@@ -723,6 +723,14 @@ SENSOR_TYPES_AUTOMATIC = {
         "unit_of_measurement": None,
         "entity_type": "sensor",
     },
+    "5.98": {
+        "name": "Flow Contact",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
 }
 
 # Additional sensor types for Automatic SALT
