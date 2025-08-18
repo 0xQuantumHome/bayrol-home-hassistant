@@ -716,7 +716,7 @@ SENSOR_TYPES_AUTOMATIC = {
         "entity_type": "sensor",
     },
     "5.28": {
-        "name": "Filtration Pump Status",
+        "name": "Flow In Status",
         "device_class": None,
         "state_class": None,
         "coefficient": None,
