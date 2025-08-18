@@ -715,22 +715,6 @@ SENSOR_TYPES_AUTOMATIC = {
         "unit_of_measurement": None,
         "entity_type": "sensor",
     },
-    "5.28": {
-        "name": "Flow In Status",
-        "device_class": None,
-        "state_class": None,
-        "coefficient": None,
-        "unit_of_measurement": None,
-        "entity_type": "sensor",
-    },
-    "5.98": {
-        "name": "Flow Contact",
-        "device_class": None,
-        "state_class": None,
-        "coefficient": None,
-        "unit_of_measurement": None,
-        "entity_type": "sensor",
-    },
 }
 
 # Additional sensor types for Automatic SALT
@@ -896,6 +880,14 @@ SENSOR_TYPES_AUTOMATIC_SALT = {
             "Constant production",
         ],
     },
+     "5.98": {
+        "name": "Flow Contact",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
 }
 
 # Additional sensor types for Automatic Cl-pH
@@ -907,6 +899,14 @@ SENSOR_TYPES_AUTOMATIC_CL_PH = {
         "state_class": SensorStateClass.MEASUREMENT,
         "coefficient": 1,
         "unit_of_measurement": "%",
+        "entity_type": "sensor",
+    },
+    "5.28": {
+        "name": "Flow In Status",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
         "entity_type": "sensor",
     },
     "5.175": {

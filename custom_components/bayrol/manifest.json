@@ -8,5 +8,5 @@
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/0xQuantumHome/bayrol-home-hassistant/issues",
   "requirements": ["paho-mqtt", "aiohttp"],
-  "version": "0.5.2"
+  "version": "0.5.3"
 }
