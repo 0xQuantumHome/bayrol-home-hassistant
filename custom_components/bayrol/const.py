@@ -715,8 +715,8 @@ SENSOR_TYPES_AUTOMATIC = {
         "unit_of_measurement": None,
         "entity_type": "sensor",
     },
-    "5.98": {
-        "name": "Filtration",
+    "5.28": {
+        "name": "Filtration Pump Status",
         "device_class": None,
         "state_class": None,
         "coefficient": None,
@@ -1512,8 +1512,8 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "sensor",
     },
-    "5.6068": {
-        "name": "Redox Canister Level",
+    "5.6066": {
+        "name": "Cl Canister Level",
         "device_class": None,
         "state_class": None,
         "coefficient": None,
