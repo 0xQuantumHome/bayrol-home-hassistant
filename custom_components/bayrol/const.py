@@ -1032,6 +1032,21 @@ SENSOR_TYPES_PM5_CHLORINE = {
             8.7,
         ],
     },
+    "4.3017": {
+        "name": "CL Setpoint",
+        "device_class": None,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "coefficient": 100,
+        "unit_of_measurement": "mg/l",
+        "entity_type": "select",
+        "options": [
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8
+        ],
+    },
     "4.3049": {
         "name": "Redox Target",
         "device_class": None,
@@ -1410,6 +1425,14 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "state_class": SensorStateClass.MEASUREMENT,
         "coefficient": 100,
         "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+        "4.4008": {
+        "name": "Cl",
+        "device_class": None,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "coefficient": 100,
+        "unit_of_measurement": "mg/l",
         "entity_type": "sensor",
     },
     "4.4022": {
