@@ -37,6 +37,47 @@ This custom integration allows you to monitor your Bayrol Pool Access device in 
 2. Click "Add Integration" and search for "Bayrol"
 3. Enter your Bayrol App Link Code (found in the Bayrol Pool Access Web App)
 
+## MQTT Debug
+
+To debug MQTT messages from the Bayrol device, you can use [**MQTT Explorer**](http://mqtt-explorer.com).
+
+### Step 1: Get your Access Token
+First, obtain your **App Link Code** from the Bayrol Pool Access Web App.  
+Replace the placeholder `A-aBcDeF` in the following URL with your code and open it in your browser:
+
+https://www.bayrol-poolaccess.de/api/?code=A-aBcDeF
+
+You will receive a response like this:
+
+{"accessToken": "23154245abc693883ef23823","deviceSerial": "212ABC1-016273"}
+
+Please note down both 'accessToken' and 'deviceSerial'.
+
+### Step 2: Configure MQTT Explorer
+In MQTT Explorer, enter the connection details as shown below.
+Use your 'accessToken' value as the 'Username'.
+
+<img width="654" height="438" alt="image" src="https://github.com/user-attachments/assets/bef549bb-e917-430b-bd07-79780a355f3d" />
+
+### Step 3: Add Subscription
+In **MQTT Explorer**, click the **ADVANCED** button and add the following subscription:
+
+d02/`deviceSerial`>/v/#
+
+For example, if your `deviceSerial` is `212ABC1-016273`, the subscription will be:
+
+d02/212ABC1-016273/v/#
+
+<img width="647" height="196" alt="image" src="https://github.com/user-attachments/assets/e3b17d01-4d21-4ac4-bb28-89ad07a5804d" />
+
+### Step 4: Connect
+
+Click the **CONNECT** button and you should see the messages floating in:
+
+<img width="587" height="558" alt="image" src="https://github.com/user-attachments/assets/f92df652-5848-40ab-8edb-8250b50be68d" />
+
+
 ## Support
 
 If you encounter any issues or have questions, please open an issue on GitHub.
+
