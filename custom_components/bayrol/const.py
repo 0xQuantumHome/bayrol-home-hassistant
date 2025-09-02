@@ -715,6 +715,14 @@ SENSOR_TYPES_AUTOMATIC = {
         "unit_of_measurement": None,
         "entity_type": "sensor",
     },
+    "5.37": {
+        "name": "Gas Sensor",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
     "5.80": {
         "name": "pH Minus Canister Status",
         "device_class": None,
@@ -888,7 +896,7 @@ SENSOR_TYPES_AUTOMATIC_SALT = {
             "Constant production",
         ],
     },
-     "5.98": {
+    "5.98": {
         "name": "Flow Contact",
         "device_class": None,
         "state_class": None,
@@ -1039,13 +1047,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "coefficient": 100,
         "unit_of_measurement": "mg/l",
         "entity_type": "select",
-        "options": [
-            0.4,
-            0.5,
-            0.6,
-            0.7,
-            0.8
-        ],
+        "options": [0.4, 0.5, 0.6, 0.7, 0.8],
     },
     "4.3049": {
         "name": "Redox Target",
@@ -1427,7 +1429,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "sensor",
     },
-        "4.4008": {
+    "4.4008": {
         "name": "Cl",
         "device_class": None,
         "state_class": SensorStateClass.MEASUREMENT,
