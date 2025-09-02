@@ -707,6 +707,14 @@ SENSOR_TYPES_AUTOMATIC = {
             "10x",
         ],
     },
+    "5.29": {
+        "name": "Flow Pump Status",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
     "5.80": {
         "name": "pH Minus Canister Status",
         "device_class": None,

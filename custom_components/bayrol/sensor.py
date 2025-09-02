@@ -31,6 +31,10 @@ def _handle_sensor_value(sensor, value):
             sensor._attr_native_value = "On"
         case "19.19":
             sensor._attr_native_value = "Off"
+        case "19.95":
+            sensor._attr_native_value = "Filtration is off"
+        case "19.96":
+            sensor._attr_native_value = "Filtration is on"
         case "19.195":
             sensor._attr_native_value = "Auto"
         case "19.115":
