@@ -15,38 +15,48 @@ BAYROL_APP_LINK_CODE = "bayrol_app_link_code"
 BAYROL_HOST = "www.bayrol-poolaccess.de"
 BAYROL_PORT = 8083
 
-# MQTT value mappings for AS5 device
-VALUE_TO_MQTT_AUTOMATIC = {
-    "0.25x": "19.3",
-    "0.5x": "19.4",
-    "0.75x": "19.5",
-    "1.0x": "19.6",
-    "1.25x": "19.7",
-    "1.5x": "19.8",
-    "2x": "19.9",
-    "3x": "19.10",
-    "5x": "19.11",
-    "10x": "19.12",
-    "On": "19.17",
-    "Off": "19.18",
-    "Constant production": "19.106",
-    "Auto Plus": "19.115",
-    "Auto": "19.195",
-    "Full": "19.258",
-    "Empty": "19.259",
+# MQTT value to display text mapping for Automatic models
+AUTOMATIC_MQTT_TO_TEXT_MAPPING = {
+    # Production rate mappings
+    "19.3": "0.25x",
+    "19.4": "0.5x", 
+    "19.5": "0.75x",
+    "19.6": "1.0x",
+    "19.7": "1.25x",
+    "19.8": "1.5x",
+    "19.9": "2x",
+    "19.10": "3x",
+    "19.11": "5x",
+    "19.12": "10x",
+    "19.17": "Yes",
+    "19.18": "No",
+    "19.106": "Constant mode",
+    "19.115": "Auto plus+",
+    "19.195": "Auto (redox control)",
+    "19.258": "filled",
+    "19.259": "empty",
+    # Filtration mode mappings
+    "19.315": "Low",
+    "19.316": "Med", 
+    "19.317": "High",
+    "19.346": "Auto",
+    "19.330": "Smart",
+    "19.338": "Frost",
+    "19.312": "Off",
 }
 
-# Reverse mapping for MQTT values to display values
-MQTT_TO_VALUE_AUTOMATIC = {v: k for k, v in VALUE_TO_MQTT_AUTOMATIC.items()}
-
-VALUE_TO_MQTT_PM5 = {
-    "On": "7408",
-    "Off": "7407",
-    "Auto": "7427",
+# MQTT value to display text mapping for PM5 models
+PM5_MQTT_TO_TEXT_MAPPING = {
+    "7408": "On",
+    "7407": "Off",
+    "7427": "Auto",
 }
 
-# Reverse mapping for MQTT values to display values
-MQTT_TO_VALUE_PM5 = {v: k for k, v in VALUE_TO_MQTT_PM5.items()}
+# Reverse mapping for display text to MQTT values for Automatic devices
+AUTOMATIC_TEXT_TO_MQTT_MAPPING = {v: k for k, v in AUTOMATIC_MQTT_TO_TEXT_MAPPING.items()}
+
+# Reverse mapping for display text to MQTT values for PM5 devices
+PM5_TEXT_TO_MQTT_MAPPING = {v: k for k, v in PM5_MQTT_TO_TEXT_MAPPING.items()}
 
 # Common sensor types for Automatic devices
 SENSOR_TYPES_AUTOMATIC = {
@@ -695,16 +705,16 @@ SENSOR_TYPES_AUTOMATIC = {
         "unit_of_measurement": None,
         "entity_type": "select",
         "options": [
-            "0.25x",
-            "0.5x",
-            "0.75x",
-            "1.0x",
-            "1.25x",
-            "1.5x",
-            "2x",
-            "3x",
-            "5x",
-            "10x",
+            "19.3",  # 0.25x
+            "19.4",  # 0.5x
+            "19.5",  # 0.75x
+            "19.6",  # 1.0x
+            "19.7",  # 1.25x
+            "19.8",  # 1.5x
+            "19.9",  # 2x
+            "19.10", # 3x
+            "19.11", # 5x
+            "19.12", # 10x
         ],
     },
     "5.29": {
@@ -730,6 +740,23 @@ SENSOR_TYPES_AUTOMATIC = {
         "coefficient": None,
         "unit_of_measurement": None,
         "entity_type": "sensor",
+    },
+    "5.184": {
+        "name": "Filtration mode",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "select",
+        "options": [
+            "19.315", # Low
+            "19.316", # Med
+            "19.317", # High
+            "19.346", # Auto
+            "19.330", # Smart
+            "19.338", # Frost
+            "19.312"  # Off
+        ],
     },
 }
 
@@ -872,15 +899,15 @@ SENSOR_TYPES_AUTOMATIC_SALT = {
         ],
     },
     "5.40": {
-        "name": "Redox ON / OFF",
+        "name": "Salt electrolysis ON/OFF",
         "device_class": None,
         "state_class": None,
         "coefficient": None,
         "unit_of_measurement": None,
         "entity_type": "select",
         "options": [
-            "On",
-            "Off",
+            "19.17", # Yes
+            "19.18", # No
         ],
     },
     "5.41": {
@@ -891,9 +918,9 @@ SENSOR_TYPES_AUTOMATIC_SALT = {
         "unit_of_measurement": None,
         "entity_type": "select",
         "options": [
-            "Auto",
-            "Auto Plus",
-            "Constant production",
+            "19.195", # Auto
+            "19.115", # Auto Plus
+            "19.106", # Constant production
         ],
     },
     "5.98": {
@@ -933,16 +960,16 @@ SENSOR_TYPES_AUTOMATIC_CL_PH = {
         "unit_of_measurement": "%",
         "entity_type": "select",
         "options": [
-            "0.25x",
-            "0.5x",
-            "0.75x",
-            "1.0x",
-            "1.25x",
-            "1.5x",
-            "2x",
-            "3x",
-            "5x",
-            "10x",
+            "19.3",  # 0.25x
+            "19.4",  # 0.5x
+            "19.5",  # 0.75x
+            "19.6",  # 1.0x
+            "19.7",  # 1.25x
+            "19.8",  # 1.5x
+            "19.9",  # 2x
+            "19.10", # 3x
+            "19.11", # 5x
+            "19.12", # 10x
         ],
     },
     "5.169": {
@@ -1477,9 +1504,9 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "select",
         "options": [
-            "On",
-            "Off",
-            "Auto",
+            "7408", # On
+            "7407", # Off
+            "7427", # Auto
         ],
     },
     "5.5434": {
@@ -1490,9 +1517,9 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "select",
         "options": [
-            "On",
-            "Off",
-            "Auto",
+            "7408", # On
+            "7407", # Off
+            "7427", # Auto
         ],
     },
     "5.5435": {
@@ -1503,9 +1530,9 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "select",
         "options": [
-            "On",
-            "Off",
-            "Auto",
+            "7408", # On
+            "7407", # Off
+            "7427", # Auto
         ],
     },
     "5.5436": {
@@ -1516,9 +1543,9 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "select",
         "options": [
-            "On",
-            "Off",
-            "Auto",
+            "7408", # On
+            "7407", # Off
+            "7427", # Auto
         ],
     },
     "5.6012": {

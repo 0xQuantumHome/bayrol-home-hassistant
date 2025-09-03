@@ -55,6 +55,18 @@ def _handle_sensor_value(sensor, value):
             sensor._attr_native_value = "Not Empty"
         case "19.259":
             sensor._attr_native_value = "Empty"
+        case "19.311":
+            sensor._attr_native_value = "ON"
+        case "19.312":
+            sensor._attr_native_value = "OFF"
+        case "19.315":
+            sensor._attr_native_value = "Low"
+        case "19.316":
+            sensor._attr_native_value = "Med"
+        case "19.317":
+            sensor._attr_native_value = "High"
+        case "19.346":
+            sensor._attr_native_value = "Auto"
         case 7001:
             sensor._attr_native_value = "On"
         case 7002:
