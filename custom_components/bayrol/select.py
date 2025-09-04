@@ -32,7 +32,7 @@ def _handle_select_value(select, value):
     _LOGGER.debug("Received MQTT value: %s for select: %s", value, select._attr_name)
     _LOGGER.debug("Available options: %s", select._attr_options)
     
-    # Try to find the value in the device-specific mappings
+    # Try to find the value in the device-specific mappings and store the TEXT value
     if select._config_entry.data[BAYROL_DEVICE_TYPE] == "PM5 Chlorine":
         if str(value) in PM5_MQTT_TO_TEXT_MAPPING:
             select._attr_current_option = PM5_MQTT_TO_TEXT_MAPPING[str(value)]
@@ -205,8 +205,8 @@ class BayrolSelect(SelectEntity):
                          option, mqtt_value, self._attr_options)
             return
 
-        # Update the current option to the MQTT value
-        self._attr_current_option = mqtt_value
+        # Update the current option to the TEXT value (user's selection)
+        self._attr_current_option = option
 
         # Publish the new value to the MQTT topic
         topic = f"d02/{self._config_entry.data[BAYROL_DEVICE_ID]}/s/{self._state_topic}"
@@ -243,39 +243,6 @@ class BayrolSelect(SelectEntity):
                 display_options.append(option_str)
         return display_options
 
-    @property
-    def current_option(self) -> str | None:
-        """Return the currently selected option."""
-        if self._attr_current_option is None:
-            return None
-        
-        _LOGGER.debug("Converting MQTT value %s to display text for device type: %s", 
-                     self._attr_current_option, self._config_entry.data[BAYROL_DEVICE_TYPE])
-        
-        # Convert MQTT value to display text based on device type
-        if self._config_entry.data[BAYROL_DEVICE_TYPE] == "PM5 Chlorine":
-            # Use PM5 specific mappings
-            if self._attr_current_option in PM5_MQTT_TO_TEXT_MAPPING:
-                result = PM5_MQTT_TO_TEXT_MAPPING[self._attr_current_option]
-                _LOGGER.debug("PM5 mapping: %s -> %s", self._attr_current_option, result)
-                return result
-        elif (self._config_entry.data[BAYROL_DEVICE_TYPE] == "Automatic Cl-pH" or 
-              self._config_entry.data[BAYROL_DEVICE_TYPE] == "Automatic SALT"):
-            # Use Automatic specific mappings
-            if self._attr_current_option in AUTOMATIC_MQTT_TO_TEXT_MAPPING:
-                result = AUTOMATIC_MQTT_TO_TEXT_MAPPING[self._attr_current_option]
-                _LOGGER.debug("Automatic mapping: %s -> %s", self._attr_current_option, result)
-                return result
-        else:
-            # Unknown device type - this should not happen
-            _LOGGER.warning("Unknown device type: %s. Cannot map MQTT value: %s", 
-                           self._config_entry.data[BAYROL_DEVICE_TYPE], self._attr_current_option)
-            return self._attr_current_option
-        
-        # This line is reached when device type is known but MQTT value not found in mapping
-        _LOGGER.debug("No mapping found for MQTT value %s in device type %s, returning original value", 
-                     self._attr_current_option, self._config_entry.data[BAYROL_DEVICE_TYPE])
-        return self._attr_current_option
 
     @property
     def device_info(self) -> DeviceInfo:
