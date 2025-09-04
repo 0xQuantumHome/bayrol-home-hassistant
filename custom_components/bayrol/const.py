@@ -43,6 +43,10 @@ AUTOMATIC_MQTT_TO_TEXT_MAPPING = {
     "19.330": "Smart",
     "19.338": "Frost",
     "19.312": "Off",
+    # Out Mode mappings
+    "19.311": "Out - On",
+    "19.100": "Out - Off",
+    "19.345": "Out - Auto",
 }
 
 # MQTT value to display text mapping for PM5 models
@@ -756,6 +760,58 @@ SENSOR_TYPES_AUTOMATIC = {
             "19.330", # Smart
             "19.338", # Frost
             "19.312"  # Off
+        ],
+    },
+    "5.186": {
+        "name": "Out 1 Mode",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "select",
+        "options": [
+            "19.311", # Out On
+            "19.100", # Out Off
+            "19.345", # Out Auto
+        ],
+    },
+    "5.187": {
+        "name": "Out 2 Mode",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "select",
+        "options": [
+            "19.311", # Out On
+            "19.100", # Out Off
+            "19.345", # Out Auto
+        ],
+    },
+    "5.188": {
+        "name": "Out 3 Mode",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "select",
+        "options": [
+            "19.311", # Out On
+            "19.100", # Out Off
+            "19.345", # Out Auto
+        ],
+    },
+    "5.189": {
+        "name": "Out 4 Mode",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "select",
+        "options": [
+            "19.311", # Out On
+            "19.100", # Out Off
+            "19.345", # Out Auto
         ],
     },
 }
