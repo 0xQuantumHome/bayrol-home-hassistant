@@ -9,7 +9,7 @@ This custom integration allows you to monitor your Bayrol Pool Access device in 
 
 ## Features
 
-- Monitors 30 pool water quality metrics (including pH, Redox, Salt levels, etc.)
+- 40+ entities (including pH, Redox, Salt levels, alarm levels, etc.)
 - Real-time updates via MQTT connection
 
 ## Tested Devices
@@ -80,4 +80,5 @@ Click the **CONNECT** button and you should see the messages floating in:
 ## Support
 
 If you encounter any issues or have questions, please open an issue on GitHub.
+
 
