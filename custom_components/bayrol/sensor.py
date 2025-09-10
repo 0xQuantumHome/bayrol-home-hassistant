@@ -26,75 +26,93 @@ _LOGGER = logging.getLogger(__name__)
 
 def _handle_sensor_value(sensor, value):
     """Handle incoming sensor value."""
-    match value:
-        case "19.18":
-            sensor._attr_native_value = "On"
-        case "19.19":
-            sensor._attr_native_value = "Off"
-        case "19.95":
-            sensor._attr_native_value = "Filtration is off"
-        case "19.96":
-            sensor._attr_native_value = "Filtration is on"
-        case "19.105":
-            sensor._attr_native_value = "Water detected"
-        case "19.147":
-            sensor._attr_native_value = "Stopped (gas detected)"
-        case "19.195":
-            sensor._attr_native_value = "Auto"
-        case "19.115":
-            sensor._attr_native_value = "Auto Plus"
-        case "19.106":
-            sensor._attr_native_value = "Constant production"
-        case "19.177":
-            sensor._attr_native_value = "On"
-        case "19.176":
-            sensor._attr_native_value = "Off"
-        case "19.257":
-            sensor._attr_native_value = "Missing"
-        case "19.258":
-            sensor._attr_native_value = "Not Empty"
-        case "19.259":
-            sensor._attr_native_value = "Empty"
-        case "19.311":
-            sensor._attr_native_value = "ON"
-        case "19.312":
-            sensor._attr_native_value = "OFF"
-        case "19.315":
-            sensor._attr_native_value = "Low"
-        case "19.316":
-            sensor._attr_native_value = "Med"
-        case "19.317":
-            sensor._attr_native_value = "High"
-        case "19.346":
-            sensor._attr_native_value = "Auto"
-        case 7001:
-            sensor._attr_native_value = "On"
-        case 7002:
-            sensor._attr_native_value = "Off"
-        case 7521:
-            sensor._attr_native_value = "Full"
-        case 7522:
-            sensor._attr_native_value = "Low"
-        case 7523:
-            sensor._attr_native_value = "Empty"
-        case 7524:
-            sensor._attr_native_value = "Ok"
-        case 7525:
-            sensor._attr_native_value = "Info"
-        case 7526:
-            sensor._attr_native_value = "Warning"
-        case 7527:
-            sensor._attr_native_value = "Alarm"
-        case _:
-            if (
-                sensor._sensor_config.get("coefficient") is not None
-                and sensor._sensor_config["coefficient"] != -1
-            ):
-                sensor._attr_native_value = value / sensor._sensor_config["coefficient"]
-            elif sensor._sensor_config.get("coefficient") == -1:
-                sensor._attr_native_value = str(value)
-            else:
-                sensor._attr_native_value = value
+    # Check if this is a numeric sensor that should not be converted to strings
+    is_numeric_sensor = (
+        sensor._sensor_config.get("state_class") is not None and
+        sensor._sensor_config.get("state_class") != "None" and
+        sensor._sensor_config.get("unit_of_measurement") is not None
+    )
+    
+    # If it's a numeric sensor, handle it directly without string conversion
+    if is_numeric_sensor:
+        if (
+            sensor._sensor_config.get("coefficient") is not None
+            and sensor._sensor_config["coefficient"] != -1
+        ):
+            sensor._attr_native_value = value / sensor._sensor_config["coefficient"]
+        else:
+            sensor._attr_native_value = value
+    else:
+        # Handle string conversion for non-numeric sensors
+        match value:
+            case "19.18":
+                sensor._attr_native_value = "On"
+            case "19.19":
+                sensor._attr_native_value = "Off"
+            case "19.95":
+                sensor._attr_native_value = "Filtration is off"
+            case "19.96":
+                sensor._attr_native_value = "Filtration is on"
+            case "19.105":
+                sensor._attr_native_value = "Water detected"
+            case "19.147":
+                sensor._attr_native_value = "Stopped (gas detected)"
+            case "19.195":
+                sensor._attr_native_value = "Auto"
+            case "19.115":
+                sensor._attr_native_value = "Auto Plus"
+            case "19.106":
+                sensor._attr_native_value = "Constant production"
+            case "19.177":
+                sensor._attr_native_value = "On"
+            case "19.176":
+                sensor._attr_native_value = "Off"
+            case "19.257":
+                sensor._attr_native_value = "Missing"
+            case "19.258":
+                sensor._attr_native_value = "Not Empty"
+            case "19.259":
+                sensor._attr_native_value = "Empty"
+            case "19.311":
+                sensor._attr_native_value = "ON"
+            case "19.312":
+                sensor._attr_native_value = "OFF"
+            case "19.315":
+                sensor._attr_native_value = "Low"
+            case "19.316":
+                sensor._attr_native_value = "Med"
+            case "19.317":
+                sensor._attr_native_value = "High"
+            case "19.346":
+                sensor._attr_native_value = "Auto"
+            case 7001:
+                sensor._attr_native_value = "On"
+            case 7002:
+                sensor._attr_native_value = "Off"
+            case 7521:
+                sensor._attr_native_value = "Full"
+            case 7522:
+                sensor._attr_native_value = "Low"
+            case 7523:
+                sensor._attr_native_value = "Empty"
+            case 7524:
+                sensor._attr_native_value = "Ok"
+            case 7525:
+                sensor._attr_native_value = "Info"
+            case 7526:
+                sensor._attr_native_value = "Warning"
+            case 7527:
+                sensor._attr_native_value = "Alarm"
+            case _:
+                if (
+                    sensor._sensor_config.get("coefficient") is not None
+                    and sensor._sensor_config["coefficient"] != -1
+                ):
+                    sensor._attr_native_value = value / sensor._sensor_config["coefficient"]
+                elif sensor._sensor_config.get("coefficient") == -1:
+                    sensor._attr_native_value = str(value)
+                else:
+                    sensor._attr_native_value = value
 
     if sensor.hass is not None:
         sensor.schedule_update_ha_state()
