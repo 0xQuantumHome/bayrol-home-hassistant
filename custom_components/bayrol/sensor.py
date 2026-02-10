@@ -20,6 +20,7 @@ from .const import (
     BAYROL_DEVICE_ID,
     BAYROL_DEVICE_TYPE,
 )
+from .helpers import normalize_entity_id_part
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -176,8 +177,8 @@ class BayrolSensor(SensorEntity):
         self._attr_state_class = sensor_config.get("state_class")
         self._attr_native_unit_of_measurement = sensor_config.get("unit_of_measurement")
         self._attr_unique_id = f"{config_entry.entry_id}_{sensor_type}"
-        device_id = config_entry.data[BAYROL_DEVICE_ID].lower().replace(" ", "_")
-        name = sensor_config.get("name", sensor_type).lower().replace(" ", "_")
+        device_id = normalize_entity_id_part(config_entry.data[BAYROL_DEVICE_ID])
+        name = normalize_entity_id_part(sensor_config.get("name", sensor_type))
         self.entity_id = f"sensor.bayrol_{device_id}_{name}"
         coefficient = sensor_config.get("coefficient")
         if coefficient == 1:

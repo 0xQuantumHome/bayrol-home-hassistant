@@ -23,6 +23,7 @@ from .const import (
     AUTOMATIC_TEXT_TO_MQTT_MAPPING,
     PM5_TEXT_TO_MQTT_MAPPING,
 )
+from .helpers import normalize_entity_id_part
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -53,7 +54,8 @@ def _handle_select_value(select, value):
         _handle_numeric_value(select, value)
     
     _LOGGER.debug("Set current_option to: %s", select._attr_current_option)
-    select.schedule_update_ha_state()
+    if select.hass is not None:
+        select.schedule_update_ha_state()
 
 
 def _handle_numeric_value(select, value):
@@ -138,8 +140,8 @@ class BayrolSelect(SelectEntity):
         self._state_topic = topic
         self._attr_name = select_config.get("name", select_type)
         self._attr_unique_id = f"{config_entry.entry_id}_{select_type}"
-        device_id = config_entry.data[BAYROL_DEVICE_ID].lower().replace(" ", "_")
-        name = select_config.get("name", select_type).lower().replace(" ", "_")
+        device_id = normalize_entity_id_part(config_entry.data[BAYROL_DEVICE_ID])
+        name = normalize_entity_id_part(select_config.get("name", select_type))
         self.entity_id = f"select.bayrol_{device_id}_{name}"
         self._attr_current_option = None
 
