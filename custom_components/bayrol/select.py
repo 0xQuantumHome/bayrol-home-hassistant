@@ -138,12 +138,9 @@ class BayrolSelect(SelectEntity):
         self._state_topic = topic
         self._attr_name = select_config.get("name", select_type)
         self._attr_unique_id = f"{config_entry.entry_id}_{select_type}"
-        self.entity_id = (
-            "select.bayrol_"
-            + config_entry.data[BAYROL_DEVICE_ID]
-            + "_"
-            + select_config.get("name", select_type)
-        )
+        device_id = config_entry.data[BAYROL_DEVICE_ID].lower().replace(" ", "_")
+        name = select_config.get("name", select_type).lower().replace(" ", "_")
+        self.entity_id = f"select.bayrol_{device_id}_{name}"
         self._attr_current_option = None
 
         # Get options from config and convert to strings
