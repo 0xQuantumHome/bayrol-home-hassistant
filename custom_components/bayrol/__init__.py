@@ -26,7 +26,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     mqtt_manager = BayrolMQTTManager(
         hass, entry.data[BAYROL_DEVICE_ID], entry.data[BAYROL_ACCESS_TOKEN]
     )
-    hass.data[DOMAIN]["mqtt_manager"] = mqtt_manager
+    # Store mqtt_manager per entry so multiple config entries don't overwrite each other
+    hass.data[DOMAIN][entry.entry_id] = {
+        "data": entry.data,
+        "mqtt_manager": mqtt_manager,
+    }
     mqtt_manager.start()
 
     # Forward the setup to the platforms
@@ -42,13 +46,13 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     )
 
     if unload_ok:
-        # Clean up MQTT manager
-        if "mqtt_manager" in hass.data[DOMAIN]:
-            mqtt_manager = hass.data[DOMAIN]["mqtt_manager"]
+        # Clean up only this entry's MQTT manager
+        entry_data = hass.data[DOMAIN].pop(entry.entry_id, {})
+        mqtt_manager = entry_data.get("mqtt_manager")
+        if mqtt_manager:
             if mqtt_manager.client:
                 mqtt_manager.client.disconnect()
             if mqtt_manager.thread:
                 mqtt_manager.thread.join(timeout=1.0)
-        hass.data[DOMAIN].pop(entry.entry_id)
 
     return unload_ok
