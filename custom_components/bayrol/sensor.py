@@ -29,11 +29,11 @@ def _handle_sensor_value(sensor, value):
     """Handle incoming sensor value."""
     # Check if this is a numeric sensor that should not be converted to strings
     is_numeric_sensor = (
-        sensor._sensor_config.get("state_class") is not None and
-        sensor._sensor_config.get("state_class") != "None" and
-        sensor._sensor_config.get("unit_of_measurement") is not None
+        sensor._sensor_config.get("state_class") is not None
+        and sensor._sensor_config.get("state_class") != "None"
+        and sensor._sensor_config.get("unit_of_measurement") is not None
     )
-    
+
     # If it's a numeric sensor, handle it directly without string conversion
     if is_numeric_sensor:
         if (
@@ -109,7 +109,9 @@ def _handle_sensor_value(sensor, value):
                     sensor._sensor_config.get("coefficient") is not None
                     and sensor._sensor_config["coefficient"] != -1
                 ):
-                    sensor._attr_native_value = value / sensor._sensor_config["coefficient"]
+                    sensor._attr_native_value = (
+                        value / sensor._sensor_config["coefficient"]
+                    )
                 elif sensor._sensor_config.get("coefficient") == -1:
                     sensor._attr_native_value = str(value)
                 else:
@@ -129,8 +131,8 @@ async def async_setup_entry(
     device_type = config_entry.data[BAYROL_DEVICE_TYPE]
     _LOGGER.debug("device_type: %s", device_type)
 
-    # Get the shared MQTT manager
-    mqtt_manager = hass.data[DOMAIN]["mqtt_manager"]
+    # Get the MQTT manager for this specific config entry
+    mqtt_manager = hass.data[DOMAIN][config_entry.entry_id]["mqtt_manager"]
 
     if device_type == "Automatic SALT":
         for sensor_type, sensor_config in SENSOR_TYPES_AUTOMATIC_SALT.items():
