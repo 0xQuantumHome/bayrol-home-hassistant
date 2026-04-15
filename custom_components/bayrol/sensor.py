@@ -29,11 +29,11 @@ def _handle_sensor_value(sensor, value):
     """Handle incoming sensor value."""
     # Check if this is a numeric sensor that should not be converted to strings
     is_numeric_sensor = (
-        sensor._sensor_config.get("state_class") is not None and
-        sensor._sensor_config.get("state_class") != "None" and
-        sensor._sensor_config.get("unit_of_measurement") is not None
+        sensor._sensor_config.get("state_class") is not None
+        and sensor._sensor_config.get("state_class") != "None"
+        and sensor._sensor_config.get("unit_of_measurement") is not None
     )
-    
+
     # If it's a numeric sensor, handle it directly without string conversion
     if is_numeric_sensor:
         if (
@@ -47,7 +47,7 @@ def _handle_sensor_value(sensor, value):
         # Handle string conversion for non-numeric sensors
         match value:
             case "19.18":
-                sensor._attr_native_value = "On"
+                sensor._attr_native_value = "No"
             case "19.19":
                 sensor._attr_native_value = "Off"
             case "19.95":
@@ -109,7 +109,9 @@ def _handle_sensor_value(sensor, value):
                     sensor._sensor_config.get("coefficient") is not None
                     and sensor._sensor_config["coefficient"] != -1
                 ):
-                    sensor._attr_native_value = value / sensor._sensor_config["coefficient"]
+                    sensor._attr_native_value = (
+                        value / sensor._sensor_config["coefficient"]
+                    )
                 elif sensor._sensor_config.get("coefficient") == -1:
                     sensor._attr_native_value = str(value)
                 else:
@@ -186,7 +188,7 @@ class BayrolSensor(SensorEntity):
         elif coefficient == 10:
             self._attr_suggested_display_precision = 1
         elif coefficient == 100:
-            self._attr_display_precision = 2
+            self._attr_suggested_display_precision = 2
         self._attr_native_value = None
 
     async def async_added_to_hass(self) -> None:
