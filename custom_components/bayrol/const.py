@@ -19,7 +19,7 @@ BAYROL_PORT = 8083
 AUTOMATIC_MQTT_TO_TEXT_MAPPING = {
     # Production rate mappings
     "19.3": "0.25x",
-    "19.4": "0.5x", 
+    "19.4": "0.5x",
     "19.5": "0.75x",
     "19.6": "1.0x",
     "19.7": "1.25x",
@@ -37,7 +37,7 @@ AUTOMATIC_MQTT_TO_TEXT_MAPPING = {
     "19.259": "empty",
     # Filtration mode mappings
     "19.315": "Low",
-    "19.316": "Med", 
+    "19.316": "Med",
     "19.317": "High",
     "19.346": "Auto",
     "19.330": "Smart",
@@ -57,7 +57,9 @@ PM5_MQTT_TO_TEXT_MAPPING = {
 }
 
 # Reverse mapping for display text to MQTT values for Automatic devices
-AUTOMATIC_TEXT_TO_MQTT_MAPPING = {v: k for k, v in AUTOMATIC_MQTT_TO_TEXT_MAPPING.items()}
+AUTOMATIC_TEXT_TO_MQTT_MAPPING = {
+    v: k for k, v in AUTOMATIC_MQTT_TO_TEXT_MAPPING.items()
+}
 
 # Reverse mapping for display text to MQTT values for PM5 devices
 PM5_TEXT_TO_MQTT_MAPPING = {v: k for k, v in PM5_MQTT_TO_TEXT_MAPPING.items()}
@@ -632,7 +634,7 @@ SENSOR_TYPES_AUTOMATIC = {
     "4.67": {
         "name": "SW Version",
         "device_class": None,
-        "state_class": SensorStateClass.MEASUREMENT,
+        "state_class": None,  # Firmware version is not a measurement
         "coefficient": 100,
         "unit_of_measurement": None,
         "entity_type": "sensor",
@@ -716,9 +718,9 @@ SENSOR_TYPES_AUTOMATIC = {
             "19.7",  # 1.25x
             "19.8",  # 1.5x
             "19.9",  # 2x
-            "19.10", # 3x
-            "19.11", # 5x
-            "19.12", # 10x
+            "19.10",  # 3x
+            "19.11",  # 5x
+            "19.12",  # 10x
         ],
     },
     "5.29": {
@@ -753,13 +755,13 @@ SENSOR_TYPES_AUTOMATIC = {
         "unit_of_measurement": None,
         "entity_type": "select",
         "options": [
-            "19.315", # Low
-            "19.316", # Med
-            "19.317", # High
-            "19.346", # Auto
-            "19.330", # Smart
-            "19.338", # Frost
-            "19.312"  # Off
+            "19.315",  # Low
+            "19.316",  # Med
+            "19.317",  # High
+            "19.346",  # Auto
+            "19.330",  # Smart
+            "19.338",  # Frost
+            "19.312",  # Off
         ],
     },
     "5.186": {
@@ -770,9 +772,9 @@ SENSOR_TYPES_AUTOMATIC = {
         "unit_of_measurement": None,
         "entity_type": "select",
         "options": [
-            "19.311", # Out On
-            "19.100", # Out Off
-            "19.345", # Out Auto
+            "19.311",  # Out On
+            "19.100",  # Out Off
+            "19.345",  # Out Auto
         ],
     },
     "5.187": {
@@ -783,9 +785,9 @@ SENSOR_TYPES_AUTOMATIC = {
         "unit_of_measurement": None,
         "entity_type": "select",
         "options": [
-            "19.311", # Out On
-            "19.100", # Out Off
-            "19.345", # Out Auto
+            "19.311",  # Out On
+            "19.100",  # Out Off
+            "19.345",  # Out Auto
         ],
     },
     "5.188": {
@@ -796,9 +798,9 @@ SENSOR_TYPES_AUTOMATIC = {
         "unit_of_measurement": None,
         "entity_type": "select",
         "options": [
-            "19.311", # Out On
-            "19.100", # Out Off
-            "19.345", # Out Auto
+            "19.311",  # Out On
+            "19.100",  # Out Off
+            "19.345",  # Out Auto
         ],
     },
     "5.189": {
@@ -809,9 +811,9 @@ SENSOR_TYPES_AUTOMATIC = {
         "unit_of_measurement": None,
         "entity_type": "select",
         "options": [
-            "19.311", # Out On
-            "19.100", # Out Off
-            "19.345", # Out Auto
+            "19.311",  # Out On
+            "19.100",  # Out Off
+            "19.345",  # Out Auto
         ],
     },
 }
@@ -962,8 +964,8 @@ SENSOR_TYPES_AUTOMATIC_SALT = {
         "unit_of_measurement": None,
         "entity_type": "select",
         "options": [
-            "19.17", # Yes
-            "19.18", # No
+            "19.17",  # Yes
+            "19.18",  # No
         ],
     },
     "5.41": {
@@ -974,9 +976,9 @@ SENSOR_TYPES_AUTOMATIC_SALT = {
         "unit_of_measurement": None,
         "entity_type": "select",
         "options": [
-            "19.195", # Auto
-            "19.115", # Auto Plus
-            "19.106", # Constant production
+            "19.195",  # Auto
+            "19.115",  # Auto Plus
+            "19.106",  # Constant production
         ],
     },
     "5.98": {
@@ -1023,9 +1025,9 @@ SENSOR_TYPES_AUTOMATIC_CL_PH = {
             "19.7",  # 1.25x
             "19.8",  # 1.5x
             "19.9",  # 2x
-            "19.10", # 3x
-            "19.11", # 5x
-            "19.12", # 10x
+            "19.10",  # 3x
+            "19.11",  # 5x
+            "19.12",  # 10x
         ],
     },
     "5.169": {
@@ -1130,7 +1132,28 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "coefficient": 100,
         "unit_of_measurement": "mg/l",
         "entity_type": "select",
-        "options": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0],
+        "options": [
+            0.1,
+            0.2,
+            0.3,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.0,
+            1.1,
+            1.2,
+            1.3,
+            1.4,
+            1.5,
+            1.6,
+            1.7,
+            1.8,
+            1.9,
+            2.0,
+        ],
     },
     "4.3018": {
         "name": "Lower Alarm threshold Chlorine",
@@ -1139,7 +1162,23 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "coefficient": 100,
         "unit_of_measurement": "mg/l",
         "entity_type": "select",
-        "options": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5],
+        "options": [
+            0.1,
+            0.2,
+            0.3,
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.0,
+            1.1,
+            1.2,
+            1.3,
+            1.4,
+            1.5,
+        ],
     },
     "4.3019": {
         "name": "Upper Alarm threshold Chlorine",
@@ -1148,7 +1187,35 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "coefficient": 100,
         "unit_of_measurement": "mg/l",
         "entity_type": "select",
-        "options": [0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3.0],
+        "options": [
+            0.4,
+            0.5,
+            0.6,
+            0.7,
+            0.8,
+            0.9,
+            1.0,
+            1.1,
+            1.2,
+            1.3,
+            1.4,
+            1.5,
+            1.6,
+            1.7,
+            1.8,
+            1.9,
+            2.0,
+            2.1,
+            2.2,
+            2.3,
+            2.4,
+            2.5,
+            2.6,
+            2.7,
+            2.8,
+            2.9,
+            3.0,
+        ],
     },
     "4.3049": {
         "name": "Setpoint Redox",
@@ -1586,9 +1653,9 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "select",
         "options": [
-            "7408", # On
-            "7407", # Off
-            "7427", # Auto
+            "7408",  # On
+            "7407",  # Off
+            "7427",  # Auto
         ],
     },
     "5.5434": {
@@ -1599,9 +1666,9 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "select",
         "options": [
-            "7408", # On
-            "7407", # Off
-            "7427", # Auto
+            "7408",  # On
+            "7407",  # Off
+            "7427",  # Auto
         ],
     },
     "5.5435": {
@@ -1612,9 +1679,9 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "select",
         "options": [
-            "7408", # On
-            "7407", # Off
-            "7427", # Auto
+            "7408",  # On
+            "7407",  # Off
+            "7427",  # Auto
         ],
     },
     "5.5436": {
@@ -1625,9 +1692,9 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "select",
         "options": [
-            "7408", # On
-            "7407", # Off
-            "7427", # Auto
+            "7408",  # On
+            "7407",  # Off
+            "7427",  # Auto
         ],
     },
     "5.6012": {
