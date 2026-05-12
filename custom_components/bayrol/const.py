@@ -647,7 +647,7 @@ SENSOR_TYPES_AUTOMATIC = {
     "4.67": {
         "name": "SW Version",
         "device_class": None,
-        "state_class": SensorStateClass.MEASUREMENT,
+        "state_class": None,  # Firmware version is not a measurement
         "coefficient": 100,
         "unit_of_measurement": None,
         "entity_type": "sensor",
