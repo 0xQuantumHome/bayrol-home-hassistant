@@ -47,7 +47,7 @@ def _handle_sensor_value(sensor, value):
         # Handle string conversion for non-numeric sensors
         match value:
             case "19.18":
-                sensor._attr_native_value = "On"
+                sensor._attr_native_value = "No"
             case "19.19":
                 sensor._attr_native_value = "Off"
             case "19.95":
@@ -188,7 +188,7 @@ class BayrolSensor(SensorEntity):
         elif coefficient == 10:
             self._attr_suggested_display_precision = 1
         elif coefficient == 100:
-            self._attr_display_precision = 2
+            self._attr_suggested_display_precision = 2
         self._attr_native_value = None
 
     async def async_added_to_hass(self) -> None:
