@@ -108,8 +108,8 @@ async def async_setup_entry(
     device_type = config_entry.data[BAYROL_DEVICE_TYPE]
     _LOGGER.debug("device_type: %s", device_type)
 
-    # Get the shared MQTT manager
-    mqtt_manager = hass.data[DOMAIN]["mqtt_manager"]
+    # Get the MQTT manager for this specific config entry
+    mqtt_manager = hass.data[DOMAIN][config_entry.entry_id]["mqtt_manager"]
 
     if device_type == "Automatic SALT":
         for select_type, select_config in SENSOR_TYPES_AUTOMATIC_SALT.items():
@@ -235,7 +235,9 @@ class BayrolSelect(SelectEntity):
         # Publish the new value to the MQTT topic
         topic = f"d02/{self._config_entry.data[BAYROL_DEVICE_ID]}/s/{self._state_topic}"
         payload = f'{{"t":"{self._state_topic}","v":{mqtt_value}}}'
-        self.hass.data[DOMAIN]["mqtt_manager"].client.publish(topic, payload)
+        self.hass.data[DOMAIN][self._config_entry.entry_id][
+            "mqtt_manager"
+        ].client.publish(topic, payload)
         _LOGGER.debug("Published MQTT message: %s", payload)
 
     @property
