@@ -194,7 +194,7 @@ class BayrolSelect(SelectEntity):
                 if coefficient is not None and coefficient != -1:
                     # Convert display value to MQTT value
                     display_float = float(option)
-                    mqtt_value = str(int(display_float * coefficient))
+                    mqtt_value = str(round(display_float * coefficient))
                     _LOGGER.debug(
                         "Converted display value %s to MQTT value %s using coefficient %s",
                         option,
