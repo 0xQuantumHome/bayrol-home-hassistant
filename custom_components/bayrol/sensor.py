@@ -17,6 +17,7 @@ from .const import (
     SENSOR_TYPES_AUTOMATIC_SALT,
     SENSOR_TYPES_AUTOMATIC_CL_PH,
     SENSOR_TYPES_PM5_CHLORINE,
+    ALARM_TOPICS,
     BAYROL_DEVICE_ID,
     BAYROL_DEVICE_TYPE,
 )
@@ -29,11 +30,11 @@ def _handle_sensor_value(sensor, value):
     """Handle incoming sensor value."""
     # Check if this is a numeric sensor that should not be converted to strings
     is_numeric_sensor = (
-        sensor._sensor_config.get("state_class") is not None and
-        sensor._sensor_config.get("state_class") != "None" and
-        sensor._sensor_config.get("unit_of_measurement") is not None
+        sensor._sensor_config.get("state_class") is not None
+        and sensor._sensor_config.get("state_class") != "None"
+        and sensor._sensor_config.get("unit_of_measurement") is not None
     )
-    
+
     # If it's a numeric sensor, handle it directly without string conversion
     if is_numeric_sensor:
         if (
@@ -109,7 +110,9 @@ def _handle_sensor_value(sensor, value):
                     sensor._sensor_config.get("coefficient") is not None
                     and sensor._sensor_config["coefficient"] != -1
                 ):
-                    sensor._attr_native_value = value / sensor._sensor_config["coefficient"]
+                    sensor._attr_native_value = (
+                        value / sensor._sensor_config["coefficient"]
+                    )
                 elif sensor._sensor_config.get("coefficient") == -1:
                     sensor._attr_native_value = str(value)
                 else:
@@ -129,36 +132,28 @@ async def async_setup_entry(
     device_type = config_entry.data[BAYROL_DEVICE_TYPE]
     _LOGGER.debug("device_type: %s", device_type)
 
-    # Get the shared MQTT manager
-    mqtt_manager = hass.data[DOMAIN]["mqtt_manager"]
+    # Get the MQTT manager for this specific config entry
+    mqtt_manager = hass.data[DOMAIN][config_entry.entry_id]["mqtt_manager"]
 
-    if device_type == "Automatic SALT":
-        for sensor_type, sensor_config in SENSOR_TYPES_AUTOMATIC_SALT.items():
-            if sensor_config.get("entity_type") != "select":  # Skip select entities
-                topic = sensor_type
-                sensor = BayrolSensor(config_entry, sensor_type, sensor_config, topic)
-                mqtt_manager.subscribe(
-                    topic, lambda v, s=sensor: _handle_sensor_value(s, v)
-                )
-                entities.append(sensor)
-    elif device_type == "Automatic Cl-pH":
-        for sensor_type, sensor_config in SENSOR_TYPES_AUTOMATIC_CL_PH.items():
-            if sensor_config.get("entity_type") != "select":  # Skip select entities
-                topic = sensor_type
-                sensor = BayrolSensor(config_entry, sensor_type, sensor_config, topic)
-                mqtt_manager.subscribe(
-                    topic, lambda v, s=sensor: _handle_sensor_value(s, v)
-                )
-                entities.append(sensor)
-    elif device_type == "PM5 Chlorine":
-        for sensor_type, sensor_config in SENSOR_TYPES_PM5_CHLORINE.items():
-            if sensor_config.get("entity_type") != "select":  # Skip select entities
-                topic = sensor_type
-                sensor = BayrolSensor(config_entry, sensor_type, sensor_config, topic)
-                mqtt_manager.subscribe(
-                    topic, lambda v, s=sensor: _handle_sensor_value(s, v)
-                )
-                entities.append(sensor)
+    type_map = {
+        "Automatic SALT": SENSOR_TYPES_AUTOMATIC_SALT,
+        "Automatic Cl-pH": SENSOR_TYPES_AUTOMATIC_CL_PH,
+        "PM5 Chlorine": SENSOR_TYPES_PM5_CHLORINE,
+    }
+    sensor_types = type_map.get(device_type, {})
+
+    for sensor_type, sensor_config in sensor_types.items():
+        # Skip select entities (handled by select platform)
+        if sensor_config.get("entity_type") == "select":
+            continue
+        # Skip alarm topics (handled by binary_sensor platform)
+        if sensor_type in ALARM_TOPICS:
+            continue
+        sensor = BayrolSensor(config_entry, sensor_type, sensor_config, sensor_type)
+        mqtt_manager.subscribe(
+            sensor_type, lambda v, s=sensor: _handle_sensor_value(s, v)
+        )
+        entities.append(sensor)
 
     async_add_entities(entities)
 

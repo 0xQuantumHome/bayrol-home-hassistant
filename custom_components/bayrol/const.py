@@ -15,6 +15,20 @@ BAYROL_APP_LINK_CODE = "bayrol_app_link_code"
 BAYROL_HOST = "www.bayrol-poolaccess.de"
 BAYROL_PORT = 8083
 
+# Alarm topics — these send a dict payload (no "v" key) and optionally
+# require the integration to publish a quit acknowledgement.
+# Payload format: {"t":"8.2002","quit_required":bool,"is_quit":bool,"active":bool,"module":str}
+ALARM_TOPICS = {
+    "8.2002": {
+        "name": "Device Alarm",
+        "quit_required": True,  # Device waits for s/8.2002 acknowledge
+    },
+    "8.2003": {
+        "name": "Device Info",
+        "quit_required": False,  # Informational only, no acknowledgement needed
+    },
+}
+
 # MQTT value to display text mapping for Automatic models
 AUTOMATIC_MQTT_TO_TEXT_MAPPING = {
     # Production rate mappings

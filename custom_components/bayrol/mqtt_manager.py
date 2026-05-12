@@ -58,12 +58,13 @@ class BayrolMQTTManager:
 
         if topic in self._subscribers:
             try:
-                payload = msg.payload
-                value = json.loads(payload)["v"]
-                # Schedule the callback in the event loop
-                self.hass.loop.call_soon_threadsafe(
-                    lambda: self._subscribers[topic](value)
-                )
+                parsed = json.loads(msg.payload)
+                # Most topics use {"v": value}. Alarm topics (8.2002, 8.2003)
+                # use a richer dict without a "v" key — pass the full dict so
+                # subscribers can read quit_required, active, module, etc.
+                value = parsed.get("v", parsed)
+                callback = self._subscribers[topic]
+                self.hass.loop.call_soon_threadsafe(lambda cb=callback, v=value: cb(v))
             except Exception as e:
                 _LOGGER.error("Invalid payload for %s: %s", msg.topic, e)
         else:
