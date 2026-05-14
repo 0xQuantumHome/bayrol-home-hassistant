@@ -58,6 +58,12 @@ PM5_MQTT_TO_TEXT_MAPPING = {
     "7408": "On",
     "7407": "Off",
     "7427": "Auto",
+    # Filter pump mode options
+    "7389": "Eco",
+    "7390": "Normal",
+    "7391": "High",
+    "7392": "Auto",
+    "7393": "Off",
     # Canister / level status
     "7521": "Full",
     "7522": "Low",
@@ -1657,6 +1663,21 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "coefficient": 1,
         "unit_of_measurement": None,
         "entity_type": "sensor",
+    },
+        "5.5427": {
+        "name": "Filter Pump Mode",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "select",
+        "options": [
+            "7389",  # Eco
+            "7390",  # Normal
+            "7391",  # High
+            "7392",  # Auto
+            "7393",  # Off
+        ],
     },
     "5.5433": {
         "name": "Out 1",
