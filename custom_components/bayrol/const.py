@@ -1664,7 +1664,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "sensor",
     },
-        "5.5427": {
+    "5.5427": {
         "name": "Filter Pump Mode",
         "device_class": None,
         "state_class": None,
@@ -1685,12 +1685,12 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "state_class": None,
         "coefficient": None,
         "unit_of_measurement": None,
-        "entity_type": "select",
-        "options": [
-            "7408",  # On
-            "7407",  # Off
-            "7427",  # Auto
-        ],
+        "entity_type": "button",
+        "actions": {
+            "On": "7408",
+            "Off": "7407",
+            "Auto": "7427",
+        },
     },
     "5.5434": {
         "name": "Out 2",
@@ -1698,12 +1698,12 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "state_class": None,
         "coefficient": None,
         "unit_of_measurement": None,
-        "entity_type": "select",
-        "options": [
-            "7408",  # On
-            "7407",  # Off
-            "7427",  # Auto
-        ],
+        "entity_type": "button",
+        "actions": {
+            "On": "7408",
+            "Off": "7407",
+            "Auto": "7427",
+        },
     },
     "5.5435": {
         "name": "Out 3",
@@ -1711,12 +1711,12 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "state_class": None,
         "coefficient": None,
         "unit_of_measurement": None,
-        "entity_type": "select",
-        "options": [
-            "7408",  # On
-            "7407",  # Off
-            "7427",  # Auto
-        ],
+        "entity_type": "button",
+        "actions": {
+            "On": "7408",
+            "Off": "7407",
+            "Auto": "7427",
+        },
     },
     "5.5436": {
         "name": "Out 4",
@@ -1724,12 +1724,174 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "state_class": None,
         "coefficient": None,
         "unit_of_measurement": None,
-        "entity_type": "select",
-        "options": [
-            "7408",  # On
-            "7407",  # Off
-            "7427",  # Auto
-        ],
+        "entity_type": "button",
+        "actions": {
+            "On": "7408",
+            "Off": "7407",
+            "Auto": "7427",
+        },
+    },
+    # Out 5-10 button IDs assumed sequential (not verified).
+    "5.5485": {
+        "name": "Out 5",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "button",
+        "actions": {
+            "On": "7408",
+            "Off": "7407",
+            "Auto": "7427",
+        },
+    },
+    "5.5519": {
+        "name": "Out 6",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "button",
+        "actions": {
+            "On": "7408",
+            "Off": "7407",
+            "Auto": "7427",
+        },
+    },
+    "5.5553": {
+        "name": "Out 7",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "button",
+        "actions": {
+            "On": "7408",
+            "Off": "7407",
+            "Auto": "7427",
+        },
+    },
+    "5.5587": {
+        "name": "Out 8",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "button",
+        "actions": {
+            "On": "7408",
+            "Off": "7407",
+            "Auto": "7427",
+        },
+    },
+    "5.5621": {
+        "name": "Out 9",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "button",
+        "actions": {
+            "On": "7408",
+            "Off": "7407",
+            "Auto": "7427",
+        },
+    },
+    "5.5655v": {
+        "name": "Out 10",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "button",
+        "actions": {
+            "On": "7408",
+            "Off": "7407",
+            "Auto": "7427",
+        },
+    },
+    # Availability sensors for the Out 1-10 buttons.
+    # Values: 7003 = Yes (available), 7004 = No (unavailable).
+    # Out 1 ID (5.6104) confirmed; Out 2-10 IDs assumed sequential.
+    "5.6104": {
+        "name": "Out 1 Available",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.6105": {
+        "name": "Out 2 Available",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.6106": {
+        "name": "Out 3 Available",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.6107": {
+        "name": "Out 4 Available",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.6108": {
+        "name": "Out 5 Available",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.6109": {
+        "name": "Out 6 Available",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.6110": {
+        "name": "Out 7 Available",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.6111": {
+        "name": "Out 8 Available",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.6112": {
+        "name": "Out 9 Available",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.6113": {
+        "name": "Out 10 Available",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
     },
     "5.6012": {
         "name": "pH Pump Status",
@@ -1787,10 +1949,11 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "sensor",
     },
-    # Additional sensors discovered via MQTT sniffer on PM5 Chlorine
-    # Pump status sensors — values: 7001 (Inactive) / 7002 (Active)
+    # On/off status sensors for the Out 1-10 buttons.
+    # Values: 7001 = On, 7002 = Off.
+    # Out 1 ID (5.6028) confirmed; Out 2-10 IDs assumed sequential.
     "5.6028": {
-        "name": "Cl Pump Status 2",
+        "name": "Out 1 Status",
         "device_class": None,
         "state_class": None,
         "coefficient": None,
@@ -1798,7 +1961,71 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "entity_type": "sensor",
     },
     "5.6029": {
-        "name": "Pump Status",
+        "name": "Out 2 Status",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.6030": {
+        "name": "Out 3 Status",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.6031": {
+        "name": "Out 4 Status",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.6058": {
+        "name": "Out 5 Status",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.6059": {
+        "name": "Out 6 Status",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.6060": {
+        "name": "Out 7 Status",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.6061": {
+        "name": "Out 8 Status",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.6062": {
+        "name": "Out 9 Status",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.6063": {
+        "name": "Out 10 Status",
         "device_class": None,
         "state_class": None,
         "coefficient": None,
@@ -1806,7 +2033,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "entity_type": "sensor",
     },
     "5.6039": {
-        "name": "Pump Status 2",
+        "name": "Heating Status",
         "device_class": None,
         "state_class": None,
         "coefficient": None,

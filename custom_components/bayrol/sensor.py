@@ -90,6 +90,10 @@ def _handle_sensor_value(sensor, value):
                 sensor._attr_native_value = "On"
             case 7002:
                 sensor._attr_native_value = "Off"
+            case 7003:
+                sensor._attr_native_value = "Yes"
+            case 7004:
+                sensor._attr_native_value = "No"
             case 7521:
                 sensor._attr_native_value = "Full"
             case 7522:

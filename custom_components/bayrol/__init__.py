@@ -16,7 +16,7 @@ from .mqtt_manager import BayrolMQTTManager
 
 _LOGGER = logging.getLogger(__name__)
 
-PLATFORMS = ["sensor", "select"]
+PLATFORMS = ["sensor", "select", "button"]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
