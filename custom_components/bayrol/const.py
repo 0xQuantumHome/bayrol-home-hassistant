@@ -1677,6 +1677,23 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "sensor",
     },
+    "5.5213": {
+        "name": "Heating Mode",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "select",
+        "options": [
+            "7256",  # Off
+            "7254",  # Auto
+        ],
+        # Topic-specific because Off and Auto are also used by other PM5 selects.
+        "mqtt_values": {
+            "7256": "Off",
+            "7254": "Auto",
+        },
+    },
     "5.5427": {
         "name": "Filter Pump Mode",
         "device_class": None,
