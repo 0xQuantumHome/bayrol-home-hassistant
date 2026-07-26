@@ -1,5 +1,6 @@
 """Constants for the Bayrol integration."""
 
+from homeassistant.components.number import NumberDeviceClass
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorStateClass,
@@ -2076,5 +2077,19 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "coefficient": None,
         "unit_of_measurement": None,
         "entity_type": "sensor",
+    },
+}
+
+# Writable number types for PM5 Chlorine
+NUMBER_TYPES_PM5_CHLORINE = {
+    "4.3118": {
+        "name": "Temperature Setpoint",
+        "device_class": NumberDeviceClass.TEMPERATURE,
+        "coefficient": 10,
+        "unit_of_measurement": "°C",
+        # Limits and step reported by the PM5 MQTT metadata.
+        "min_value": 3.0,
+        "max_value": 50.0,
+        "step": 0.5,
     },
 }
