@@ -1570,6 +1570,14 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": "°C",
         "entity_type": "sensor",
     },
+    "4.4071": {
+        "name": "Temperature T3",
+        "device_class": SensorDeviceClass.TEMPERATURE,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "coefficient": 10,
+        "unit_of_measurement": "°C",
+        "entity_type": "sensor",
+    },
     "4.4132": {
         "name": "Active Alarms",
         "device_class": None,
