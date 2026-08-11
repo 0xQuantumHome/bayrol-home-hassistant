@@ -29,11 +29,11 @@ def _handle_sensor_value(sensor, value):
     """Handle incoming sensor value."""
     # Check if this is a numeric sensor that should not be converted to strings
     is_numeric_sensor = (
-        sensor._sensor_config.get("state_class") is not None and
-        sensor._sensor_config.get("state_class") != "None" and
-        sensor._sensor_config.get("unit_of_measurement") is not None
+        sensor._sensor_config.get("state_class") is not None
+        and sensor._sensor_config.get("state_class") != "None"
+        and sensor._sensor_config.get("unit_of_measurement") is not None
     )
-    
+
     # If it's a numeric sensor, handle it directly without string conversion
     if is_numeric_sensor:
         if (
@@ -47,27 +47,33 @@ def _handle_sensor_value(sensor, value):
         # Handle string conversion for non-numeric sensors
         match value:
             case "19.18":
-                sensor._attr_native_value = "On"
+                sensor._attr_native_value = "No"
             case "19.19":
                 sensor._attr_native_value = "Off"
+            case "19.55":
+                sensor._attr_native_value = "OFF"
             case "19.95":
                 sensor._attr_native_value = "Filtration is off"
             case "19.96":
                 sensor._attr_native_value = "Filtration is on"
             case "19.105":
                 sensor._attr_native_value = "Water detected"
-            case "19.147":
-                sensor._attr_native_value = "Stopped (gas detected)"
-            case "19.195":
-                sensor._attr_native_value = "Auto"
-            case "19.115":
-                sensor._attr_native_value = "Auto Plus"
             case "19.106":
                 sensor._attr_native_value = "Constant production"
-            case "19.177":
-                sensor._attr_native_value = "On"
+            case "19.115":
+                sensor._attr_native_value = "Auto Plus"
+            case "19.142":
+                sensor._attr_native_value = "Open"
+            case "19.143":
+                sensor._attr_native_value = "Closed"
+            case "19.147":
+                sensor._attr_native_value = "Stopped (gas detected)"
             case "19.176":
                 sensor._attr_native_value = "Off"
+            case "19.177":
+                sensor._attr_native_value = "On"
+            case "19.195":
+                sensor._attr_native_value = "Auto"
             case "19.257":
                 sensor._attr_native_value = "Missing"
             case "19.258":
@@ -90,6 +96,10 @@ def _handle_sensor_value(sensor, value):
                 sensor._attr_native_value = "On"
             case 7002:
                 sensor._attr_native_value = "Off"
+            case 7003:
+                sensor._attr_native_value = "Yes"
+            case 7004:
+                sensor._attr_native_value = "No"
             case 7521:
                 sensor._attr_native_value = "Full"
             case 7522:
@@ -109,7 +119,9 @@ def _handle_sensor_value(sensor, value):
                     sensor._sensor_config.get("coefficient") is not None
                     and sensor._sensor_config["coefficient"] != -1
                 ):
-                    sensor._attr_native_value = value / sensor._sensor_config["coefficient"]
+                    sensor._attr_native_value = (
+                        value / sensor._sensor_config["coefficient"]
+                    )
                 elif sensor._sensor_config.get("coefficient") == -1:
                     sensor._attr_native_value = str(value)
                 else:
@@ -129,8 +141,8 @@ async def async_setup_entry(
     device_type = config_entry.data[BAYROL_DEVICE_TYPE]
     _LOGGER.debug("device_type: %s", device_type)
 
-    # Get the shared MQTT manager
-    mqtt_manager = hass.data[DOMAIN]["mqtt_manager"]
+    # Get the MQTT manager for this specific config entry
+    mqtt_manager = hass.data[DOMAIN][config_entry.entry_id]["mqtt_manager"]
 
     if device_type == "Automatic SALT":
         for sensor_type, sensor_config in SENSOR_TYPES_AUTOMATIC_SALT.items():
@@ -186,7 +198,7 @@ class BayrolSensor(SensorEntity):
         elif coefficient == 10:
             self._attr_suggested_display_precision = 1
         elif coefficient == 100:
-            self._attr_display_precision = 2
+            self._attr_suggested_display_precision = 2
         self._attr_native_value = None
 
     async def async_added_to_hass(self) -> None:
