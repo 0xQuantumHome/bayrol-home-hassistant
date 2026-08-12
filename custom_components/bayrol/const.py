@@ -1856,7 +1856,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
             "Auto": "7427",
         },
     },
-    "5.5655v": {
+    "5.5655": {
         "name": "Out 10",
         "device_class": None,
         "state_class": None,
