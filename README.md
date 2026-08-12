@@ -9,7 +9,8 @@ This custom integration allows you to monitor your Bayrol Pool Access device in 
 
 ## Features
 
-- 40+ entities (including pH, Redox, Salt levels, alarm levels, etc.)
+- 35 to 60+ entities per device, depending on the model (pH, Redox, Salt, chlorine, temperatures, alarm thresholds, pump and output states)
+- Writable settings as select entities (targets, alarm limits, modes) and number entities (temperature setpoints)
 - Real-time updates via MQTT connection
 
 ## Tested Devices
@@ -17,6 +18,177 @@ This custom integration allows you to monitor your Bayrol Pool Access device in 
 - Bayrol Automatic Salt 5 (AS5)
 - Bayrol Automatic Cl-pH
 - Pool Manager 5 Chlorine
+
+## Supported Entities
+
+The entities you get depend on the device type you select when adding the integration.
+The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug](#mqtt-debug)), the **Type** is the Home Assistant platform the entity is created on:
+
+- `sensor` – read only
+- `select` – writable, pick one of a fixed list of values
+- `number` – writable numeric value
+- `button` – sends a command to the device
+
+### Automatic SALT
+
+| MQTT ID | Name | Type | Unit |
+| --- | --- | --- | --- |
+| `4.2` | pH Target | select | — |
+| `4.3` | pH Alert Max | select | — |
+| `4.4` | pH Alert Min | select | — |
+| `4.5` | pH Dosing Control Time Interval | sensor | min |
+| `4.7` | Minutes Counter / Reset every hour | sensor | min |
+| `4.26` | Redox Alert Max | select | mV |
+| `4.27` | Redox Alert Min | select | mV |
+| `4.28` | Redox Target | select | mV |
+| `4.34` | Minimal Approach to Control the pH | sensor | — |
+| `4.37` | Start Delay | select | min |
+| `4.38` | pH Dosing Cycle | sensor | s |
+| `4.47` | pH Dosing Speed | sensor | % |
+| `4.51` | Polarity Reversal Times | sensor | min |
+| `4.66` | Minimum Redox Produktion | select | % |
+| `4.67` | SW Version | sensor | — |
+| `4.68` | SW Date | sensor | — |
+| `4.69` | Hourly Counter / Reset every 24h | sensor | h |
+| `4.82` | Redox | sensor | mV |
+| `4.89` | pH Dosing Rate | sensor | % |
+| `4.91` | Electrolyzer Production Rate | sensor | % |
+| `4.98` | Temperature | sensor | °C |
+| `4.100` | Salt | sensor | g/l |
+| `4.102` | Conductivity | sensor | mS/cm |
+| `4.104` | Electrolyzer Voltage | sensor | V |
+| `4.105` | Electrolyzer Current | sensor | A |
+| `4.107` | Battery Voltage | sensor | V |
+| `4.112` | Time Before Next Polarity Reversal | sensor | s |
+| `4.119` | Time Since Polarity Reversal | sensor | s |
+| `4.144` | Salt Preferred Level | select | g/l |
+| `4.182` | pH | sensor | — |
+| `5.3` | pH Production Rate | select | — |
+| `5.29` | Flow Pump Status | sensor | — |
+| `5.37` | Gas Sensor | sensor | — |
+| `5.40` | Salt electrolysis ON/OFF | select | — |
+| `5.41` | Redox Mode | select | — |
+| `5.80` | pH Minus Canister Status | sensor | — |
+| `5.83` | Cover | sensor | — |
+| `5.98` | Flow Contact | sensor | — |
+| `5.184` | Filtration mode | select | — |
+| `5.186` | Out 1 Mode | select | — |
+| `5.187` | Out 2 Mode | select | — |
+| `5.188` | Out 3 Mode | select | — |
+| `5.189` | Out 4 Mode | select | — |
+
+### Automatic Cl-pH
+
+| MQTT ID | Name | Type | Unit |
+| --- | --- | --- | --- |
+| `4.2` | pH Target | select | — |
+| `4.3` | pH Alert Max | select | — |
+| `4.4` | pH Alert Min | select | — |
+| `4.5` | pH Dosing Control Time Interval | sensor | min |
+| `4.7` | Minutes Counter / Reset every hour | sensor | min |
+| `4.26` | Redox Alert Max | select | mV |
+| `4.27` | Redox Alert Min | select | mV |
+| `4.28` | Redox Target | select | mV |
+| `4.34` | Minimal Approach to Control the pH | sensor | — |
+| `4.37` | Start Delay | select | min |
+| `4.38` | pH Dosing Cycle | sensor | s |
+| `4.47` | pH Dosing Speed | sensor | % |
+| `4.67` | SW Version | sensor | — |
+| `4.68` | SW Date | sensor | — |
+| `4.69` | Hourly Counter / Reset every 24h | sensor | h |
+| `4.82` | Redox | sensor | mV |
+| `4.89` | pH Dosing Rate | sensor | % |
+| `4.90` | Cl Dosing Rate | sensor | % |
+| `4.98` | Temperature | sensor | °C |
+| `4.102` | Conductivity | sensor | mS/cm |
+| `4.107` | Battery Voltage | sensor | V |
+| `4.182` | pH | sensor | — |
+| `5.3` | pH Production Rate | select | — |
+| `5.28` | Flow In Status | sensor | — |
+| `5.29` | Flow Pump Status | sensor | — |
+| `5.37` | Gas Sensor | sensor | — |
+| `5.80` | pH Minus Canister Status | sensor | — |
+| `5.83` | Cover | sensor | — |
+| `5.169` | Cl Canister Status | sensor | — |
+| `5.175` | Cl Adjust Dosing Amount | select | % |
+| `5.184` | Filtration mode | select | — |
+| `5.186` | Out 1 Mode | select | — |
+| `5.187` | Out 2 Mode | select | — |
+| `5.188` | Out 3 Mode | select | — |
+| `5.189` | Out 4 Mode | select | — |
+
+### PM5 Chlorine
+
+| MQTT ID | Name | Type | Unit |
+| --- | --- | --- | --- |
+| `4.3001` | pH Target | select | — |
+| `4.3002` | pH Alert Min | select | — |
+| `4.3003` | pH Alert Max | select | — |
+| `4.3017` | Setpoint Chlorine | select | mg/l |
+| `4.3018` | Lower Alarm threshold Chlorine | select | mg/l |
+| `4.3019` | Upper Alarm threshold Chlorine | select | mg/l |
+| `4.3049` | Setpoint Redox | select | mV |
+| `4.3051` | Redox Alert Min | select | mV |
+| `4.3053` | Redox Alert Max | select | mV |
+| `4.3118` | Heating Setpoint | number | °C |
+| `4.3120` | Solar Setpoint ¹ | number | °C |
+| `4.3376` | Whirlpool Setpoint ¹ | number | °C |
+| `4.4001` | pH | sensor | — |
+| `4.4008` | Cl | sensor | mg/l |
+| `4.4022` | Redox | sensor | mV |
+| `4.4033` | Water Temperature | sensor | °C |
+| `4.4047` | Battery | sensor | V |
+| `4.4069` | Air Temperature | sensor | °C |
+| `4.4071` | Temperature T3 | sensor | °C |
+| `4.4132` | Active Alarms | sensor | — |
+| `5.5427` | Filter Pump Mode | select | — |
+| `5.5433` | Out 1 ² | button | — |
+| `5.5434` | Out 2 ² | button | — |
+| `5.5435` | Out 3 ² | button | — |
+| `5.5436` | Out 4 ² | button | — |
+| `5.5485` | Out 5 ² | button | — |
+| `5.5519` | Out 6 ² | button | — |
+| `5.5553` | Out 7 ² | button | — |
+| `5.5587` | Out 8 ² | button | — |
+| `5.5621` | Out 9 ² | button | — |
+| `5.5655` | Out 10 ² | button | — |
+| `5.6012` | pH Pump Status | sensor | — |
+| `5.6013` | Cl Pump Status | sensor | — |
+| `5.6015` | Redox Pump Status | sensor | — |
+| `5.6028` | Out 1 Status | sensor | — |
+| `5.6029` | Out 2 Status | sensor | — |
+| `5.6030` | Out 3 Status | sensor | — |
+| `5.6031` | Out 4 Status | sensor | — |
+| `5.6039` | Heating Status | sensor | — |
+| `5.6058` | Out 5 Status | sensor | — |
+| `5.6059` | Out 6 Status | sensor | — |
+| `5.6060` | Out 7 Status | sensor | — |
+| `5.6061` | Out 8 Status | sensor | — |
+| `5.6062` | Out 9 Status | sensor | — |
+| `5.6063` | Out 10 Status | sensor | — |
+| `5.6064` | pH Canister Level | sensor | — |
+| `5.6065` | pH Status | sensor | — |
+| `5.6066` | Cl Canister Level | sensor | — |
+| `5.6067` | pH System Status | sensor | — |
+| `5.6069` | Redox Status | sensor | — |
+| `5.6071` | Cl System Status | sensor | — |
+| `5.6072` | Redox System Status | sensor | — |
+| `5.6104` | Out 1 Available | sensor | — |
+| `5.6105` | Out 2 Available | sensor | — |
+| `5.6106` | Out 3 Available | sensor | — |
+| `5.6107` | Out 4 Available | sensor | — |
+| `5.6108` | Out 5 Available | sensor | — |
+| `5.6109` | Out 6 Available | sensor | — |
+| `5.6110` | Out 7 Available | sensor | — |
+| `5.6111` | Out 8 Available | sensor | — |
+| `5.6112` | Out 9 Available | sensor | — |
+| `5.6113` | Out 10 Available | sensor | — |
+
+¹ **Solar Setpoint** and **Whirlpool Setpoint** are disabled by default, because not every PM5 installation has a solar or whirlpool circuit.
+To use them, go to Settings -> Devices & Services -> Bayrol -> Entities, open the entity and enable it. **Heating Setpoint** is enabled by default.
+
+² Each `Out` entry creates three button entities: *On*, *Off* and *Auto* (for example `Out 1 On`, `Out 1 Off`, `Out 1 Auto`).
+The current state of an output is reported by the matching `Out x Status` sensor, and `Out x Available` tells you whether the output is configured on the device.
 
 ## Installation
 
