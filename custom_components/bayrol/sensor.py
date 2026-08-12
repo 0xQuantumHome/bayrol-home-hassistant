@@ -146,7 +146,10 @@ async def async_setup_entry(
 
     if device_type == "Automatic SALT":
         for sensor_type, sensor_config in SENSOR_TYPES_AUTOMATIC_SALT.items():
-            if sensor_config.get("entity_type") != "select":  # Skip select entities
+            if sensor_config.get("entity_type") not in (
+                "select",
+                "number",
+            ):  # Skip select/number entities
                 topic = sensor_type
                 sensor = BayrolSensor(config_entry, sensor_type, sensor_config, topic)
                 mqtt_manager.subscribe(
@@ -155,7 +158,10 @@ async def async_setup_entry(
                 entities.append(sensor)
     elif device_type == "Automatic Cl-pH":
         for sensor_type, sensor_config in SENSOR_TYPES_AUTOMATIC_CL_PH.items():
-            if sensor_config.get("entity_type") != "select":  # Skip select entities
+            if sensor_config.get("entity_type") not in (
+                "select",
+                "number",
+            ):  # Skip select/number entities
                 topic = sensor_type
                 sensor = BayrolSensor(config_entry, sensor_type, sensor_config, topic)
                 mqtt_manager.subscribe(
@@ -164,7 +170,10 @@ async def async_setup_entry(
                 entities.append(sensor)
     elif device_type == "PM5 Chlorine":
         for sensor_type, sensor_config in SENSOR_TYPES_PM5_CHLORINE.items():
-            if sensor_config.get("entity_type") != "select":  # Skip select entities
+            if sensor_config.get("entity_type") not in (
+                "select",
+                "number",
+            ):  # Skip select/number entities
                 topic = sensor_type
                 sensor = BayrolSensor(config_entry, sensor_type, sensor_config, topic)
                 mqtt_manager.subscribe(

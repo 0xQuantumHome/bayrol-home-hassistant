@@ -1,5 +1,6 @@
 """Constants for the Bayrol integration."""
 
+from homeassistant.components.number import NumberDeviceClass, NumberMode
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorStateClass,
@@ -1619,6 +1620,44 @@ SENSOR_TYPES_PM5_CHLORINE = {
             505,
             500,
         ],
+    },
+    "4.3118": {
+        "name": "Heating Setpoint",
+        "device_class": NumberDeviceClass.TEMPERATURE,
+        "state_class": None,
+        "coefficient": 10,
+        "unit_of_measurement": "°C",
+        "entity_type": "number",
+        "min": 3.0,
+        "max": 50.0,
+        "step": 0.1,
+        "mode": NumberMode.BOX,
+    },
+    "4.3120": {
+        "name": "Solar Setpoint",
+        "device_class": NumberDeviceClass.TEMPERATURE,
+        "state_class": None,
+        "coefficient": 10,
+        "unit_of_measurement": "°C",
+        "entity_type": "number",
+        "min": 3.0,
+        "max": 50.0,
+        "step": 0.1,
+        "mode": NumberMode.BOX,
+        "enabled_default": False,
+    },
+    "4.3376": {
+        "name": "Whirlpool Setpoint",
+        "device_class": NumberDeviceClass.TEMPERATURE,
+        "state_class": None,
+        "coefficient": 10,
+        "unit_of_measurement": "°C",
+        "entity_type": "number",
+        "min": 3.0,
+        "max": 50.0,
+        "step": 0.1,
+        "mode": NumberMode.BOX,
+        "enabled_default": False,
     },
     "4.4001": {
         "name": "pH",
