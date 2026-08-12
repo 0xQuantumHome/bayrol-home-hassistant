@@ -59,8 +59,10 @@ class BayrolMQTTManager:
 
         if topic in self._subscribers:
             try:
-                payload = msg.payload
-                value = json.loads(payload)["v"]
+                parsed = json.loads(msg.payload)
+                # Alarm topics (8.2002/8.2003) send a dict without a "v" key;
+                # pass the whole payload through in that case.
+                value = parsed.get("v", parsed) if isinstance(parsed, dict) else parsed
                 # Schedule the callback in the event loop
                 self.hass.loop.call_soon_threadsafe(
                     lambda: self._subscribers[topic](value)
