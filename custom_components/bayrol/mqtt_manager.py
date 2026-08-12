@@ -41,8 +41,9 @@ class BayrolMQTTManager:
         """Handle the connection to the MQTT broker."""
         if rc == 0:
             _LOGGER.info("Connected to Bayrol MQTT broker with result code 0 (Success)")
-            # Resubscribe to all topics
-            for topic in self._subscribers:
+            # Resubscribe to all topics (copy: the dict may grow concurrently
+            # while platforms are still setting up)
+            for topic in list(self._subscribers):
                 client.subscribe(f"d02/{self.device_id}/v/{topic}")
                 client.publish(f"d02/{self.device_id}/g/{topic}")
         else:
