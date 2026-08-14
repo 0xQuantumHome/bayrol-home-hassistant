@@ -170,6 +170,7 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 | `5.6065` | pH Status | sensor | — |
 | `5.6066` | Cl Canister Level | sensor | — |
 | `5.6067` | pH System Status | sensor | — |
+| `5.6068` | Redox Canister Level | sensor | — |
 | `5.6069` | Redox Status | sensor | — |
 | `5.6071` | Cl System Status | sensor | — |
 | `5.6072` | Redox System Status | sensor | — |

@@ -2015,6 +2015,14 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "sensor",
     },
+    "5.6068": {
+        "name": "Redox Canister Level",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
     "5.6069": {
         "name": "Redox Status",
         "device_class": None,
