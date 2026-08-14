@@ -33,8 +33,16 @@ def _handle_select_value(select, value):
     _LOGGER.debug("Received MQTT value: %s for select: %s", value, select._attr_name)
     _LOGGER.debug("Available options: %s", select._attr_options)
 
-    # Try to find the value in the device-specific mappings and store the TEXT value
-    if select._config_entry.data[BAYROL_DEVICE_TYPE] == "PM5 Chlorine":
+    # Prefer a topic-specific mapping when one is configured.
+    if str(value) in select._mqtt_to_value:
+        select._attr_current_option = select._mqtt_to_value[str(value)]
+        _LOGGER.debug(
+            "Topic-specific mapping found: %s -> %s",
+            value,
+            select._attr_current_option,
+        )
+    # Otherwise use the device-specific mappings and store the TEXT value.
+    elif select._config_entry.data[BAYROL_DEVICE_TYPE] == "PM5 Chlorine":
         if str(value) in PM5_MQTT_TO_TEXT_MAPPING:
             select._attr_current_option = PM5_MQTT_TO_TEXT_MAPPING[str(value)]
             _LOGGER.debug(
@@ -173,14 +181,32 @@ class BayrolSelect(SelectEntity):
         # Convert display text back to MQTT value based on device type
         mqtt_value = None
 
-        if self._config_entry.data[BAYROL_DEVICE_TYPE] == "PM5 Chlorine":
+        # Prefer a topic-specific mapping when one is configured.
+        if self._mqtt_to_value:
+            value_to_mqtt = {
+                display_value: mapped_mqtt_value
+                for mapped_mqtt_value, display_value in self._mqtt_to_value.items()
+            }
+            mqtt_value = value_to_mqtt.get(option)
+            if mqtt_value is not None:
+                _LOGGER.debug(
+                    "Topic-specific text mapping: %s -> %s", option, mqtt_value
+                )
+
+        if (
+            mqtt_value is None
+            and self._config_entry.data[BAYROL_DEVICE_TYPE] == "PM5 Chlorine"
+        ):
             # Use PM5 specific mappings
             if option in PM5_TEXT_TO_MQTT_MAPPING:
                 mqtt_value = PM5_TEXT_TO_MQTT_MAPPING[option]
                 _LOGGER.debug("PM5 text mapping: %s -> %s", option, mqtt_value)
         elif (
-            self._config_entry.data[BAYROL_DEVICE_TYPE] == "Automatic Cl-pH"
-            or self._config_entry.data[BAYROL_DEVICE_TYPE] == "Automatic SALT"
+            mqtt_value is None
+            and (
+                self._config_entry.data[BAYROL_DEVICE_TYPE] == "Automatic Cl-pH"
+                or self._config_entry.data[BAYROL_DEVICE_TYPE] == "Automatic SALT"
+            )
         ):
             # Use Automatic specific mappings
             if option in AUTOMATIC_TEXT_TO_MQTT_MAPPING:
@@ -249,7 +275,10 @@ class BayrolSelect(SelectEntity):
             # Convert option to string for mapping lookup
             option_str = str(option)
 
-            if self._config_entry.data[BAYROL_DEVICE_TYPE] == "PM5 Chlorine":
+            if option_str in self._mqtt_to_value:
+                # Prefer a topic-specific mapping when one is configured
+                display_options.append(self._mqtt_to_value[option_str])
+            elif self._config_entry.data[BAYROL_DEVICE_TYPE] == "PM5 Chlorine":
                 # Use PM5 specific mappings
                 if option_str in PM5_MQTT_TO_TEXT_MAPPING:
                     display_options.append(PM5_MQTT_TO_TEXT_MAPPING[option_str])

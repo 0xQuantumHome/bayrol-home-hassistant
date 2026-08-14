@@ -141,6 +141,7 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 | `4.4069` | Air Temperature | sensor | °C |
 | `4.4071` | Temperature T3 | sensor | °C |
 | `4.4132` | Active Alarms | sensor | — |
+| `5.5213` | Heating Mode | select | — |
 | `5.5427` | Filter Pump Mode | select | — |
 | `5.5433` | Out 1 ² | button | — |
 | `5.5434` | Out 2 ² | button | — |

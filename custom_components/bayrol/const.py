@@ -1645,7 +1645,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "entity_type": "number",
         "min": 3.0,
         "max": 50.0,
-        "step": 0.1,
+        "step": 0.5,
         "mode": NumberMode.BOX,
     },
     "4.3120": {
@@ -1657,7 +1657,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "entity_type": "number",
         "min": 3.0,
         "max": 50.0,
-        "step": 0.1,
+        "step": 0.5,
         "mode": NumberMode.BOX,
         "enabled_default": False,
     },
@@ -1670,7 +1670,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "entity_type": "number",
         "min": 3.0,
         "max": 50.0,
-        "step": 0.1,
+        "step": 0.5,
         "mode": NumberMode.BOX,
         "enabled_default": False,
     },
@@ -1737,6 +1737,25 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "coefficient": 1,
         "unit_of_measurement": None,
         "entity_type": "sensor",
+    },
+    # Heating operating mode. Values verified on a live PM5 Chlorine
+    # by @tRoOlos (PR #43).
+    "5.5213": {
+        "name": "Heating Mode",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "select",
+        "options": [
+            "7256",  # Off
+            "7254",  # Auto
+        ],
+        # Topic-specific because Off and Auto are also used by other PM5 selects.
+        "mqtt_values": {
+            "7256": "Off",
+            "7254": "Auto",
+        },
     },
     "5.5427": {
         "name": "Filter Pump Mode",
