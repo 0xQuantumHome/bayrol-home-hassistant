@@ -191,6 +191,28 @@ To use them, go to Settings -> Devices & Services -> Bayrol -> Entities, open th
 ² Each `Out` entry creates three button entities: *On*, *Off* and *Auto* (for example `Out 1 On`, `Out 1 Off`, `Out 1 Auto`).
 The current state of an output is reported by the matching `Out x Status` sensor, and `Out x Available` tells you whether the output is configured on the device.
 
+### Filtering stale values when the pump is off
+
+When the filter pump is not running, water does not circulate past the probes, so pH, redox and temperature readings become physically stale. The device keeps sending the last measured values anyway - the native Bayrol app shows them the same way, and this integration deliberately mirrors that behavior. Marking those sensors as *unavailable* would also clash with Home Assistant semantics, where *unavailable* means "the data source is broken" (e.g. MQTT connection lost), not "the value is old".
+
+If you prefer gaps in your history instead of stale readings, you can build that per sensor with a standard [template sensor](https://www.home-assistant.io/integrations/template/), using the flow status entity this integration already provides. On Automatic SALT devices this is `Flow Contact` (the paddle switch on the FLOW input), which reports `On` while water is circulating and `Off` otherwise:
+
+```yaml
+template:
+  - sensor:
+      - name: "Pool pH (filtered)"
+        unique_id: pool_ph_filtered
+        state: >
+          {% if is_state('sensor.bayrol_DEVICEID_flow_contact', 'On') %}
+            {{ states('sensor.bayrol_DEVICEID_ph') }}
+          {% else %}
+            unknown
+          {% endif %}
+        availability: "{{ has_value('sensor.bayrol_DEVICEID_flow_contact') }}"
+```
+
+Replace `DEVICEID` with your device id - the exact entity ids are listed under Settings → Devices & Services → Bayrol. On devices without a `Flow Contact` entity, use `Flow Pump Status` instead and check which states it reports (Developer Tools → States). Repeat the pattern for redox and temperature if desired.
+
 ## Installation
 
 ### HACS (Recommended)
