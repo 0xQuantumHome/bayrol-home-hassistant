@@ -1750,11 +1750,13 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "options": [
             "7256",  # Off
             "7254",  # Auto
+            "7006",  # Inactive (heating not configured on the device)
         ],
         # Topic-specific because Off and Auto are also used by other PM5 selects.
         "mqtt_values": {
             "7256": "Off",
             "7254": "Auto",
+            "7006": "Inactive",
         },
     },
     "5.5427": {
