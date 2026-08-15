@@ -27,6 +27,12 @@ _LOGGER = logging.getLogger(__name__)
 
 def _handle_sensor_value(sensor, value):
     """Handle incoming sensor value."""
+    _LOGGER.debug(
+        "Received MQTT value: %s for sensor: %s (topic %s)",
+        value,
+        sensor._attr_name,
+        sensor._state_topic,
+    )
     # Check if this is a numeric sensor that should not be converted to strings
     is_numeric_sensor = (
         sensor._sensor_config.get("state_class") is not None
