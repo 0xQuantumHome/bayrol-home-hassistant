@@ -10,7 +10,7 @@ This custom integration allows you to monitor your Bayrol Pool Access device in 
 ## Features
 
 - 35 to 60+ entities per device, depending on the model (pH, Redox, Salt, chlorine, temperatures, alarm thresholds, pump and output states)
-- Writable settings as select entities (targets, alarm limits, modes), number entities (temperature setpoints), and switch entities (pH dosing and salt electrolysis)
+- Writable settings as select entities (discrete modes), number entities (targets, alarm limits, delays and temperature setpoints), and switch entities (pH dosing and salt electrolysis)
 - Current device messages, including pH, redox, salt, flow and cell warnings
 - Real-time updates via MQTT connection
 
@@ -36,20 +36,20 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 | MQTT ID | Name | Type | Unit |
 | --- | --- | --- | --- |
 | `10` | Messages | sensor | — |
-| `4.2` | pH Target | select | — |
-| `4.3` | pH Alert Max | select | — |
-| `4.4` | pH Alert Min | select | — |
+| `4.2` | pH Target | number | — |
+| `4.3` | pH Alert Max | number | — |
+| `4.4` | pH Alert Min | number | — |
 | `4.5` | pH Dosing Control Time Interval | sensor | min |
 | `4.7` | Minutes Counter / Reset every hour | sensor | min |
-| `4.26` | Redox Alert Max | select | mV |
-| `4.27` | Redox Alert Min | select | mV |
-| `4.28` | Redox Target | select | mV |
+| `4.26` | Redox Alert Max | number | mV |
+| `4.27` | Redox Alert Min | number | mV |
+| `4.28` | Redox Target | number | mV |
 | `4.34` | Minimal Approach to Control the pH | sensor | — |
-| `4.37` | Start Delay | select | min |
+| `4.37` | Start Delay | number | min |
 | `4.38` | pH Dosing Cycle | sensor | s |
 | `4.47` | pH Dosing Speed | sensor | % |
 | `4.51` | Polarity Reversal Times | sensor | min |
-| `4.66` | Minimum Redox Produktion | select | % |
+| `4.66` | Minimum Redox Produktion | number | % |
 | `4.67` | SW Version | sensor | — |
 | `4.68` | SW Date | sensor | — |
 | `4.69` | Hourly Counter / Reset every 24h | sensor | h |
@@ -64,7 +64,7 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 | `4.107` | Battery Voltage | sensor | V |
 | `4.112` | Time Before Next Polarity Reversal | sensor | s |
 | `4.119` | Time Since Polarity Reversal | sensor | s |
-| `4.144` | Salt Preferred Level | select | g/l |
+| `4.144` | Salt Preferred Level | number | g/l |
 | `4.182` | pH | sensor | — |
 | `5.3` | pH Production Rate | select | — |
 | `5.29` | Flow Pump Status | sensor | — |
@@ -86,16 +86,16 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 | MQTT ID | Name | Type | Unit |
 | --- | --- | --- | --- |
 | `10` | Messages | sensor | — |
-| `4.2` | pH Target | select | — |
-| `4.3` | pH Alert Max | select | — |
-| `4.4` | pH Alert Min | select | — |
+| `4.2` | pH Target | number | — |
+| `4.3` | pH Alert Max | number | — |
+| `4.4` | pH Alert Min | number | — |
 | `4.5` | pH Dosing Control Time Interval | sensor | min |
 | `4.7` | Minutes Counter / Reset every hour | sensor | min |
-| `4.26` | Redox Alert Max | select | mV |
-| `4.27` | Redox Alert Min | select | mV |
-| `4.28` | Redox Target | select | mV |
+| `4.26` | Redox Alert Max | number | mV |
+| `4.27` | Redox Alert Min | number | mV |
+| `4.28` | Redox Target | number | mV |
 | `4.34` | Minimal Approach to Control the pH | sensor | — |
-| `4.37` | Start Delay | select | min |
+| `4.37` | Start Delay | number | min |
 | `4.38` | pH Dosing Cycle | sensor | s |
 | `4.47` | pH Dosing Speed | sensor | % |
 | `4.67` | SW Version | sensor | — |
