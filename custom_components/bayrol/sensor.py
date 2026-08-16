@@ -129,6 +129,77 @@ MESSAGE_DEFINITIONS = {
     "8.36": ("ev_default_reset", "info", "Default reset"),
 }
 
+MESSAGE_TRANSLATIONS = {
+    "fr": {
+        "al_no_flow_bnc": "Pompe de filtration arrêtée (pas de débit)",
+        "al_no_flow_230V": (
+            "Pompe de filtration arrêtée "
+            "(pas de signal 230V~ de la pompe de filtration)"
+        ),
+        "al_start_delay": "Délai de démarrage",
+        "al_se_gas_detected": (
+            "Gaz détecté dans la cellule ; électrolyse de sel arrêtée"
+        ),
+        "al_se_err_setpoint_safe_mode": (
+            "Mesure redox trop basse depuis plusieurs jours ; "
+            "électrolyse en mode Safe"
+        ),
+        "al_se_err_setpoint_stopped": (
+            "Mesure redox trop basse depuis plusieurs jours ; électrolyse arrêtée"
+        ),
+        "al_se_err_setpoint": (
+            "Mesure redox trop basse depuis plusieurs jours"
+        ),
+        "al_se_err_rise_safe_mode": (
+            "La mesure redox n'augmente pas comme prévu ; "
+            "électrolyse en mode Safe"
+        ),
+        "al_se_err_rise_stopped": (
+            "La mesure redox n'augmente pas comme prévu ; électrolyse arrêtée"
+        ),
+        "al_se_err_rise": "La mesure redox n'augmente pas comme prévu",
+        "al_ph_dosing_stopped": (
+            "La mesure pH ne réagit pas comme prévu ; dosage pH arrêté"
+        ),
+        "al_mv_dosing_stopped": (
+            "La mesure redox ne réagit pas comme prévu ; dosage chlore arrêté"
+        ),
+        "al_ph_minus_empty": "Bidon de pH-Minus vide",
+        "al_ph_plus_empty": "Bidon de pH-Plus vide",
+        "al_salt_low_stopped": (
+            "Taux de sel trop bas ; électrolyse arrêtée"
+        ),
+        "al_salt_low_cell_protection": (
+            "Taux de sel trop faible ; production réduite (protection cellule)"
+        ),
+        "al_salt_low_pre_warning": "Taux de sel inférieur au taux préféré",
+        "al_se_production_low": "Production par électrolyse trop faible",
+        "al_ph_too_high": "Mesure pH trop haute",
+        "al_ph_too_low": "Mesure pH trop basse",
+        "al_se_t_low_stopped": (
+            "Température de l'eau trop basse ; électrolyse arrêtée"
+        ),
+        "al_se_t_low_stopped_user": (
+            "Température de l'eau basse ; électrolyse arrêtée"
+        ),
+        "al_se_t_low_cell_protection": (
+            "Température de l'eau trop basse ; "
+            "production réduite (protection cellule)"
+        ),
+        "al_mv_too_high": "Mesure redox trop haute",
+        "al_mv_too_low": "Mesure redox trop basse",
+        "al_se_no_current": "Pas de courant cellule",
+        "al_filtration_short": (
+            "Temps de filtration journalier potentiellement trop faible"
+        ),
+        "al_cl_empty": "Bidon de Chloriliquide vide",
+        "enjoy": "Tout va bien. Profitez de votre piscine !",
+        "ev_sw_reset": "Réinitialisation logicielle",
+        "ev_system_start": "Mise sous tension",
+        "ev_default_reset": "Réinitialisation des paramètres par défaut",
+    }
+}
+
 
 def _handle_sensor_value(sensor, value):
     """Handle incoming sensor value."""
@@ -296,7 +367,7 @@ async def async_setup_entry(
                 entities.append(sensor)
 
     if device_type in ("Automatic SALT", "Automatic Cl-pH"):
-        messages = BayrolMessagesSensor(config_entry)
+        messages = BayrolMessagesSensor(config_entry, hass.config.language)
         mqtt_manager.subscribe(MESSAGE_TOPIC, messages.handle_message_payload)
         entities.append(messages)
 
@@ -349,9 +420,15 @@ class BayrolMessagesSensor(SensorEntity):
     _attr_icon = "mdi:message-bulleted"
     _attr_should_poll = False
 
-    def __init__(self, config_entry: ConfigEntry) -> None:
+    def __init__(self, config_entry: ConfigEntry, language: str) -> None:
         """Initialize the messages sensor."""
         self._config_entry = config_entry
+        self._language = (
+            language.lower().replace("_", "-").split("-", maxsplit=1)[0]
+        )
+        self._message_language = (
+            self._language if self._language in MESSAGE_TRANSLATIONS else "en"
+        )
         self._attr_unique_id = f"{config_entry.entry_id}_{MESSAGE_TOPIC}"
         device_id = normalize_entity_id_part(config_entry.data[BAYROL_DEVICE_ID])
         self.entity_id = f"sensor.bayrol_{device_id}_messages"
@@ -412,8 +489,7 @@ class BayrolMessagesSensor(SensorEntity):
             code,
         )
 
-    @staticmethod
-    def _message_details(code: str) -> dict[str, str]:
+    def _message_details(self, code: str) -> dict[str, str]:
         """Return stable metadata for one PoolAccess message code."""
         definition = MESSAGE_DEFINITIONS.get(code)
         if definition is None:
@@ -421,10 +497,17 @@ class BayrolMessagesSensor(SensorEntity):
                 "code": code,
                 "key": f"unknown_{code.replace('.', '_')}",
                 "type": "unknown",
-                "message": f"Unknown Bayrol message ({code})",
+                "message": (
+                    f"Message Bayrol inconnu ({code})"
+                    if self._message_language == "fr"
+                    else f"Unknown Bayrol message ({code})"
+                ),
             }
 
         key, message_type, message = definition
+        message = MESSAGE_TRANSLATIONS.get(self._message_language, {}).get(
+            key, message
+        )
         return {
             "code": code,
             "key": key,
@@ -439,6 +522,7 @@ class BayrolMessagesSensor(SensorEntity):
         return {
             "message_codes": self._message_codes,
             "message_keys": message_keys,
+            "message_language": self._message_language,
             "messages": self._messages,
             # Compatibility alias for templates migrated from
             # bayrol-poolaccess-mqtt's MessagesSensor.
