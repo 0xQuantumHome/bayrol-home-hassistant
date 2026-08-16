@@ -762,6 +762,13 @@ SENSOR_TYPES_AUTOMATIC = {
             "19.12",  # 10x
         ],
     },
+    "5.42": {
+        "name": "pH Dosing ON/OFF",
+        "entity_type": "switch",
+        "on_value": "19.17",
+        "off_value": "19.18",
+        "icon": "mdi:beaker",
+    },
     "5.29": {
         "name": "Flow Pump Status",
         "device_class": None,
@@ -1005,15 +1012,10 @@ SENSOR_TYPES_AUTOMATIC_SALT = {
     },
     "5.40": {
         "name": "Salt electrolysis ON/OFF",
-        "device_class": None,
-        "state_class": None,
-        "coefficient": None,
-        "unit_of_measurement": None,
-        "entity_type": "select",
-        "options": [
-            "19.17",  # Yes
-            "19.18",  # No
-        ],
+        "entity_type": "switch",
+        "on_value": "19.17",
+        "off_value": "19.18",
+        "icon": "mdi:water-opacity",
     },
     "5.41": {
         "name": "Redox Mode",

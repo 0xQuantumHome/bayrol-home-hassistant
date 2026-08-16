@@ -10,7 +10,8 @@ This custom integration allows you to monitor your Bayrol Pool Access device in 
 ## Features
 
 - 35 to 60+ entities per device, depending on the model (pH, Redox, Salt, chlorine, temperatures, alarm thresholds, pump and output states)
-- Writable settings as select entities (targets, alarm limits, modes) and number entities (temperature setpoints)
+- Writable settings as select entities (targets, alarm limits, modes), number entities (temperature setpoints), and switch entities (pH dosing and salt electrolysis)
+- Current device messages, including pH, redox, salt, flow and cell warnings
 - Real-time updates via MQTT connection
 
 ## Tested Devices
@@ -27,12 +28,14 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 - `sensor` – read only
 - `select` – writable, pick one of a fixed list of values
 - `number` – writable numeric value
+- `switch` – writable on/off setting
 - `button` – sends a command to the device
 
 ### Automatic SALT
 
 | MQTT ID | Name | Type | Unit |
 | --- | --- | --- | --- |
+| `10` | Messages | sensor | — |
 | `4.2` | pH Target | select | — |
 | `4.3` | pH Alert Max | select | — |
 | `4.4` | pH Alert Min | select | — |
@@ -66,8 +69,9 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 | `5.3` | pH Production Rate | select | — |
 | `5.29` | Flow Pump Status | sensor | — |
 | `5.37` | Gas Sensor | sensor | — |
-| `5.40` | Salt electrolysis ON/OFF | select | — |
+| `5.40` | Salt electrolysis ON/OFF | switch | — |
 | `5.41` | Redox Mode | select | — |
+| `5.42` | pH Dosing ON/OFF | switch | — |
 | `5.80` | pH Minus Canister Status | sensor | — |
 | `5.83` | Cover | sensor | — |
 | `5.98` | Flow Contact | sensor | — |
@@ -81,6 +85,7 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 
 | MQTT ID | Name | Type | Unit |
 | --- | --- | --- | --- |
+| `10` | Messages | sensor | — |
 | `4.2` | pH Target | select | — |
 | `4.3` | pH Alert Max | select | — |
 | `4.4` | pH Alert Min | select | — |
@@ -107,6 +112,7 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 | `5.28` | Flow In Status | sensor | — |
 | `5.29` | Flow Pump Status | sensor | — |
 | `5.37` | Gas Sensor | sensor | — |
+| `5.42` | pH Dosing ON/OFF | switch | — |
 | `5.80` | pH Minus Canister Status | sensor | — |
 | `5.83` | Cover | sensor | — |
 | `5.169` | Cl Canister Status | sensor | — |
@@ -116,6 +122,15 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 | `5.187` | Out 2 Mode | select | — |
 | `5.188` | Out 3 Mode | select | — |
 | `5.189` | Out 4 Mode | select | — |
+
+Automatic SALT and Automatic Cl-pH devices also expose MQTT topic `10` as a
+`Messages` sensor. Its state contains the stable message keys used by the
+previous `bayrol-poolaccess-mqtt` bridge. The `message_codes` attribute keeps
+the raw Bayrol codes, `message_keys` exposes the stable keys for automations,
+and `data` provides each code, key, severity and readable message. Message text
+follows Home Assistant's configured system language (French and English are
+supported, with English as the fallback). This includes redox warnings such as
+`8.9` to `8.14`, as well as the other current messages shown by PoolAccess.
 
 ### PM5 Chlorine
 
