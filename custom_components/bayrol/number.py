@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import math
 
 import paho.mqtt.client as mqtt
 
@@ -24,6 +25,14 @@ from .const import (
 from .helpers import normalize_entity_id_part
 
 _LOGGER = logging.getLogger(__name__)
+
+
+def _value_matches_step(value: float, minimum: float, step: float) -> bool:
+    """Return whether value is aligned to step from the minimum value."""
+    if step <= 0:
+        return True
+    increments = (value - minimum) / step
+    return math.isclose(increments, round(increments), rel_tol=0.0, abs_tol=1e-6)
 
 
 def _sensor_types_for_device(device_type: str) -> dict:
@@ -110,11 +119,26 @@ class BayrolNumber(NumberEntity):
 
     async def async_set_native_value(self, value: float) -> None:
         """Encode the value, publish it and update the state optimistically."""
+        native_value = float(value)
+        minimum = float(self._attr_native_min_value)
+        maximum = float(self._attr_native_max_value)
+        step = float(self._attr_native_step)
+        if native_value < minimum or native_value > maximum:
+            raise HomeAssistantError(
+                f"Value {native_value} for {self._attr_name} must be between "
+                f"{minimum} and {maximum}"
+            )
+        if not _value_matches_step(native_value, minimum, step):
+            raise HomeAssistantError(
+                f"Value {native_value} for {self._attr_name} must use step {step} "
+                f"from {minimum}"
+            )
+
         coefficient = self._number_config.get("coefficient")
         if coefficient is not None and coefficient != -1:
-            mqtt_value = str(int(float(value) * coefficient + 0.5))
+            mqtt_value = str(int(native_value * coefficient + 0.5))
         else:
-            mqtt_value = str(int(float(value) + 0.5))
+            mqtt_value = str(int(native_value + 0.5))
 
         client = self.hass.data[DOMAIN][self._config_entry.entry_id][
             "mqtt_manager"
@@ -132,7 +156,7 @@ class BayrolNumber(NumberEntity):
         _LOGGER.debug("Published MQTT message: %s", payload)
 
         # Optimistic update; the device echo on the v/ topic confirms/corrects it.
-        self._attr_native_value = value
+        self._attr_native_value = native_value
         self.async_write_ha_state()
 
     @property
