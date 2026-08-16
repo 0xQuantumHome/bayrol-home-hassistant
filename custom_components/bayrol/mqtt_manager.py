@@ -88,12 +88,7 @@ class BayrolMQTTManager:
             # loop_write() from the Home Assistant thread while a manually
             # created loop_forever() thread may already be writing to the same
             # WebSocket buffer.
-            connect_result = self.client.connect_async(BAYROL_HOST, BAYROL_PORT, 60)
-            if connect_result != paho.MQTT_ERR_SUCCESS:
-                raise RuntimeError(
-                    f"MQTT connect_async() failed with result {connect_result}"
-                )
-
+            self.client.connect_async(BAYROL_HOST, BAYROL_PORT, 60)
             loop_result = self.client.loop_start()
             if loop_result != paho.MQTT_ERR_SUCCESS:
                 raise RuntimeError(
