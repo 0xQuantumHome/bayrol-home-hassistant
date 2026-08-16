@@ -127,10 +127,9 @@ Automatic SALT and Automatic Cl-pH devices also expose MQTT topic `10` as a
 `Messages` sensor. Its state contains the stable message keys used by the
 previous `bayrol-poolaccess-mqtt` bridge. The `message_codes` attribute keeps
 the raw Bayrol codes, `message_keys` exposes the stable keys for automations,
-and `messages` provides each code, key, severity and readable message. Message
-text follows Home Assistant's configured system language (French and English
-are supported, with English as the fallback). The legacy `data` attribute is
-kept as an alias for migrated templates. This includes redox warnings such as
+and `data` provides each code, key, severity and readable message. Message text
+follows Home Assistant's configured system language (French and English are
+supported, with English as the fallback). This includes redox warnings such as
 `8.9` to `8.14`, as well as the other current messages shown by PoolAccess.
 
 ### PM5 Chlorine

@@ -523,9 +523,6 @@ class BayrolMessagesSensor(SensorEntity):
             "message_codes": self._message_codes,
             "message_keys": message_keys,
             "message_language": self._message_language,
-            "messages": self._messages,
-            # Compatibility alias for templates migrated from
-            # bayrol-poolaccess-mqtt's MessagesSensor.
             "data": self._messages,
         }
 
