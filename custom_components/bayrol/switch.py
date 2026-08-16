@@ -115,7 +115,11 @@ class BayrolSwitch(SwitchEntity):
             f"d02/{self._config_entry.data[BAYROL_DEVICE_ID]}"
             f"/s/{self._state_topic}"
         )
-        payload = json.dumps({"t": self._state_topic, "v": float(value)})
+        # Integer codes (e.g. PM5 "7408") must be published without a decimal
+        # point to match the select wire format; Automatic codes like "19.17"
+        # stay floats.
+        numeric_value = int(value) if value.isdigit() else float(value)
+        payload = json.dumps({"t": self._state_topic, "v": numeric_value})
         mqtt_manager = self.hass.data[DOMAIN][self._config_entry.entry_id][
             "mqtt_manager"
         ]

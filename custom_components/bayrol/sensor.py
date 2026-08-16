@@ -480,14 +480,23 @@ class BayrolMessagesSensor(SensorEntity):
         except (TypeError, ValueError):
             return code
 
-        return next(
-            (
-                known_code
-                for known_code in MESSAGE_DEFINITIONS
-                if float(known_code) == numeric_code
-            ),
-            code,
-        )
+        # Numeric JSON payloads lose trailing zeros ("8.30" arrives as 8.3),
+        # so codes are matched by float value. This is unambiguous as long as
+        # no two known codes share the same float (e.g. "8.3" vs "8.30");
+        # currently codes 8.1 to 8.4 do not exist. Warn if that ever changes.
+        matches = [
+            known_code
+            for known_code in MESSAGE_DEFINITIONS
+            if float(known_code) == numeric_code
+        ]
+        if len(matches) > 1:
+            _LOGGER.warning(
+                "Ambiguous Bayrol message code %s matches %s; using %s",
+                code,
+                matches,
+                matches[0],
+            )
+        return matches[0] if matches else code
 
     def _message_details(self, code: str) -> dict[str, str]:
         """Return stable metadata for one PoolAccess message code."""
