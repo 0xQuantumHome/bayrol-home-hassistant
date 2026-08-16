@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-import logging
-import threading
-import paho.mqtt.client as paho
 import json
+import logging
+
+import paho.mqtt.client as paho
 
 from homeassistant.core import HomeAssistant
 
@@ -26,7 +26,6 @@ class BayrolMQTTManager:
         self.mqtt_user = mqtt_user
         self.device_id = device_id
         self.client = None
-        self.thread = None
         self._subscribers = {}
 
     def subscribe(self, topic: str, callback):
@@ -72,23 +71,51 @@ class BayrolMQTTManager:
         else:
             _LOGGER.warning("Received message for unknown topic: %s", msg.topic)
 
-    def _start(self):
-        """Start the MQTT manager."""
+    def start(self):
+        """Start Paho's threaded MQTT network loop."""
+        if self.client is not None:
+            return
+
         self.client = paho.Client(transport="websockets")
         self.client.username_pw_set(self.mqtt_user, "1")
         self.client.tls_set()
         self.client.on_connect = self._on_connect
         self.client.on_message = self._on_message
-        try:
-            self.client.connect(BAYROL_HOST, BAYROL_PORT, 60)
-            _LOGGER.debug("MQTT connect() called for %s:%s", BAYROL_HOST, BAYROL_PORT)
-        except Exception as e:
-            _LOGGER.error("MQTT connect() failed: %s", e)
-        self.client.loop_forever()
 
-    def start(self):
-        """Start the MQTT manager."""
-        _LOGGER.debug("Starting MQTT manager")
-        if not self.thread:
-            self.thread = threading.Thread(target=self._start, daemon=True)
-            self.thread.start()
+        try:
+            # loop_start() registers Paho's network thread internally. This is
+            # important because publish()/subscribe() otherwise call
+            # loop_write() from the Home Assistant thread while a manually
+            # created loop_forever() thread may already be writing to the same
+            # WebSocket buffer.
+            connect_result = self.client.connect_async(BAYROL_HOST, BAYROL_PORT, 60)
+            if connect_result != paho.MQTT_ERR_SUCCESS:
+                raise RuntimeError(
+                    f"MQTT connect_async() failed with result {connect_result}"
+                )
+
+            loop_result = self.client.loop_start()
+            if loop_result != paho.MQTT_ERR_SUCCESS:
+                raise RuntimeError(
+                    f"MQTT loop_start() failed with result {loop_result}"
+                )
+            _LOGGER.debug(
+                "MQTT connect_async()/loop_start() called for %s:%s",
+                BAYROL_HOST,
+                BAYROL_PORT,
+            )
+        except Exception as e:
+            _LOGGER.error("MQTT startup failed: %s", e)
+            self.client = None
+
+    def stop(self):
+        """Disconnect and stop Paho's network thread."""
+        if self.client is None:
+            return
+
+        client = self.client
+        self.client = None
+        try:
+            client.disconnect()
+        finally:
+            client.loop_stop()

@@ -31,7 +31,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         "data": entry.data,
         "mqtt_manager": mqtt_manager,
     }
-    mqtt_manager.start()
+    await hass.async_add_executor_job(mqtt_manager.start)
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
@@ -47,9 +47,6 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         entry_data = hass.data[DOMAIN].pop(entry.entry_id, {})
         mqtt_manager = entry_data.get("mqtt_manager")
         if mqtt_manager:
-            if mqtt_manager.client:
-                mqtt_manager.client.disconnect()
-            if mqtt_manager.thread:
-                mqtt_manager.thread.join(timeout=1.0)
+            await hass.async_add_executor_job(mqtt_manager.stop)
 
     return unload_ok
