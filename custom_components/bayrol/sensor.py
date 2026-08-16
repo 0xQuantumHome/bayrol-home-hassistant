@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from typing import Any
 
 from homeassistant.components.sensor import (
     SensorEntity,
@@ -23,6 +24,110 @@ from .const import (
 from .helpers import normalize_entity_id_part
 
 _LOGGER = logging.getLogger(__name__)
+
+MESSAGE_TOPIC = "10"
+
+# Topic 10 is the current message list shown by the PoolAccess application.
+# Keep the stable keys from bayrol-poolaccess-mqtt so existing automations can
+# continue to match them after migrating to this integration.
+MESSAGE_DEFINITIONS = {
+    "8.5": (
+        "al_no_flow_bnc",
+        "warning",
+        "Filter pump off (no signal from paddle switch)",
+    ),
+    "8.6": (
+        "al_no_flow_230V",
+        "warning",
+        "Filter pump off (no 230V signal from the filter pump)",
+    ),
+    "8.7": ("al_start_delay", "info", "Start delay"),
+    "8.8": (
+        "al_se_gas_detected",
+        "warning",
+        "Gas detected in the cell; salt electrolysis stopped",
+    ),
+    "8.9": (
+        "al_se_err_setpoint_safe_mode",
+        "warning",
+        "Redox has been too low for several days; salt electrolysis is in Safe Mode",
+    ),
+    "8.10": (
+        "al_se_err_setpoint_stopped",
+        "warning",
+        "Redox has been too low for several days; salt electrolysis stopped",
+    ),
+    "8.11": (
+        "al_se_err_setpoint",
+        "warning",
+        "Redox has been too low for several days",
+    ),
+    "8.12": (
+        "al_se_err_rise_safe_mode",
+        "warning",
+        "Redox is not rising as expected; salt electrolysis is in Safe Mode",
+    ),
+    "8.13": (
+        "al_se_err_rise_stopped",
+        "warning",
+        "Redox is not rising as expected; salt electrolysis stopped",
+    ),
+    "8.14": ("al_se_err_rise", "warning", "Redox is not rising as expected"),
+    "8.15": (
+        "al_ph_dosing_stopped",
+        "warning",
+        "pH is not reacting as expected; pH dosing stopped",
+    ),
+    "8.16": (
+        "al_mv_dosing_stopped",
+        "warning",
+        "Redox is not reacting as expected; chlorine dosing stopped",
+    ),
+    "8.17": ("al_ph_minus_empty", "warning", "pH-Minus canister empty"),
+    "8.18": ("al_ph_plus_empty", "warning", "pH-Plus canister empty"),
+    "8.19": (
+        "al_salt_low_stopped",
+        "warning",
+        "Salt level too low; salt electrolysis stopped",
+    ),
+    "8.20": (
+        "al_salt_low_cell_protection",
+        "warning",
+        "Salt level too low; cell protection mode is active",
+    ),
+    "8.21": ("al_salt_low_pre_warning", "warning", "Salt level below preferred level"),
+    "8.22": ("al_se_production_low", "warning", "Salt electrolysis production too low"),
+    "8.23": ("al_ph_too_high", "warning", "pH reading too high"),
+    "8.24": ("al_ph_too_low", "warning", "pH reading too low"),
+    "8.25": (
+        "al_se_t_low_stopped",
+        "warning",
+        "Water temperature too low; salt electrolysis stopped",
+    ),
+    "8.26": (
+        "al_se_t_low_stopped_user",
+        "warning",
+        "Water temperature low; salt electrolysis stopped",
+    ),
+    "8.27": (
+        "al_se_t_low_cell_protection",
+        "warning",
+        "Water temperature too low; cell protection mode is active",
+    ),
+    "8.28": ("al_mv_too_high", "warning", "Redox reading too high"),
+    "8.29": ("al_mv_too_low", "warning", "Redox reading too low"),
+    "8.30": ("al_se_no_current", "warning", "No cell current"),
+    "8.31": (
+        "al_filtration_short",
+        "warning",
+        "Daily filtration time may be too short",
+    ),
+    "8.32": ("al_cl_empty", "warning", "Chlorine canister empty"),
+    "8.33": ("enjoy", "success", "Everything is OK. Enjoy your pool!"),
+    "8.34": ("ev_sw_reset", "warning", "Software reset"),
+    "8.35": ("ev_system_start", "info", "Power on"),
+    "8.36": ("ev_default_reset", "info", "Default reset"),
+}
 
 
 def _handle_sensor_value(sensor, value):
@@ -155,7 +260,8 @@ async def async_setup_entry(
             if sensor_config.get("entity_type") not in (
                 "select",
                 "number",
-            ):  # Skip select/number entities
+                "switch",
+            ):  # Skip writable entities
                 topic = sensor_type
                 sensor = BayrolSensor(config_entry, sensor_type, sensor_config, topic)
                 mqtt_manager.subscribe(
@@ -167,7 +273,8 @@ async def async_setup_entry(
             if sensor_config.get("entity_type") not in (
                 "select",
                 "number",
-            ):  # Skip select/number entities
+                "switch",
+            ):  # Skip writable entities
                 topic = sensor_type
                 sensor = BayrolSensor(config_entry, sensor_type, sensor_config, topic)
                 mqtt_manager.subscribe(
@@ -179,13 +286,19 @@ async def async_setup_entry(
             if sensor_config.get("entity_type") not in (
                 "select",
                 "number",
-            ):  # Skip select/number entities
+                "switch",
+            ):  # Skip writable entities
                 topic = sensor_type
                 sensor = BayrolSensor(config_entry, sensor_type, sensor_config, topic)
                 mqtt_manager.subscribe(
                     topic, lambda v, s=sensor: _handle_sensor_value(s, v)
                 )
                 entities.append(sensor)
+
+    if device_type in ("Automatic SALT", "Automatic Cl-pH"):
+        messages = BayrolMessagesSensor(config_entry)
+        mqtt_manager.subscribe(MESSAGE_TOPIC, messages.handle_message_payload)
+        entities.append(messages)
 
     async_add_entities(entities)
 
@@ -223,6 +336,118 @@ class BayrolSensor(SensorEntity):
     @property
     def device_info(self) -> DeviceInfo:
         """Device info."""
+        return DeviceInfo(
+            identifiers={(DOMAIN, self._config_entry.data[BAYROL_DEVICE_ID])},
+            manufacturer="Bayrol",
+        )
+
+
+class BayrolMessagesSensor(SensorEntity):
+    """Current PoolAccess messages published on MQTT topic 10."""
+
+    _attr_name = "Messages"
+    _attr_icon = "mdi:message-bulleted"
+    _attr_should_poll = False
+
+    def __init__(self, config_entry: ConfigEntry) -> None:
+        """Initialize the messages sensor."""
+        self._config_entry = config_entry
+        self._attr_unique_id = f"{config_entry.entry_id}_{MESSAGE_TOPIC}"
+        device_id = normalize_entity_id_part(config_entry.data[BAYROL_DEVICE_ID])
+        self.entity_id = f"sensor.bayrol_{device_id}_messages"
+        self._attr_native_value = None
+        self._message_codes: list[str] = []
+        self._messages: list[dict[str, str]] = []
+
+    def handle_message_payload(self, payload: Any) -> None:
+        """Decode the current PoolAccess message list."""
+        if payload is None:
+            raw_codes = []
+        elif isinstance(payload, (list, tuple)):
+            raw_codes = list(payload)
+        elif isinstance(payload, (str, int, float)):
+            raw_codes = [payload]
+        else:
+            _LOGGER.warning(
+                "Unexpected MQTT payload type for Bayrol messages: %s",
+                type(payload),
+            )
+            return
+
+        self._message_codes = [self._normalize_message_code(code) for code in raw_codes]
+        self._messages = [self._message_details(code) for code in self._message_codes]
+
+        keys = [message["key"] for message in self._messages]
+        state = ", ".join(keys) if keys else "none"
+        self._attr_native_value = (
+            state if len(state) <= 255 else f"{len(keys)} messages"
+        )
+        self._attr_icon = (
+            "mdi:message-alert"
+            if any(message["type"] == "warning" for message in self._messages)
+            else "mdi:message-bulleted"
+        )
+
+        if self.hass is not None:
+            self.schedule_update_ha_state()
+
+    @staticmethod
+    def _normalize_message_code(value: Any) -> str:
+        """Normalize a message code, including numeric JSON values."""
+        code = str(value)
+        if code in MESSAGE_DEFINITIONS:
+            return code
+
+        try:
+            numeric_code = float(code)
+        except (TypeError, ValueError):
+            return code
+
+        return next(
+            (
+                known_code
+                for known_code in MESSAGE_DEFINITIONS
+                if float(known_code) == numeric_code
+            ),
+            code,
+        )
+
+    @staticmethod
+    def _message_details(code: str) -> dict[str, str]:
+        """Return stable metadata for one PoolAccess message code."""
+        definition = MESSAGE_DEFINITIONS.get(code)
+        if definition is None:
+            return {
+                "code": code,
+                "key": f"unknown_{code.replace('.', '_')}",
+                "type": "unknown",
+                "message": f"Unknown Bayrol message ({code})",
+            }
+
+        key, message_type, message = definition
+        return {
+            "code": code,
+            "key": key,
+            "type": message_type,
+            "message": message,
+        }
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        """Return the raw codes and decoded messages."""
+        message_keys = [message["key"] for message in self._messages]
+        return {
+            "message_codes": self._message_codes,
+            "message_keys": message_keys,
+            "messages": self._messages,
+            # Compatibility alias for templates migrated from
+            # bayrol-poolaccess-mqtt's MessagesSensor.
+            "data": self._messages,
+        }
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Return the Bayrol device information."""
         return DeviceInfo(
             identifiers={(DOMAIN, self._config_entry.data[BAYROL_DEVICE_ID])},
             manufacturer="Bayrol",
