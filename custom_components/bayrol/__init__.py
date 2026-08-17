@@ -23,6 +23,7 @@ PLATFORMS = [
     "button",
     "number",
     "binary_sensor",
+    "cover",
     "event",
 ]
 

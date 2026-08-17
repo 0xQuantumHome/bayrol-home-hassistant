@@ -26,6 +26,8 @@ The entities you get depend on the device type you select when adding the integr
 The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug](#mqtt-debug)), the **Type** is the Home Assistant platform the entity is created on:
 
 - `sensor` – read only
+- `binary_sensor` – read-only two-state input
+- `cover` – read-only pool-cover state (no controls are exposed)
 - `select` – writable, pick one of a fixed list of values
 - `number` – writable numeric value
 - `switch` – writable on/off setting
@@ -70,13 +72,13 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 | `4.343` | pH Dosed Today ³ | sensor | L |
 | `5.3` | pH Production Rate | select | — |
 | `5.29` | Flow Pump Status | sensor | — |
-| `5.37` | Gas Sensor | sensor | — |
+| `5.37` | Gas Sensor | binary_sensor | — |
 | `5.40` | Salt electrolysis ON/OFF | switch | — |
 | `5.41` | Redox Mode | select | — |
 | `5.42` | pH Dosing ON/OFF | switch | — |
 | `5.80` | pH Minus Canister Status | sensor | — |
-| `5.83` | Cover | sensor | — |
-| `5.98` | Flow Contact | sensor | — |
+| `5.83` | Cover | cover | — |
+| `5.98` | Flow Contact | binary_sensor | — |
 | `5.184` | Filtration mode | select | — |
 | `5.186` | Out 1 Mode | select | — |
 | `5.187` | Out 2 Mode | select | — |
@@ -117,10 +119,10 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 | `5.3` | pH Production Rate | select | — |
 | `5.28` | Flow In Status | sensor | — |
 | `5.29` | Flow Pump Status | sensor | — |
-| `5.37` | Gas Sensor | sensor | — |
+| `5.37` | Gas Sensor | binary_sensor | — |
 | `5.42` | pH Dosing ON/OFF | switch | — |
 | `5.80` | pH Minus Canister Status | sensor | — |
-| `5.83` | Cover | sensor | — |
+| `5.83` | Cover | cover | — |
 | `5.169` | Cl Canister Status | sensor | — |
 | `5.175` | Cl Adjust Dosing Amount | select | % |
 | `5.184` | Filtration mode | select | — |
@@ -280,7 +282,7 @@ The current state of an output is reported by the matching `Out x Status` sensor
 
 When the filter pump is not running, water does not circulate past the probes, so pH, redox and temperature readings become physically stale. The device keeps sending the last measured values anyway - the native Bayrol app shows them the same way, and this integration deliberately mirrors that behavior. Marking those sensors as *unavailable* would also clash with Home Assistant semantics, where *unavailable* means "the data source is broken" (e.g. MQTT connection lost), not "the value is old".
 
-If you prefer gaps in your history instead of stale readings, you can build that per sensor with a standard [template sensor](https://www.home-assistant.io/integrations/template/), using the flow status entity this integration already provides. On Automatic SALT devices this is `Flow Contact` (the paddle switch on the FLOW input), which reports `On` while water is circulating and `Off` otherwise:
+If you prefer gaps in your history instead of stale readings, you can build that per sensor with a standard [template sensor](https://www.home-assistant.io/integrations/template/), using the flow status entity this integration already provides. On Automatic SALT devices this is the `Flow Contact` binary sensor (the paddle switch on the FLOW input), which is `on` while water is circulating and `off` otherwise:
 
 ```yaml
 template:
@@ -288,12 +290,12 @@ template:
       - name: "Pool pH (filtered)"
         unique_id: pool_ph_filtered
         state: >
-          {% if is_state('sensor.bayrol_DEVICEID_flow_contact', 'On') %}
+          {% if is_state('binary_sensor.bayrol_DEVICEID_flow_contact', 'on') %}
             {{ states('sensor.bayrol_DEVICEID_ph') }}
           {% else %}
             unknown
           {% endif %}
-        availability: "{{ has_value('sensor.bayrol_DEVICEID_flow_contact') }}"
+        availability: "{{ has_value('binary_sensor.bayrol_DEVICEID_flow_contact') }}"
 ```
 
 Replace `DEVICEID` with your device id - the exact entity ids are listed under Settings → Devices & Services → Bayrol. On devices without a `Flow Contact` entity, use `Flow Pump Status` instead and check which states it reports (Developer Tools → States). Repeat the pattern for redox and temperature if desired.
@@ -360,5 +362,4 @@ Click the **CONNECT** button and you should see the messages floating in:
 ## Support
 
 If you encounter any issues or have questions, please open an issue on GitHub.
-
 
