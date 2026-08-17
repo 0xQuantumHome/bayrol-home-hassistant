@@ -66,6 +66,8 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 | `4.119` | Time Since Polarity Reversal | sensor | s |
 | `4.144` | Salt Preferred Level | number | g/l |
 | `4.182` | pH | sensor | — |
+| `4.340` | pH Dosing Time Today ³ | sensor | s |
+| `4.343` | pH Dosed Today ³ | sensor | L |
 | `5.3` | pH Production Rate | select | — |
 | `5.29` | Flow Pump Status | sensor | — |
 | `5.37` | Gas Sensor | sensor | — |
@@ -108,6 +110,10 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 | `4.102` | Conductivity | sensor | mS/cm |
 | `4.107` | Battery Voltage | sensor | V |
 | `4.182` | pH | sensor | — |
+| `4.335` | Cl Dosing Time Today ³ | sensor | s |
+| `4.339` | Cl Dosed Today ³ | sensor | L |
+| `4.340` | pH Dosing Time Today ³ | sensor | s |
+| `4.343` | pH Dosed Today ³ | sensor | L |
 | `5.3` | pH Production Rate | select | — |
 | `5.28` | Flow In Status | sensor | — |
 | `5.29` | Flow Pump Status | sensor | — |
@@ -122,6 +128,11 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 | `5.187` | Out 2 Mode | select | — |
 | `5.188` | Out 3 Mode | select | — |
 | `5.189` | Out 4 Mode | select | — |
+
+³ Daily dosing statistics require a recent PoolAccess firmware (the values were
+added with app version v1.0.147); devices on older firmware never publish
+these topics and the entities stay unknown. The dosing time sensors are
+disabled by default and can be enabled in the entity registry.
 
 Automatic SALT and Automatic Cl-pH devices also expose MQTT topic `10` as a
 `Messages` sensor. Its state shows the current messages as readable text in

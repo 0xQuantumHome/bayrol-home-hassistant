@@ -273,6 +273,25 @@ SENSOR_TYPES_AUTOMATIC = {
         "unit_of_measurement": "%",
         "entity_type": "sensor",
     },
+    # Daily dosing statistics, added with PoolAccess firmware v1.0.147.
+    # Devices on older firmware never publish these topics.
+    "4.343": {
+        "name": "pH Dosed Today",
+        "device_class": SensorDeviceClass.VOLUME,
+        "state_class": SensorStateClass.TOTAL_INCREASING,
+        "coefficient": 10,
+        "unit_of_measurement": "L",
+        "entity_type": "sensor",
+    },
+    "4.340": {
+        "name": "pH Dosing Time Today",
+        "device_class": SensorDeviceClass.DURATION,
+        "state_class": SensorStateClass.TOTAL_INCREASING,
+        "coefficient": 1,
+        "unit_of_measurement": "s",
+        "entity_type": "sensor",
+        "enabled_default": False,
+    },
     "4.98": {
         "name": "Temperature",
         "device_class": SensorDeviceClass.TEMPERATURE,
@@ -558,6 +577,25 @@ SENSOR_TYPES_AUTOMATIC_CL_PH = {
         "coefficient": 1,
         "unit_of_measurement": "%",
         "entity_type": "sensor",
+    },
+    # Daily dosing statistics, added with PoolAccess firmware v1.0.147.
+    # Devices on older firmware never publish these topics.
+    "4.339": {
+        "name": "Cl Dosed Today",
+        "device_class": SensorDeviceClass.VOLUME,
+        "state_class": SensorStateClass.TOTAL_INCREASING,
+        "coefficient": 10,
+        "unit_of_measurement": "L",
+        "entity_type": "sensor",
+    },
+    "4.335": {
+        "name": "Cl Dosing Time Today",
+        "device_class": SensorDeviceClass.DURATION,
+        "state_class": SensorStateClass.TOTAL_INCREASING,
+        "coefficient": 1,
+        "unit_of_measurement": "s",
+        "entity_type": "sensor",
+        "enabled_default": False,
     },
     "5.28": {
         "name": "Flow In Status",

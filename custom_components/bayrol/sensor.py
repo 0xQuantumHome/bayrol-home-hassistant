@@ -488,6 +488,9 @@ class BayrolSensor(SensorEntity):
         device_id = normalize_entity_id_part(config_entry.data[BAYROL_DEVICE_ID])
         name = normalize_entity_id_part(sensor_config.get("name", sensor_type))
         self.entity_id = f"sensor.bayrol_{device_id}_{name}"
+        self._attr_entity_registry_enabled_default = sensor_config.get(
+            "enabled_default", True
+        )
         coefficient = sensor_config.get("coefficient")
         if coefficient == 1:
             self._attr_suggested_display_precision = 0
