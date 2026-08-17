@@ -16,6 +16,10 @@ BAYROL_APP_LINK_CODE = "bayrol_app_link_code"
 BAYROL_HOST = "www.bayrol-poolaccess.de"
 BAYROL_PORT = 8083
 
+# Event fired on the HA bus for every newly appearing PoolAccess message
+# (topic 10). Data: entry_id, device_id, code, key, type, message.
+BAYROL_MESSAGE_EVENT = "bayrol_message"
+
 # Alarm topics — these send a dict payload (no "v" key) and optionally
 # require the integration to publish a quit acknowledgement.
 # Payload format: {"t":"8.2002","quit_required":bool,"is_quit":bool,"active":bool,"module":str}

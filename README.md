@@ -124,13 +124,71 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 | `5.189` | Out 4 Mode | select | — |
 
 Automatic SALT and Automatic Cl-pH devices also expose MQTT topic `10` as a
-`Messages` sensor. Its state contains the stable message keys used by the
-previous `bayrol-poolaccess-mqtt` bridge. The `message_codes` attribute keeps
-the raw Bayrol codes, `message_keys` exposes the stable keys for automations,
-and `data` provides each code, key, severity and readable message. Message text
-follows Home Assistant's configured system language (French and English are
-supported, with English as the fallback). This includes redox warnings such as
-`8.9` to `8.14`, as well as the other current messages shown by PoolAccess.
+`Messages` sensor. Its state shows the current messages as readable text in
+Home Assistant's configured system language (English, German, French, Spanish,
+Italian and Polish, with English as the fallback). The `message_codes`
+attribute keeps the raw Bayrol codes, `message_keys` exposes the stable keys
+used by the previous `bayrol-poolaccess-mqtt` bridge for automations, and
+`data` provides each code, key, severity and localized message. All 43 message
+codes of the current PoolAccess firmware (`8.5` to `8.47`) are decoded,
+including the new daily dosing limit and out-of-range alarms.
+
+Because the sensor only shows the *current* snapshot, every newly appearing
+message is additionally recorded in two ways:
+
+- a `bayrol_message` event is fired on the Home Assistant event bus
+  (data: `code`, `key`, `type`, `message`, `device_id`), ideal for automations
+  that react to specific message keys
+- an `event.bayrol_<device>_message` entity records each message with its own
+  timestamp, so the logbook keeps a full chronological message history
+
+On the first payload after a restart, all currently active messages are
+announced once.
+
+#### Displaying message history
+
+The `Messages` sensor always shows the current snapshot, so older messages
+disappear from its state. If you want a persistent list of the last messages
+on a dashboard, combine a small trigger-based template sensor with a Markdown
+card:
+
+<img width="500" alt="Message history card" src="images/message-history-card.png" />
+
+Add this to your `configuration.yaml` (or your template file):
+
+```yaml
+template:
+  - trigger:
+      - platform: event
+        event_type: bayrol_message
+    sensor:
+      - name: "Pool Message History"
+        unique_id: pool_message_history
+        state: "{{ trigger.event.data.message }}"
+        attributes:
+          history: >
+            {{ ([{'time': now().strftime('%b %d, %H:%M'),
+                  'type': trigger.event.data.type,
+                  'text': trigger.event.data.message}]
+                + (this.attributes.get('history') or []))[:10] }}
+```
+
+And this Markdown card to your dashboard:
+
+```yaml
+type: markdown
+title: Pool Messages
+content: >
+  {% set icons = {'warning': '⚠️', 'info': 'ℹ️', 'success': '✅'} %}
+  {% for m in state_attr('sensor.pool_message_history', 'history') or [] %}
+  {{ icons.get(m.type, '•') }} **{{ m.time }}** {{ m.text }}
+
+  {% endfor %}
+```
+
+The sensor keeps the last 10 messages (adjust the `[:10]` slice to taste) and
+survives Home Assistant restarts. Message texts follow your Home Assistant
+system language.
 
 ### PM5 Chlorine
 
