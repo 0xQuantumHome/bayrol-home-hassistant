@@ -37,12 +37,12 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 
 | MQTT ID | Name | Type | Unit |
 | --- | --- | --- | --- |
-| `10` | Messages | sensor | — |
 | `4.2` | pH Target | number | — |
 | `4.3` | pH Alert Max | number | — |
 | `4.4` | pH Alert Min | number | — |
 | `4.5` | pH Dosing Control Time Interval | sensor | min |
 | `4.7` | Minutes Counter / Reset every hour | sensor | min |
+| `4.10` | Pool Volume ⁴ | number | m³ |
 | `4.26` | Redox Alert Max | number | mV |
 | `4.27` | Redox Alert Min | number | mV |
 | `4.28` | Redox Target | number | mV |
@@ -58,43 +58,67 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 | `4.82` | Redox | sensor | mV |
 | `4.89` | pH Dosing Rate | sensor | % |
 | `4.91` | Electrolyzer Production Rate | sensor | % |
+| `4.92` | Start Delay Remaining | sensor | min |
 | `4.98` | Temperature | sensor | °C |
 | `4.100` | Salt | sensor | g/l |
 | `4.102` | Conductivity | sensor | mS/cm |
 | `4.104` | Electrolyzer Voltage | sensor | V |
 | `4.105` | Electrolyzer Current | sensor | A |
+| `4.106` | Cell Power | sensor | W |
 | `4.107` | Battery Voltage | sensor | V |
 | `4.112` | Time Before Next Polarity Reversal | sensor | s |
 | `4.119` | Time Since Polarity Reversal | sensor | s |
+| `4.138` | Salt To Add | sensor | kg |
 | `4.144` | Salt Preferred Level | number | g/l |
+| `4.145` | Recommended Min Daily Filtration Time | sensor | h |
+| `4.146` | Proposed Production Rate | sensor | % |
+| `4.147` | Estimated Daily Production | sensor | mg/l |
+| `4.176` | Power On Time | sensor | min |
 | `4.182` | pH | sensor | — |
+| `4.212` | Message Count | sensor | — |
+| `4.239` | WiFi RSSI | sensor | dBm |
+| `4.304` | Control Module Signal Strength | sensor | % |
 | `4.340` | pH Dosing Time Today ³ | sensor | s |
 | `4.343` | pH Dosed Today ³ | sensor | L |
+| `5.2` | Language | sensor | — |
 | `5.3` | pH Production Rate | select | — |
+| `5.9` | Alarm Sound | sensor | — |
+| `5.17` | SE Polarity | sensor | — |
 | `5.29` | Flow Pump Status | sensor | — |
 | `5.37` | Gas Sensor | binary_sensor | — |
 | `5.40` | Salt electrolysis ON/OFF | switch | — |
 | `5.41` | Redox Mode | select | — |
 | `5.42` | pH Dosing ON/OFF | switch | — |
+| `5.59` | pH Pause Runtime | sensor | — |
+| `5.60` | SE Pause Runtime | sensor | — |
 | `5.80` | pH Minus Canister Status | sensor | — |
 | `5.83` | Cover | cover | — |
 | `5.98` | Flow Contact | binary_sensor | — |
+| `5.147` | HW Version | sensor | — |
+| `5.152` | WiFi State | sensor | — |
+| `5.153` | WiFi Signal | sensor | — |
+| `5.173` | Device Type | sensor | — |
+| `5.174` | Web Portal State | sensor | — |
+| `5.178` | Detected Device Type | sensor | — |
 | `5.184` | Filtration mode | select | — |
 | `5.186` | Out 1 Mode | select | — |
 | `5.187` | Out 2 Mode | select | — |
 | `5.188` | Out 3 Mode | select | — |
 | `5.189` | Out 4 Mode | select | — |
+| `5.239` | SW Update Required | sensor | — |
+| `5.242` | Control Module Connection Quality | sensor | — |
+| `10` | Messages | sensor | — |
 
 ### Automatic Cl-pH
 
 | MQTT ID | Name | Type | Unit |
 | --- | --- | --- | --- |
-| `10` | Messages | sensor | — |
 | `4.2` | pH Target | number | — |
 | `4.3` | pH Alert Max | number | — |
 | `4.4` | pH Alert Min | number | — |
 | `4.5` | pH Dosing Control Time Interval | sensor | min |
 | `4.7` | Minutes Counter / Reset every hour | sensor | min |
+| `4.10` | Pool Volume ⁴ | number | m³ |
 | `4.26` | Redox Alert Max | number | mV |
 | `4.27` | Redox Alert Min | number | mV |
 | `4.28` | Redox Target | number | mV |
@@ -108,33 +132,56 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 | `4.82` | Redox | sensor | mV |
 | `4.89` | pH Dosing Rate | sensor | % |
 | `4.90` | Cl Dosing Rate | sensor | % |
+| `4.92` | Start Delay Remaining | sensor | min |
 | `4.98` | Temperature | sensor | °C |
 | `4.102` | Conductivity | sensor | mS/cm |
 | `4.107` | Battery Voltage | sensor | V |
+| `4.145` | Recommended Min Daily Filtration Time | sensor | h |
+| `4.176` | Power On Time | sensor | min |
 | `4.182` | pH | sensor | — |
+| `4.212` | Message Count | sensor | — |
+| `4.239` | WiFi RSSI | sensor | dBm |
+| `4.304` | Control Module Signal Strength | sensor | % |
 | `4.335` | Cl Dosing Time Today ³ | sensor | s |
 | `4.339` | Cl Dosed Today ³ | sensor | L |
 | `4.340` | pH Dosing Time Today ³ | sensor | s |
 | `4.343` | pH Dosed Today ³ | sensor | L |
+| `5.2` | Language | sensor | — |
 | `5.3` | pH Production Rate | select | — |
+| `5.9` | Alarm Sound | sensor | — |
 | `5.28` | Flow In Status | sensor | — |
 | `5.29` | Flow Pump Status | sensor | — |
 | `5.37` | Gas Sensor | binary_sensor | — |
 | `5.42` | pH Dosing ON/OFF | switch | — |
+| `5.59` | pH Pause Runtime | sensor | — |
 | `5.80` | pH Minus Canister Status | sensor | — |
 | `5.83` | Cover | cover | — |
+| `5.147` | HW Version | sensor | — |
+| `5.152` | WiFi State | sensor | — |
+| `5.153` | WiFi Signal | sensor | — |
 | `5.169` | Cl Canister Status | sensor | — |
+| `5.173` | Device Type | sensor | — |
+| `5.174` | Web Portal State | sensor | — |
 | `5.175` | Cl Adjust Dosing Amount | select | % |
+| `5.178` | Detected Device Type | sensor | — |
 | `5.184` | Filtration mode | select | — |
 | `5.186` | Out 1 Mode | select | — |
 | `5.187` | Out 2 Mode | select | — |
 | `5.188` | Out 3 Mode | select | — |
 | `5.189` | Out 4 Mode | select | — |
+| `5.239` | SW Update Required | sensor | — |
+| `5.242` | Control Module Connection Quality | sensor | — |
+| `10` | Messages | sensor | — |
 
 ³ Daily dosing statistics require a recent PoolAccess firmware (the values were
 added with app version v1.0.147); devices on older firmware never publish
 these topics and the entities stay unknown. The dosing time sensors are
 disabled by default and can be enabled in the entity registry.
+
+⁴ Pool Volume is the writable commissioning setting the device bases its
+dosing calculations on. It is disabled by default; enable it in the entity
+registry only if you really need to change it from Home Assistant. The device
+stores whole cubic meters.
 
 Automatic SALT and Automatic Cl-pH devices also expose MQTT topic `10` as a
 `Messages` sensor. Its state shows the current messages as readable text in

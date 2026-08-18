@@ -109,6 +109,83 @@ AUTOMATIC_TEXT_TO_MQTT_MAPPING = {
 # Reverse mapping for display text to MQTT values for PM5 devices
 PM5_TEXT_TO_MQTT_MAPPING = {v: k for k, v in PM5_MQTT_TO_TEXT_MAPPING.items()}
 
+
+# Decode table for Automatic enum values shown by read-only sensors.
+# Kept separate from AUTOMATIC_MQTT_TO_TEXT_MAPPING so the reverse
+# text-to-code mapping used by select entities is not affected
+# (e.g. "Yes"/"No" exist there with different codes).
+# Value sets and texts extracted from the official Bayrol web app (v1.0.147).
+AUTOMATIC_SENSOR_VALUE_TEXTS = {
+    # HW version (5.147)
+    "19.261": "1.0.0.0",
+    "19.262": "1.1.0.0",
+    # WiFi state (5.152)
+    "19.263": "WiFi switched off",
+    "19.264": "No WiFi network selected",
+    "19.265": "Initializing WiFi",
+    "19.266": "No reply from WiFi module",
+    "19.267": "Connecting WiFi",
+    "19.290": "WiFi or password error",
+    "19.291": "Connecting internet",
+    "19.292": "WiFi connected / no internet connection",
+    "19.293": "Initializing DNS",
+    "19.294": "DNS error",
+    "19.309": "Connected",
+    # WiFi signal (5.153)
+    "19.268": "Full",
+    "19.269": "Medium",
+    "19.270": "Weak",
+    # Device type (5.173 / 5.178)
+    "19.274": "Automatic SALT",
+    "19.275": "Automatic Cl-pH (T)",
+    "19.276": "Automatic Cl-pH",
+    "19.277": "Automatic pH",
+    "19.289": "Auto detect failed",
+    # Web portal state (5.174)
+    "19.281": "Not connected",
+    "19.282": "Waiting for WiFi connection",
+    "19.283": "Please enter Web portal PIN",
+    "19.284": "Connecting Web portal",
+    "19.285": "No reply from Web portal",
+    "19.286": "Device registration",
+    "19.295": "No connection | PIN? | Registration?",
+    "19.296": "Registration successful",
+    "19.297": "Initializing MQTT",
+    "19.298": "MQTT configuration failed",
+    "19.299": "Connecting MQTT",
+    "19.300": "MQTT connection failed",
+    "19.301": "MQTT connected",
+    "19.307": "Sending data",
+    "19.308": "Retry sending data",
+    "19.310": "Connected",
+    # SW update required (5.239)
+    "19.336": "Yes",
+    "19.337": "No",
+    # Control Module connection quality (5.242)
+    "19.331": "No connection",
+    "19.332": "Unstable",
+    "19.333": "Good",
+    "19.334": "Optimal",
+    # Language (5.2)
+    "19.19": "Deutsch",
+    "19.20": "English",
+    "19.21": "Francais",
+    "19.22": "Espanol",
+    "19.23": "Italiano",
+    "19.25": "Polski",
+    # Salt electrolysis polarity (5.17); 19.55 "OFF" decodes via match case
+    "19.89": "A",
+    "19.90": "B",
+    # Pause runtime (5.59 / 5.60)
+    "19.123": "1 hour",
+    "19.124": "2 hours",
+    "19.125": "4 hours",
+    "19.126": "8 hours",
+    "19.127": "12 hours",
+    "19.128": "24 hours",
+    "19.129": "48 hours",
+}
+
 # Common sensor types for Automatic devices
 SENSOR_TYPES_AUTOMATIC = {
     "4.2": {
@@ -318,6 +395,157 @@ SENSOR_TYPES_AUTOMATIC = {
         "unit_of_measurement": "V",
         "entity_type": "sensor",
     },
+    # Writable commissioning setting. Bayrol warns that many functions
+    # adjust to the pool volume, therefore disabled by default.
+    "4.10": {
+        "name": "Pool Volume",
+        "device_class": NumberDeviceClass.VOLUME,
+        "state_class": None,
+        "coefficient": 1,
+        "unit_of_measurement": "m³",
+        "entity_type": "number",
+        "min": 1.0,
+        "max": 500.0,
+        "step": 1.0,
+        "mode": NumberMode.BOX,
+        "enabled_default": False,
+    },
+    "4.92": {
+        "name": "Start Delay Remaining",
+        "device_class": SensorDeviceClass.DURATION,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "coefficient": 1,
+        "unit_of_measurement": "min",
+        "entity_type": "sensor",
+    },
+    "4.145": {
+        "name": "Recommended Min Daily Filtration Time",
+        "device_class": SensorDeviceClass.DURATION,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "coefficient": 1,
+        "unit_of_measurement": "h",
+        "entity_type": "sensor",
+    },
+    "4.176": {
+        "name": "Power On Time",
+        "device_class": SensorDeviceClass.DURATION,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "coefficient": 1,
+        "unit_of_measurement": "min",
+        "entity_type": "sensor",
+    },
+    "4.212": {
+        "name": "Message Count",
+        "device_class": None,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "coefficient": 1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "4.239": {
+        "name": "WiFi RSSI",
+        "device_class": SensorDeviceClass.SIGNAL_STRENGTH,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "coefficient": 1,
+        "unit_of_measurement": "dBm",
+        "entity_type": "sensor",
+    },
+    "4.304": {
+        "name": "Control Module Signal Strength",
+        "device_class": None,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "coefficient": 1,
+        "unit_of_measurement": "%",
+        "entity_type": "sensor",
+    },
+    "5.2": {
+        "name": "Language",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.9": {
+        "name": "Alarm Sound",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.59": {
+        "name": "pH Pause Runtime",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.147": {
+        "name": "HW Version",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.152": {
+        "name": "WiFi State",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.153": {
+        "name": "WiFi Signal",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.173": {
+        "name": "Device Type",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.174": {
+        "name": "Web Portal State",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.178": {
+        "name": "Detected Device Type",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.239": {
+        "name": "SW Update Required",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.242": {
+        "name": "Control Module Connection Quality",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
     "4.182": {
         "name": "pH",
         "device_class": SensorDeviceClass.PH,
@@ -464,6 +692,54 @@ SENSOR_TYPES_AUTOMATIC = {
 # Additional sensor types for Automatic SALT
 SENSOR_TYPES_AUTOMATIC_SALT = {
     **SENSOR_TYPES_AUTOMATIC,  # Include all base sensors
+    "4.106": {
+        "name": "Cell Power",
+        "device_class": SensorDeviceClass.POWER,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "coefficient": 1,
+        "unit_of_measurement": "W",
+        "entity_type": "sensor",
+    },
+    "4.138": {
+        "name": "Salt To Add",
+        "device_class": SensorDeviceClass.WEIGHT,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "coefficient": 10,
+        "unit_of_measurement": "kg",
+        "entity_type": "sensor",
+    },
+    "4.146": {
+        "name": "Proposed Production Rate",
+        "device_class": None,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "coefficient": 1,
+        "unit_of_measurement": "%",
+        "entity_type": "sensor",
+    },
+    "4.147": {
+        "name": "Estimated Daily Production",
+        "device_class": None,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "coefficient": 10,
+        "unit_of_measurement": "mg/l",
+        "entity_type": "sensor",
+    },
+    "5.17": {
+        "name": "SE Polarity",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.60": {
+        "name": "SE Pause Runtime",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
     "4.51": {
         "name": "Polarity Reversal Times",
         "device_class": None,

@@ -14,6 +14,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.device_registry import DeviceInfo
 
 from .const import (
+    AUTOMATIC_SENSOR_VALUE_TEXTS,
     DOMAIN,
     SENSOR_TYPES_AUTOMATIC_SALT,
     SENSOR_TYPES_AUTOMATIC_CL_PH,
@@ -322,6 +323,12 @@ def _handle_sensor_value(sensor, value):
             sensor._attr_native_value = value / sensor._sensor_config["coefficient"]
         else:
             sensor._attr_native_value = value
+    elif str(value) in AUTOMATIC_SENSOR_VALUE_TEXTS:
+        # Declarative decode table for Automatic enum values
+        sensor._attr_native_value = AUTOMATIC_SENSOR_VALUE_TEXTS[str(value)]
+        if sensor.hass is not None:
+            sensor.schedule_update_ha_state()
+        return
     else:
         # Handle string conversion for non-numeric sensors
         match value:
