@@ -9,14 +9,27 @@ This custom integration allows you to monitor your Bayrol Pool Access device in 
 
 ## Features
 
-- 35 to 60+ entities per device, depending on the model (pH, Redox, Salt, chlorine, temperatures, alarm thresholds, pump and output states)
-- Writable settings as select entities (discrete modes), number entities (targets, alarm limits, delays and temperature setpoints), and switch entities (pH dosing and salt electrolysis)
-- Current device messages, including pH, redox, salt, flow and cell warnings
-- Real-time updates via MQTT connection
+- Water values (pH, redox, chlorine, salt, temperatures), electrolysis and
+  dosing details, canister levels, pump and output states, flow and cover
+  states, and connectivity diagnostics (WiFi, web portal, Control Module):
+
+  | Device | Entities |
+  | --- | --- |
+  | Automatic SALT | 75 |
+  | Automatic Cl-pH | 63 |
+  | Pool Manager 5 Chlorine | 87 |
+- Native entity types: read-only values as `sensor` and `binary_sensor`, the
+  pool cover as a read-only `cover`, and writable settings as `select`
+  (discrete modes), `number` (targets, alarm limits, temperature setpoints)
+  and `switch` (pH dosing, salt electrolysis) entities
+- Device messages decoded to readable text in six languages (EN, DE, FR, ES,
+  IT, PL), with a message event entity for a full logbook history and a
+  `bayrol_message` bus event for automations
+- Real-time updates via MQTT connection to the Bayrol cloud
 
 ## Tested Devices
 
-- Bayrol Automatic Salt 5 (AS5)
+- Bayrol Automatic Salt 5 (AS5) and Salt 7 (AS7)
 - Bayrol Automatic Cl-pH
 - Pool Manager 5 Chlorine
 
