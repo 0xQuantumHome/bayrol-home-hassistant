@@ -1,0 +1,33 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Attach ZIP to release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set version in manifest
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          jq --arg v "$VERSION" '.version = $v' \
+            custom_components/bayrol/manifest.json > /tmp/manifest.json
+          mv /tmp/manifest.json custom_components/bayrol/manifest.json
+
+      - name: Create ZIP archive
+        run: |
+          cd custom_components/bayrol
+          zip -r ../../bayrol.zip .
+
+      - name: Upload ZIP to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: bayrol.zip
