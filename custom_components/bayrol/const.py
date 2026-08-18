@@ -1,5 +1,7 @@
 """Constants for the Bayrol integration."""
 
+from homeassistant.components.binary_sensor import BinarySensorDeviceClass
+from homeassistant.components.cover import CoverDeviceClass
 from homeassistant.components.number import NumberDeviceClass, NumberMode
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -361,11 +363,13 @@ SENSOR_TYPES_AUTOMATIC = {
     },
     "5.37": {
         "name": "Gas Sensor",
-        "device_class": None,
+        "device_class": BinarySensorDeviceClass.GAS,
         "state_class": None,
         "coefficient": None,
         "unit_of_measurement": None,
-        "entity_type": "sensor",
+        "entity_type": "binary_sensor",
+        "on_values": ("19.104",),  # Gas detected
+        "off_values": ("19.105",),  # Water detected
     },
     "5.80": {
         "name": "pH Minus Canister Status",
@@ -377,11 +381,14 @@ SENSOR_TYPES_AUTOMATIC = {
     },
     "5.83": {
         "name": "Cover",
-        "device_class": None,
+        "device_class": CoverDeviceClass.SHUTTER,
         "state_class": None,
         "coefficient": None,
         "unit_of_measurement": None,
-        "entity_type": "sensor",
+        "entity_type": "cover",
+        "open_values": ("19.142",),
+        "closed_values": ("19.143",),
+        "unknown_values": ("19.55",),  # Cover status is disabled
     },
     "5.184": {
         "name": "Filtration mode",
@@ -559,11 +566,13 @@ SENSOR_TYPES_AUTOMATIC_SALT = {
     },
     "5.98": {
         "name": "Flow Contact",
-        "device_class": None,
+        "device_class": BinarySensorDeviceClass.RUNNING,
         "state_class": None,
         "coefficient": None,
         "unit_of_measurement": None,
-        "entity_type": "sensor",
+        "entity_type": "binary_sensor",
+        "on_values": ("19.177",),  # Contact closed: water is flowing
+        "off_values": ("19.176",),  # Contact open: no water flow
     },
 }
 

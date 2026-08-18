@@ -429,7 +429,9 @@ async def async_setup_entry(
                 "select",
                 "number",
                 "switch",
-            ):  # Skip writable entities
+                "binary_sensor",
+                "cover",
+            ):  # Skip entities exposed by another platform
                 topic = sensor_type
                 sensor = BayrolSensor(config_entry, sensor_type, sensor_config, topic)
                 mqtt_manager.subscribe(
@@ -442,7 +444,9 @@ async def async_setup_entry(
                 "select",
                 "number",
                 "switch",
-            ):  # Skip writable entities
+                "binary_sensor",
+                "cover",
+            ):  # Skip entities exposed by another platform
                 topic = sensor_type
                 sensor = BayrolSensor(config_entry, sensor_type, sensor_config, topic)
                 mqtt_manager.subscribe(
@@ -455,7 +459,9 @@ async def async_setup_entry(
                 "select",
                 "number",
                 "switch",
-            ):  # Skip writable entities
+                "binary_sensor",
+                "cover",
+            ):  # Skip entities exposed by another platform
                 topic = sensor_type
                 sensor = BayrolSensor(config_entry, sensor_type, sensor_config, topic)
                 mqtt_manager.subscribe(
