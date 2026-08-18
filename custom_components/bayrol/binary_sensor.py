@@ -95,21 +95,25 @@ class BayrolStateBinarySensor(BinarySensorEntity):
 
     def handle_state_payload(self, payload: Any) -> None:
         """Process a two-state MQTT payload without guessing unknown values."""
-        self._raw_value = payload
-        value = str(payload)
+        # Broker payloads are untrusted; cap what we keep and log.
+        value = str(payload)[:64]
+        previous_raw = self._raw_value
+        self._raw_value = value
 
         if value in self._sensor_config.get("on_values", ()):
             self._attr_is_on = True
         elif value in self._sensor_config.get("off_values", ()):
             self._attr_is_on = False
         else:
-            self._attr_is_on = None
-            _LOGGER.warning(
-                "Unexpected value %r for binary sensor %s (topic %s)",
-                payload,
-                self._attr_name,
-                self._state_topic,
-            )
+            # Keep the last known state instead of dropping to unknown on a
+            # single malformed message; warn once per distinct value.
+            if value != previous_raw:
+                _LOGGER.warning(
+                    "Unexpected value %r for binary sensor %s (topic %s)",
+                    value,
+                    self._attr_name,
+                    self._state_topic,
+                )
 
         if self.hass is not None:
             self.schedule_update_ha_state()
