@@ -1,5 +1,7 @@
 {
-    "name": "Bayrol",
-    "homeassistant": "2025.1.0",
-    "render_readme": true
-  }
+  "name": "Bayrol",
+  "homeassistant": "2025.1.0",
+  "render_readme": true,
+  "zip_release": true,
+  "filename": "bayrol.zip"
+}
