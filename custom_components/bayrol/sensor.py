@@ -382,6 +382,15 @@ def _handle_sensor_value(sensor, value):
                 sensor._attr_native_value = "On"
             case 7002:
                 sensor._attr_native_value = "Off"
+            # Filter pump current speed (5.6083)
+            case 7239:
+                sensor._attr_native_value = "Off"
+            case 7240:
+                sensor._attr_native_value = "Normal"
+            case 7241:
+                sensor._attr_native_value = "Eco"
+            case 7242:
+                sensor._attr_native_value = "High"
             case 7003:
                 sensor._attr_native_value = "Yes"
             case 7004:

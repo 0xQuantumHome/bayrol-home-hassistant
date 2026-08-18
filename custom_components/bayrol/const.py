@@ -581,6 +581,14 @@ SENSOR_TYPES_AUTOMATIC = {
         "off_value": "19.18",
         "icon": "mdi:beaker",
     },
+    # Aggregated flow input state (e_enum_var_flow_in_status).
+    "5.275": {
+        "name": "Flow In Status",
+        "device_class": BinarySensorDeviceClass.RUNNING,
+        "entity_type": "binary_sensor",
+        "on_values": ("19.355",),  # Flow in ON
+        "off_values": ("19.354",),  # Flow in OFF
+    },
     "5.29": {
         "name": "Flow Pump Status",
         "device_class": None,
@@ -882,13 +890,14 @@ SENSOR_TYPES_AUTOMATIC_CL_PH = {
         "entity_type": "sensor",
         "enabled_default": False,
     },
+    # Raw 230V~ flow input signal from the filter pump. Was previously
+    # (misleadingly) named "Flow In Status"; the aggregated status is 5.275.
     "5.28": {
-        "name": "Flow In Status",
-        "device_class": None,
-        "state_class": None,
-        "coefficient": None,
-        "unit_of_measurement": None,
-        "entity_type": "sensor",
+        "name": "Flow In 230V",
+        "device_class": BinarySensorDeviceClass.RUNNING,
+        "entity_type": "binary_sensor",
+        "on_values": ("19.177",),  # Contact closed: 230V signal present
+        "off_values": ("19.176",),  # Contact open: no signal
     },
     "5.175": {
         "name": "Cl Adjust Dosing Amount",
@@ -1962,6 +1971,19 @@ SENSOR_TYPES_PM5_CHLORINE = {
     },
     "5.6063": {
         "name": "Out 10 Status",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    # Current speed of the variable-speed filter pump. Values 7239-7242
+    # (Off/Normal/Eco/High) are decoded in sensor.py; they are deliberately
+    # NOT in PM5_MQTT_TO_TEXT_MAPPING because Eco/Normal/High exist there
+    # with different codes for the Filter Pump Mode select and would corrupt
+    # its reverse text-to-code mapping.
+    "5.6083": {
+        "name": "Filter Pump Current Speed",
         "device_class": None,
         "state_class": None,
         "coefficient": None,

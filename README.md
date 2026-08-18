@@ -107,6 +107,7 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 | `5.189` | Out 4 Mode | select | — |
 | `5.239` | SW Update Required | sensor | — |
 | `5.242` | Control Module Connection Quality | sensor | — |
+| `5.275` | Flow In Status | binary_sensor | — |
 | `10` | Messages | sensor | — |
 
 ### Automatic Cl-pH
@@ -149,7 +150,7 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 | `5.2` | Language | sensor | — |
 | `5.3` | pH Production Rate | select | — |
 | `5.9` | Alarm Sound | sensor | — |
-| `5.28` | Flow In Status | sensor | — |
+| `5.28` | Flow In 230V | binary_sensor | — |
 | `5.29` | Flow Pump Status | sensor | — |
 | `5.37` | Gas Sensor | binary_sensor | — |
 | `5.42` | pH Dosing ON/OFF | switch | — |
@@ -171,6 +172,7 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 | `5.189` | Out 4 Mode | select | — |
 | `5.239` | SW Update Required | sensor | — |
 | `5.242` | Control Module Connection Quality | sensor | — |
+| `5.275` | Flow In Status | binary_sensor | — |
 | `10` | Messages | sensor | — |
 
 ³ Daily dosing statistics require a recent PoolAccess firmware (the values were
@@ -308,6 +310,7 @@ system language.
 | `5.6069` | Redox Status | sensor | — |
 | `5.6071` | Cl System Status | sensor | — |
 | `5.6072` | Redox System Status | sensor | — |
+| `5.6083` | Filter Pump Current Speed | sensor | — |
 | `5.6104` | Out 1 Available | sensor | — |
 | `5.6105` | Out 2 Available | sensor | — |
 | `5.6106` | Out 3 Available | sensor | — |
