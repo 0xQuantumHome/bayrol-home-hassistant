@@ -55,6 +55,12 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 - `switch` – writable on/off setting
 - `button` – sends a command to the device
 
+The tables below list the entities the integration creates. A community
+reference of **all** known MQTT datapoints, including those not implemented
+yet, lives in [docs/DATAPOINTS.md](docs/DATAPOINTS.md), useful if you like to
+explore the topics with MQTT Explorer (see [MQTT Debug](#mqtt-debug)) or want
+to request a new entity.
+
 ### Automatic SALT
 
 | MQTT ID | Name | Type | Unit |
