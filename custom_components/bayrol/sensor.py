@@ -334,8 +334,8 @@ def _handle_sensor_value(sensor, value):
         match value:
             case "19.18":
                 sensor._attr_native_value = "No"
-            case "19.19":
-                sensor._attr_native_value = "Off"
+            # (a legacy case mapping 19.19 to "Off" was removed: 19.19 is
+            # the language code for German and decodes via the value table)
             case "19.55":
                 sensor._attr_native_value = "OFF"
             case "19.95":

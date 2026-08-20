@@ -173,6 +173,12 @@ AUTOMATIC_SENSOR_VALUE_TEXTS = {
     "19.22": "Espanol",
     "19.23": "Italiano",
     "19.25": "Polski",
+    # Flow pump status (5.29), variable-speed states; 19.95/19.96 decode
+    # via the existing match cases
+    "19.350": "Filtration low",
+    "19.351": "Filtration medium",
+    "19.352": "Filtration high",
+    "19.353": "Filtration off / Flow on",
     # Salt electrolysis polarity (5.17); 19.55 "OFF" decodes via match case
     "19.89": "A",
     "19.90": "B",
