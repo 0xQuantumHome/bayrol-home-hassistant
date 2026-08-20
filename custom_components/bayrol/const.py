@@ -895,6 +895,14 @@ SENSOR_TYPES_AUTOMATIC_CL_PH = {
         "unit_of_measurement": "L",
         "entity_type": "sensor",
     },
+    # Chlorine dosing on/off, the Cl-pH counterpart of the pH switch 5.42.
+    "5.154": {
+        "name": "Cl Dosing ON/OFF",
+        "entity_type": "switch",
+        "on_value": "19.17",
+        "off_value": "19.18",
+        "icon": "mdi:beaker",
+    },
     # Writable daily dosing limit behind the al_cl_dos_limit alarm
     # (e_num_cl_max_daily_dos_in_l_dec1, device default 8.0 l).
     "4.336": {

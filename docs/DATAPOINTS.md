@@ -455,7 +455,7 @@ applies to both.
 | `5.149` | Expert Mode at system start | both | — |
 | `5.150` | Activate WiFi | both | — |
 | `5.151` | DHCP (automatic configuration) | both | — |
-| `5.154` | Automatic chlorine dosing ON/OFF | both | — |
+| `5.154` | Automatic chlorine dosing ON/OFF | both | Cl Dosing ON/OFF (`switch`) |
 | `5.159` | Run chlorine pump for the selected time | both | — |
 | `5.160` | Pause chlorine dosing for | both | — |
 | `5.161` | Pause chlorine dosing also | both | — |
