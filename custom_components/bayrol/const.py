@@ -362,6 +362,20 @@ SENSOR_TYPES_AUTOMATIC = {
         "unit_of_measurement": "L",
         "entity_type": "sensor",
     },
+    # Writable daily dosing limit behind the al_ph_dos_limit alarm
+    # (e_num_ph_max_daily_dos_in_l_dec1, device default 4.0 l).
+    "4.341": {
+        "name": "pH Daily Dosing Limit",
+        "device_class": NumberDeviceClass.VOLUME,
+        "state_class": None,
+        "coefficient": 10,
+        "unit_of_measurement": "L",
+        "entity_type": "number",
+        "min": 0.1,
+        "max": 50.0,
+        "step": 0.1,
+        "mode": NumberMode.BOX,
+    },
     "4.340": {
         "name": "pH Dosing Time Today",
         "device_class": SensorDeviceClass.DURATION,
@@ -880,6 +894,20 @@ SENSOR_TYPES_AUTOMATIC_CL_PH = {
         "coefficient": 10,
         "unit_of_measurement": "L",
         "entity_type": "sensor",
+    },
+    # Writable daily dosing limit behind the al_cl_dos_limit alarm
+    # (e_num_cl_max_daily_dos_in_l_dec1, device default 8.0 l).
+    "4.336": {
+        "name": "Cl Daily Dosing Limit",
+        "device_class": NumberDeviceClass.VOLUME,
+        "state_class": None,
+        "coefficient": 10,
+        "unit_of_measurement": "L",
+        "entity_type": "number",
+        "min": 0.1,
+        "max": 50.0,
+        "step": 0.1,
+        "mode": NumberMode.BOX,
     },
     "4.335": {
         "name": "Cl Dosing Time Today",

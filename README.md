@@ -15,8 +15,8 @@ This custom integration allows you to monitor your Bayrol Pool Access device in 
 
   | Device | Entities |
   | --- | --- |
-  | Automatic SALT | 75 |
-  | Automatic Cl-pH | 63 |
+  | Automatic SALT | 76 |
+  | Automatic Cl-pH | 65 |
   | Pool Manager 5 Chlorine | 87 |
 - Native entity types: read-only values as `sensor` and `binary_sensor`, the
   pool cover as a read-only `cover`, and writable settings as `select`
@@ -92,6 +92,7 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 | `4.239` | WiFi RSSI | sensor | dBm |
 | `4.304` | Control Module Signal Strength | sensor | % |
 | `4.340` | pH Dosing Time Today ³ | sensor | s |
+| `4.341` | pH Daily Dosing Limit ³ | number | L |
 | `4.343` | pH Dosed Today ³ | sensor | L |
 | `5.2` | Language | sensor | — |
 | `5.3` | pH Production Rate | select | — |
@@ -157,8 +158,10 @@ The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug]
 | `4.239` | WiFi RSSI | sensor | dBm |
 | `4.304` | Control Module Signal Strength | sensor | % |
 | `4.335` | Cl Dosing Time Today ³ | sensor | s |
+| `4.336` | Cl Daily Dosing Limit ³ | number | L |
 | `4.339` | Cl Dosed Today ³ | sensor | L |
 | `4.340` | pH Dosing Time Today ³ | sensor | s |
+| `4.341` | pH Daily Dosing Limit ³ | number | L |
 | `4.343` | pH Dosed Today ³ | sensor | L |
 | `5.2` | Language | sensor | — |
 | `5.3` | pH Production Rate | select | — |
