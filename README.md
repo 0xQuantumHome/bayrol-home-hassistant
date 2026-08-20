@@ -24,8 +24,8 @@ This custom integration allows you to monitor your Bayrol Pool Access device in 
 
   | Device | Entities |
   | --- | --- |
-  | Automatic SALT | 76 |
-  | Automatic Cl-pH | 66 |
+  | Automatic SALT | 74 |
+  | Automatic Cl-pH | 64 |
   | Pool Manager 5 Chlorine | 87 |
 - Native entity types: read-only values as `sensor` and `binary_sensor`, the
   pool cover as a read-only `cover`, and writable settings as `select`

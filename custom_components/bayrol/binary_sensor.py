@@ -59,12 +59,16 @@ async def async_setup_entry(
         )
         entities.append(sensor)
 
-    for topic, alarm_config in ALARM_TOPICS.items():
-        sensor = BayrolAlarmBinarySensor(config_entry, topic, alarm_config)
-        mqtt_manager.subscribe(
-            topic, lambda payload, s=sensor: s.handle_alarm_payload(payload)
-        )
-        entities.append(sensor)
+    # The 8.2002/8.2003 alarm topics only exist on PM5 devices; Automatic
+    # devices report their message state on topic 10 instead (verified via
+    # a full topic capture in #51).
+    if device_type == "PM5 Chlorine":
+        for topic, alarm_config in ALARM_TOPICS.items():
+            sensor = BayrolAlarmBinarySensor(config_entry, topic, alarm_config)
+            mqtt_manager.subscribe(
+                topic, lambda payload, s=sensor: s.handle_alarm_payload(payload)
+            )
+            entities.append(sensor)
 
     async_add_entities(entities)
 

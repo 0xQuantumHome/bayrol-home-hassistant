@@ -939,5 +939,5 @@ active flag and weekdays). Of little use in Home Assistant.
 | MQTT ID | Description | Payload | Entity in HA |
 | --- | --- | --- | --- |
 | `10` | Current message list of the PoolAccess app (Automatic devices) | list of message codes (`8.5` to `8.47`) | Messages (`sensor`) plus `bayrol_message` events |
-| `8.2002` | Device alarm state | dict: `active`, `quit_required`, `is_quit`, `module` (no `v` key) | Device Alarm (`binary_sensor`) |
-| `8.2003` | Device info state | dict, same shape as `8.2002` | Device Info (`binary_sensor`) |
+| `8.2002` | Device alarm state (PM5 only) | dict: `active`, `quit_required`, `is_quit`, `module` (no `v` key) | Device Alarm (`binary_sensor`) |
+| `8.2003` | Device info state (PM5 only) | dict, same shape as `8.2002` | Device Info (`binary_sensor`) |
