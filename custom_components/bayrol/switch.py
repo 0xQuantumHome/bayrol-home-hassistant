@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import logging
 from typing import Any
 
@@ -115,11 +114,10 @@ class BayrolSwitch(SwitchEntity):
             f"d02/{self._config_entry.data[BAYROL_DEVICE_ID]}"
             f"/s/{self._state_topic}"
         )
-        # Integer codes (e.g. PM5 "7408") must be published without a decimal
-        # point to match the select wire format; Automatic codes like "19.17"
-        # stay floats.
-        numeric_value = int(value) if value.isdigit() else float(value)
-        payload = json.dumps({"t": self._state_topic, "v": numeric_value})
+        # Compact JSON without spaces, exactly like the select/number/button
+        # write paths: the device firmware ignores payloads with whitespace
+        # (json.dumps default formatting broke switch writes, see #51).
+        payload = f'{{"t":"{self._state_topic}","v":{value}}}'
         mqtt_manager = self.hass.data[DOMAIN][self._config_entry.entry_id][
             "mqtt_manager"
         ]
