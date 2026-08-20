@@ -7,6 +7,15 @@
 
 This custom integration allows you to monitor your Bayrol Pool Access device in Home Assistant. It uses a direct MQTT connection to the Bayrol Cloud.
 
+> [!WARNING]
+> **Do not modify the integration files locally.** Since v0.9.0 HACS installs
+> the integration from a release ZIP, which completely replaces the
+> `custom_components/bayrol` folder on every update. Any local changes (e.g.
+> manually added datapoints in `const.py`) are lost without warning. If you
+> are missing a sensor or setting, please
+> [open an issue](https://github.com/0xQuantumHome/bayrol-home-hassistant/issues)
+> instead. Known datapoints are usually quick to add officially.
+
 ## Features
 
 - Water values (pH, redox, chlorine, salt, temperatures), electrolysis and
