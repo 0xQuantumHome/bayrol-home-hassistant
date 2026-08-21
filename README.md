@@ -25,7 +25,7 @@ This custom integration allows you to monitor your Bayrol Pool Access device in 
   | Device | Entities |
   | --- | --- |
   | Automatic SALT | 74 |
-  | Automatic Cl-pH | 64 |
+  | Automatic Cl-pH | 65 |
   | Pool Manager 5 Chlorine | 87 |
 - Native entity types: read-only values as `sensor` and `binary_sensor`, the
   pool cover as a read-only `cover`, and writable settings as `select`
@@ -188,6 +188,7 @@ to request a new entity.
 | `5.59` | pH Pause Runtime | sensor | — |
 | `5.80` | pH Minus Canister Status | sensor | — |
 | `5.83` | Cover | cover | — |
+| `5.98` | Flow Contact | binary_sensor | — |
 | `5.147` | HW Version | sensor | — |
 | `5.152` | WiFi State | sensor | — |
 | `5.153` | WiFi Signal | sensor | — |

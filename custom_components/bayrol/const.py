@@ -601,6 +601,18 @@ SENSOR_TYPES_AUTOMATIC = {
         "off_value": "19.18",
         "icon": "mdi:beaker",
     },
+    # BNC paddle switch contact. Same availability condition as 5.29 in the
+    # device model, so it exists on Cl-pH as well (verified need in #51).
+    "5.98": {
+        "name": "Flow Contact",
+        "device_class": BinarySensorDeviceClass.RUNNING,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "binary_sensor",
+        "on_values": ("19.177",),  # Contact closed: water is flowing
+        "off_values": ("19.176",),  # Contact open: no water flow
+    },
     # State of the 230V flow input. Stays "off" on installations using
     # the BNC paddle switch (those report through 5.29/5.98), verified on
     # AS5 and Cl-pH in #51.
@@ -869,16 +881,6 @@ SENSOR_TYPES_AUTOMATIC_SALT = {
             "19.115",  # Auto Plus
             "19.106",  # Constant production
         ],
-    },
-    "5.98": {
-        "name": "Flow Contact",
-        "device_class": BinarySensorDeviceClass.RUNNING,
-        "state_class": None,
-        "coefficient": None,
-        "unit_of_measurement": None,
-        "entity_type": "binary_sensor",
-        "on_values": ("19.177",),  # Contact closed: water is flowing
-        "off_values": ("19.176",),  # Contact open: no water flow
     },
 }
 
