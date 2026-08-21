@@ -527,8 +527,8 @@ applies to both.
 | `5.262` | OUT 2 function | both | — |
 | `5.263` | OUT 3 function | both | — |
 | `5.264` | OUT 4 function | both | — |
-| `5.265` | Set e_c_fm_supported | both | — |
-| `5.266` | Set e_c_fm_used | both | — |
+| `5.265` | Set internal flag | both | — |
+| `5.266` | Set internal flag | both | — |
 | `5.267` | Blocking clock timer enabled | both | — |
 | `5.268` | Blocking clock timer enabled | both | — |
 | `5.269` | Blocking clock timer enabled | both | — |
@@ -941,3 +941,51 @@ active flag and weekdays). Of little use in Home Assistant.
 | `10` | Current message list of the PoolAccess app (Automatic devices) | list of message codes (`8.5` to `8.47`) | Messages (`sensor`) plus `bayrol_message` events |
 | `8.2002` | Device alarm state (PM5 only) | dict: `active`, `quit_required`, `is_quit`, `module` (no `v` key) | Device Alarm (`binary_sensor`) |
 | `8.2003` | Device info state (PM5 only) | dict, same shape as `8.2002` | Device Info (`binary_sensor`) |
+
+## 4. Other topic families (Automatic, observed on a live device)
+
+Seen in a full topic capture of an Automatic Cl-pH (#51); not implemented yet.
+
+### 4.1 Device strings (`6.x`)
+
+User-configured names and device identity as plain strings.
+
+| MQTT ID | Description |
+| --- | --- |
+| `6.2` | MAC address |
+| `6.3` | IP address |
+| `6.4` | Gateway |
+| `6.5` | Netmask |
+| `6.9` | DNS server |
+| `6.11` | Serial number (display form) |
+| `6.15` | Software version |
+| `6.16` | Serial number |
+| `6.17` | Hardware version |
+| `6.19` | Name of the variable-speed pump |
+| `6.20` | Name of the heating |
+| `6.21` to `6.24` | User-configured names of Out 1 to 4 (universal function) |
+| `6.25` to `6.28` | User-configured names of Out 1 to 4 (pool light function) |
+| `6.30` / `6.31` | Control Module software version / serial number |
+| `6.32` / `6.33` | Software commit (device / Control Module) |
+
+### 4.2 Feature flags (`11.x`)
+
+Dozens of 0/1 values that mirror the device's internal feature conditions
+(which hardware options and functions are present/active). The exact
+ID-to-meaning mapping is not decoded yet. Once it is, these are the natural
+basis for entity availability handling.
+
+### 4.3 Message stream
+
+| MQTT ID | Description |
+| --- | --- |
+| `9` | Most relevant current message code (e.g. `8.5`) |
+| `14` | Timestamped message event: `{"ts": <unix>, "class": "20.x", "type": "21.x", "id": "8.x"}` |
+| `16` | Pre-rendered notification content (subject and text of the e-mail the portal sends) |
+
+### 4.4 Unidentified
+
+`1` (protocol or state marker, e.g. `{"v":"17.3"}`), `7.1` to `7.10`
+(numeric counters, meaning unknown). Value payloads may also carry `min`,
+`max` and `status` fields alongside `v`; the `17.x`/`20.x`/`21.x` code
+tables are not decoded yet.
