@@ -25,7 +25,7 @@ This custom integration allows you to monitor your Bayrol Pool Access device in 
   | Device | Entities |
   | --- | --- |
   | Automatic SALT | 74 |
-  | Automatic Cl-pH | 65 |
+  | Automatic Cl-pH | 70 |
   | Pool Manager 5 Chlorine | 87 |
 - Native entity types: read-only values as `sensor` and `binary_sensor`, the
   pool cover as a read-only `cover`, and writable settings as `select`
@@ -65,6 +65,7 @@ to request a new entity.
 
 | MQTT ID | Name | Type | Unit |
 | --- | --- | --- | --- |
+| `1` | Device Online | binary_sensor | — |
 | `4.2` | pH Target | number | — |
 | `4.3` | pH Alert Max | number | — |
 | `4.4` | pH Alert Min | number | — |
@@ -138,11 +139,17 @@ to request a new entity.
 | `5.242` | Control Module Connection Quality | sensor | — |
 | `5.275` | Flow In Status | binary_sensor | — |
 | `10` | Messages | sensor | — |
+| `11.42` | pH Manual Dosing Active | binary_sensor | — |
+| `11.43` | pH Dosing Paused | binary_sensor | — |
+| `11.46` | SE Boost Active | binary_sensor | — |
+| `11.47` | SE Manual Production Active | binary_sensor | — |
+| `11.48` | SE Paused | binary_sensor | — |
 
 ### Automatic Cl-pH
 
 | MQTT ID | Name | Type | Unit |
 | --- | --- | --- | --- |
+| `1` | Device Online | binary_sensor | — |
 | `4.2` | pH Target | number | — |
 | `4.3` | pH Alert Max | number | — |
 | `4.4` | pH Alert Min | number | — |
@@ -207,6 +214,10 @@ to request a new entity.
 | `5.242` | Control Module Connection Quality | sensor | — |
 | `5.275` | Flow In Status | binary_sensor | — |
 | `10` | Messages | sensor | — |
+| `11.42` | pH Manual Dosing Active | binary_sensor | — |
+| `11.43` | pH Dosing Paused | binary_sensor | — |
+| `11.44` | Cl Manual Dosing Active | binary_sensor | — |
+| `11.45` | Cl Dosing Paused | binary_sensor | — |
 
 ³ Daily dosing statistics require a recent PoolAccess firmware (the values were
 added with app version v1.0.147); devices on older firmware never publish

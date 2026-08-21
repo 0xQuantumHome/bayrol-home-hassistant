@@ -968,24 +968,137 @@ User-configured names and device identity as plain strings.
 | `6.30` / `6.31` | Control Module software version / serial number |
 | `6.32` / `6.33` | Software commit (device / Control Module) |
 
-### 4.2 Feature flags (`11.x`)
+### 4.2 Feature and state flags (`11.x`, 106 flags)
 
-Dozens of 0/1 values that mirror the device's internal feature conditions
-(which hardware options and functions are present/active). The exact
-ID-to-meaning mapping is not decoded yet. Once it is, these are the natural
-basis for entity availability handling.
+0/1 values that mirror the device's feature conditions: which hardware
+options are connected, which functions are configured and which runtime
+states are active. Descriptions are derived from observed behavior.
 
-### 4.3 Message stream
+<details><summary>expand</summary>
+
+| MQTT ID | Meaning (derived) |
+| --- | --- |
+| `11.3` | Device salt electrolysis |
+| `11.4` | Device chlorine ph |
+| `11.5` | Device ph |
+| `11.6` | Temperature input |
+| `11.7` | Temperature used |
+| `11.8` | Temperature option |
+| `11.9` | Local only |
+| `11.10` | App only |
+| `11.11` | Lock in app |
+| `11.12` | Ph |
+| `11.13` | Chlorine/redox |
+| `11.14` | Salt electrolysis |
+| `11.15` | No salt electrolysis |
+| `11.16` | Salt electrolysis chlorine/redox |
+| `11.17` | Salt electrolysis const |
+| `11.18` | Chlorine/redox chlorine |
+| `11.19` | Salt |
+| `11.20` | Ph minus |
+| `11.21` | Ph plus |
+| `11.22` | Flow in 230 present |
+| `11.23` | Flow in present |
+| `11.24` | Flow in bnc used |
+| `11.26` | Level ph used |
+| `11.27` | Level ph not used |
+| `11.28` | Level chlorine/redox used |
+| `11.29` | Level chlorine/redox not used |
+| `11.30` | Flow 230 off |
+| `11.31` | Flow 230 on |
+| `11.32` | Flow in off |
+| `11.33` | Flow in on |
+| `11.34` | Manual dosing ph alarm |
+| `11.35` | Manual dosing chlorine/redox alarm |
+| `11.36` | Salt electrolysis auto |
+| `11.37` | Salt electrolysis auto plus |
+| `11.38` | Salt electrolysis safe mode used |
+| `11.39` | Usb present |
+| `11.40` | Calibration chlorine/redox chlorine correct level |
+| `11.41` | Calibration chlorine/redox chlorine incorrect level |
+| `11.42` | Ph manual active |
+| `11.43` | Ph pause active |
+| `11.44` | Chlorine/redox manual active |
+| `11.45` | Chlorine/redox pause active |
+| `11.46` | Salt electrolysis boost active |
+| `11.47` | Salt electrolysis manual active |
+| `11.48` | Salt electrolysis pause active |
+| `11.49` | Ph pump running |
+| `11.50` | Chlorine/redox pump running |
+| `11.51` | Salt electrolysis plus daily |
+| `11.52` | Salt electrolysis plus weekly |
+| `11.53` | Ph on off visible |
+| `11.54` | Chlorine/redox on off visible |
+| `11.55` | Salt electrolysis on off visible |
+| `11.56` | Boost visible |
+| `11.57` | Use additional salt wizard |
+| `11.58` | Dont use additional salt wizard |
+| `11.59` | Under test |
+| `11.60` | Debug |
+| `11.61` | Use network |
+| `11.62` | Wifi |
+| `11.63` | Additional chlorine manual |
+| `11.64` | Additional chlorine no |
+| `11.65` | Additional chlorine run salt electrolysis |
+| `11.66` | Chlorine above setpoint |
+| `11.67` | Chlorine at setpoint |
+| `11.68` | Chlorine below setpoint |
+| `11.69` | Pump 3l |
+| `11.70` | Pump 6l |
+| `11.71` | Temperature not used |
+| `11.72` | Control module supported |
+| `11.73` | Control module used |
+| `11.74` | Variable-speed pump used |
+| `11.75` | Out1 used |
+| `11.76` | Out2 used |
+| `11.77` | Out3 used |
+| `11.78` | Out4 used |
+| `11.79` | Out1 light with programs |
+| `11.80` | Out2 light with programs |
+| `11.81` | Out3 light with programs |
+| `11.82` | Out4 light with programs |
+| `11.83` | Out1 heating |
+| `11.84` | Out2 heating |
+| `11.85` | Out3 heating |
+| `11.86` | Out4 heating |
+| `11.87` | Out1 universal |
+| `11.88` | Out2 universal |
+| `11.89` | Out3 universal |
+| `11.90` | Out4 universal |
+| `11.91` | Out1 filter pump |
+| `11.92` | Out2 filter pump |
+| `11.93` | Out3 filter pump |
+| `11.94` | Out4 filter pump |
+| `11.96` | Control box used |
+| `11.97` | No control box used |
+| `11.98` | Control module no connection |
+| `11.99` | Control module connection unstable |
+| `11.100` | Control module connection good |
+| `11.101` | Control module connected |
+| `11.102` | Control module not connected |
+| `11.103` | Out1 show expert menu |
+| `11.104` | Out2 show expert menu |
+| `11.105` | Out3 show expert menu |
+| `11.106` | Out4 show expert menu |
+| `11.107` | Software v2 or later |
+| `11.108` | Temperature pump smart |
+| `11.109` | Frost protection option |
+| `11.110` | Use rtc calibration |
+
+</details>
+
+### 4.3 Message stream and device status
 
 | MQTT ID | Description |
 | --- | --- |
+| `1` | Device online status (`17.0` = offline, `17.4` = online, intermediate values during connect) |
 | `9` | Most relevant current message code (e.g. `8.5`) |
 | `14` | Timestamped message event: `{"ts": <unix>, "class": "20.x", "type": "21.x", "id": "8.x"}` |
 | `16` | Pre-rendered notification content (subject and text of the e-mail the portal sends) |
 
 ### 4.4 Unidentified
 
-`1` (protocol or state marker, e.g. `{"v":"17.3"}`), `7.1` to `7.10`
-(numeric counters, meaning unknown). Value payloads may also carry `min`,
-`max` and `status` fields alongside `v`; the `17.x`/`20.x`/`21.x` code
-tables are not decoded yet.
+`7.1` to `7.10` (numeric counters, meaning unknown). Value payloads may
+also carry `min`, `max` and `status` fields alongside `v`; the `status`
+values use the same `17.x` codes as the device online status, the
+`20.x`/`21.x` class/type tables are not decoded.

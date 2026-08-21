@@ -194,6 +194,30 @@ AUTOMATIC_SENSOR_VALUE_TEXTS = {
 
 # Common sensor types for Automatic devices
 SENSOR_TYPES_AUTOMATIC = {
+    # Device online state as seen by the Bayrol portal (17.4 = online,
+    # 17.0 = offline). Verified on AS5 and Cl-pH in #51.
+    "1": {
+        "name": "Device Online",
+        "device_class": BinarySensorDeviceClass.CONNECTIVITY,
+        "entity_type": "binary_sensor",
+        "on_values": ("17.4",),
+        "off_values": ("17.0",),
+    },
+    # Dosing/production mode states (0/1). Verified dynamic on AS5 in #51.
+    "11.42": {
+        "name": "pH Manual Dosing Active",
+        "device_class": None,
+        "entity_type": "binary_sensor",
+        "on_values": ("1",),
+        "off_values": ("0",),
+    },
+    "11.43": {
+        "name": "pH Dosing Paused",
+        "device_class": None,
+        "entity_type": "binary_sensor",
+        "on_values": ("1",),
+        "off_values": ("0",),
+    },
     "4.2": {
         "name": "pH Target",
         "device_class": NumberDeviceClass.PH,
@@ -734,6 +758,27 @@ SENSOR_TYPES_AUTOMATIC = {
 # Additional sensor types for Automatic SALT
 SENSOR_TYPES_AUTOMATIC_SALT = {
     **SENSOR_TYPES_AUTOMATIC,  # Include all base sensors
+    "11.46": {
+        "name": "SE Boost Active",
+        "device_class": None,
+        "entity_type": "binary_sensor",
+        "on_values": ("1",),
+        "off_values": ("0",),
+    },
+    "11.47": {
+        "name": "SE Manual Production Active",
+        "device_class": None,
+        "entity_type": "binary_sensor",
+        "on_values": ("1",),
+        "off_values": ("0",),
+    },
+    "11.48": {
+        "name": "SE Paused",
+        "device_class": None,
+        "entity_type": "binary_sensor",
+        "on_values": ("1",),
+        "off_values": ("0",),
+    },
     "4.106": {
         "name": "Cell Power",
         "device_class": SensorDeviceClass.POWER,
@@ -887,6 +932,20 @@ SENSOR_TYPES_AUTOMATIC_SALT = {
 # Additional sensor types for Automatic Cl-pH
 SENSOR_TYPES_AUTOMATIC_CL_PH = {
     **SENSOR_TYPES_AUTOMATIC,  # Include all base sensors
+    "11.44": {
+        "name": "Cl Manual Dosing Active",
+        "device_class": None,
+        "entity_type": "binary_sensor",
+        "on_values": ("1",),
+        "off_values": ("0",),
+    },
+    "11.45": {
+        "name": "Cl Dosing Paused",
+        "device_class": None,
+        "entity_type": "binary_sensor",
+        "on_values": ("1",),
+        "off_values": ("0",),
+    },
     "4.90": {
         "name": "Cl Dosing Rate",
         "device_class": None,
