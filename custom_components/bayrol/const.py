@@ -601,7 +601,9 @@ SENSOR_TYPES_AUTOMATIC = {
         "off_value": "19.18",
         "icon": "mdi:beaker",
     },
-    # Aggregated flow input state (e_enum_var_flow_in_status).
+    # State of the 230V flow input. Stays "off" on installations using
+    # the BNC paddle switch (those report through 5.29/5.98), verified on
+    # AS5 and Cl-pH in #51.
     "5.275": {
         "name": "Flow In Status",
         "device_class": BinarySensorDeviceClass.RUNNING,

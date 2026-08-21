@@ -176,7 +176,7 @@ applies to both.
 | `5.239` | Software update required | both | SW Update Required (`sensor`) |
 | `5.242` | Connection quality | both | Control Module Connection Quality (`sensor`) |
 | `5.260` | Control Module connection status (detailed) * | both | — |
-| `5.275` | Flow input state (Flow in ON / Flow in OFF) * | both | Flow In Status (`binary_sensor`) |
+| `5.275` | Flow input state of the 230V input (unused on BNC paddle installations) * | both | Flow In Status (`binary_sensor`) |
 | `5.277` | ESP32 version | both | — |
 
 ### 1.2 Settings (355)
