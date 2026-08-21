@@ -238,7 +238,7 @@ applies to both.
 | `4.120` | Cell operating hours | SALT | — |
 | `4.121` | Cell operating hours (polarity A) | SALT | — |
 | `4.122` | Cell operating hours (polarity B) | SALT | — |
-| `4.123` | Desired temp. | both | — |
+| `4.123` | Desired temp. | both | Desired Temperature (`number`) |
 | `4.124` | T upper limit * | both | — |
 | `4.125` | Chlorine increase by daily plus+ cycle | SALT | — |
 | `4.131` | View = user / edit = user | both | — |
@@ -391,7 +391,7 @@ applies to both.
 | `5.4` | Increase dos. amount | both | — |
 | `5.5` | Adjust salt electrolysis production level | SALT | — |
 | `5.6` | Increase salt electrolysis production level | SALT | — |
-| `5.8` | Product used for pH dosing | both | — |
+| `5.8` | Product used for pH dosing | both | pH Dosing Direction (`sensor`) |
 | `5.9` | Acoustic alarm signal in case of messages | both | Alarm Sound (`sensor`) |
 | `5.10` | Controller type (temporary for demo) | both | — |
 | `5.11` | Paddle switch on FLOW input (BNC) | both | — |

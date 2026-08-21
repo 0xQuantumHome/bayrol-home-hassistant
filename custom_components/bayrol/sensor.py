@@ -513,6 +513,7 @@ class BayrolSensor(SensorEntity):
         self._attr_entity_registry_enabled_default = sensor_config.get(
             "enabled_default", True
         )
+        self._attr_entity_category = sensor_config.get("entity_category")
         coefficient = sensor_config.get("coefficient")
         if coefficient == 1:
             self._attr_suggested_display_precision = 0

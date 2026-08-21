@@ -1,6 +1,7 @@
 [![Static Badge](https://img.shields.io/badge/HACS-Custom-41BDF5?style=for-the-badge&logo=homeassistantcommunitystore&logoColor=white)](https://github.com/hacs/integration) 
 ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/0xQuantumHome/bayrol-home-hassistant?style=for-the-badge) 
 ![GitHub Release Date](https://img.shields.io/github/release-date/0xQuantumHome/bayrol-home-hassistant?style=for-the-badge&label=Latest%20Release) [![GitHub Release](https://img.shields.io/github/v/release/0xQuantumHome/bayrol-home-hassistant?style=for-the-badge)](https://github.com/0xQuantumHome/bayrol-home-hassistant/releases)
+[![Downloads (total)](https://img.shields.io/github/downloads/0xQuantumHome/bayrol-home-hassistant/total?style=for-the-badge&label=Downloads%20total)](https://github.com/0xQuantumHome/bayrol-home-hassistant/releases) [![Downloads (latest)](https://img.shields.io/github/downloads/0xQuantumHome/bayrol-home-hassistant/latest/total?style=for-the-badge&label=Downloads%20latest)](https://github.com/0xQuantumHome/bayrol-home-hassistant/releases)
 
 
 # Bayrol Pool Access Integration for Home Assistant
@@ -24,8 +25,8 @@ This custom integration allows you to monitor your Bayrol Pool Access device in 
 
   | Device | Entities |
   | --- | --- |
-  | Automatic SALT | 74 |
-  | Automatic Cl-pH | 70 |
+  | Automatic SALT | 86 |
+  | Automatic Cl-pH | 76 |
   | Pool Manager 5 Chlorine | 87 |
 - Native entity types: read-only values as `sensor` and `binary_sensor`, the
   pool cover as a read-only `cover`, and writable settings as `select`
@@ -97,6 +98,7 @@ to request a new entity.
 | `4.107` | Battery Voltage | sensor | V |
 | `4.112` | Time Before Next Polarity Reversal | sensor | s |
 | `4.119` | Time Since Polarity Reversal | sensor | s |
+| `4.123` | Desired Temperature | number | °C |
 | `4.138` | Salt To Add | sensor | kg |
 | `4.144` | Salt Preferred Level | number | g/l |
 | `4.145` | Recommended Min Daily Filtration Time | sensor | h |
@@ -112,6 +114,7 @@ to request a new entity.
 | `4.343` | pH Dosed Today ³ | sensor | L |
 | `5.2` | Language | sensor | — |
 | `5.3` | pH Production Rate | select | — |
+| `5.8` | pH Dosing Direction | sensor | — |
 | `5.9` | Alarm Sound | sensor | — |
 | `5.17` | SE Polarity | sensor | — |
 | `5.29` | Flow Pump Status | sensor | — |
@@ -138,6 +141,10 @@ to request a new entity.
 | `5.239` | SW Update Required | sensor | — |
 | `5.242` | Control Module Connection Quality | sensor | — |
 | `5.275` | Flow In Status | binary_sensor | — |
+| `6.2` | MAC Address | sensor | — |
+| `6.3` | IP Address | sensor | — |
+| `6.16` | Serial Number | sensor | — |
+| `6.17` | Hardware Version | sensor | — |
 | `10` | Messages | sensor | — |
 | `11.42` | pH Manual Dosing Active | binary_sensor | — |
 | `11.43` | pH Dosing Paused | binary_sensor | — |
@@ -173,6 +180,7 @@ to request a new entity.
 | `4.98` | Temperature | sensor | °C |
 | `4.102` | Conductivity | sensor | mS/cm |
 | `4.107` | Battery Voltage | sensor | V |
+| `4.123` | Desired Temperature | number | °C |
 | `4.145` | Recommended Min Daily Filtration Time | sensor | h |
 | `4.176` | Power On Time | sensor | min |
 | `4.182` | pH | sensor | — |
@@ -187,6 +195,7 @@ to request a new entity.
 | `4.343` | pH Dosed Today ³ | sensor | L |
 | `5.2` | Language | sensor | — |
 | `5.3` | pH Production Rate | select | — |
+| `5.8` | pH Dosing Direction | sensor | — |
 | `5.9` | Alarm Sound | sensor | — |
 | `5.28` | Flow In 230V | binary_sensor | — |
 | `5.29` | Flow Pump Status | sensor | — |
@@ -213,6 +222,10 @@ to request a new entity.
 | `5.239` | SW Update Required | sensor | — |
 | `5.242` | Control Module Connection Quality | sensor | — |
 | `5.275` | Flow In Status | binary_sensor | — |
+| `6.2` | MAC Address | sensor | — |
+| `6.3` | IP Address | sensor | — |
+| `6.16` | Serial Number | sensor | — |
+| `6.17` | Hardware Version | sensor | — |
 | `10` | Messages | sensor | — |
 | `11.42` | pH Manual Dosing Active | binary_sensor | — |
 | `11.43` | pH Dosing Paused | binary_sensor | — |
@@ -228,6 +241,7 @@ disabled by default and can be enabled in the entity registry.
 dosing calculations on. It is disabled by default; enable it in the entity
 registry only if you really need to change it from Home Assistant. The device
 stores whole cubic meters.
+
 
 Automatic SALT and Automatic Cl-pH devices also expose MQTT topic `10` as a
 `Messages` sensor. Its state shows the current messages as readable text in

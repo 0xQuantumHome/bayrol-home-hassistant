@@ -7,6 +7,7 @@ from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorStateClass,
 )
+from homeassistant.helpers.entity import EntityCategory
 
 DOMAIN = "bayrol"
 
@@ -179,6 +180,9 @@ AUTOMATIC_SENSOR_VALUE_TEXTS = {
     "19.351": "Filtration medium",
     "19.352": "Filtration high",
     "19.353": "Filtration off / Flow on",
+    # pH dosing direction (5.8)
+    "19.38": "pH-Minus (acid)",
+    "19.39": "pH-Plus (base)",
     # Salt electrolysis polarity (5.17); 19.55 "OFF" decodes via match case
     "19.89": "A",
     "19.90": "B",
@@ -217,6 +221,69 @@ SENSOR_TYPES_AUTOMATIC = {
         "entity_type": "binary_sensor",
         "on_values": ("1",),
         "off_values": ("0",),
+    },
+    # pH dosing direction (read-only): acid or base. Shown when a
+    # temperature sensor is present. Verified on AS5 and Cl-pH in #51.
+    "5.8": {
+        "name": "pH Dosing Direction",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    # Writable desired temperature (heating setpoint), shown when a
+    # temperature sensor is present. 4.0-40.0 C. Verified in #51.
+    "4.123": {
+        "name": "Desired Temperature",
+        "device_class": NumberDeviceClass.TEMPERATURE,
+        "state_class": None,
+        "coefficient": 10,
+        "unit_of_measurement": "°C",
+        "entity_type": "number",
+        "min": 4.0,
+        "max": 40.0,
+        "step": 0.5,
+        "mode": NumberMode.BOX,
+    },
+    # Device identity and network diagnostics (string topics). Not
+    # broadcast proactively, but the device answers the g/ poll the
+    # integration sends on subscribe (confirmed on AS5 in #51).
+    "6.2": {
+        "name": "MAC Address",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+        "entity_category": EntityCategory.DIAGNOSTIC,
+    },
+    "6.3": {
+        "name": "IP Address",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+        "entity_category": EntityCategory.DIAGNOSTIC,
+    },
+    "6.16": {
+        "name": "Serial Number",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+        "entity_category": EntityCategory.DIAGNOSTIC,
+    },
+    "6.17": {
+        "name": "Hardware Version",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+        "entity_category": EntityCategory.DIAGNOSTIC,
     },
     "4.2": {
         "name": "pH Target",
