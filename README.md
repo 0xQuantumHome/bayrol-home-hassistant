@@ -27,7 +27,7 @@ This custom integration allows you to monitor your Bayrol Pool Access device in 
   | --- | --- |
   | Automatic SALT | 86 |
   | Automatic Cl-pH | 76 |
-  | Pool Manager 5 Chlorine | 87 |
+  | Pool Manager 5 Chlorine | 94 |
 - Native entity types: read-only values as `sensor` and `binary_sensor`, the
   pool cover as a read-only `cover`, and writable settings as `select`
   (discrete modes), `number` (targets, alarm limits, temperature setpoints)
@@ -323,6 +323,12 @@ system language.
 | `4.3049` | Setpoint Redox | select | mV |
 | `4.3051` | Redox Alert Min | select | mV |
 | `4.3053` | Redox Alert Max | select | mV |
+| `4.3069` | T1 Alert Min | number | °C |
+| `4.3070` | T1 Alert Max | number | °C |
+| `4.3074` | T2 Alert Min | number | °C |
+| `4.3075` | T2 Alert Max | number | °C |
+| `4.3079` | T3 Alert Min | number | °C |
+| `4.3080` | T3 Alert Max | number | °C |
 | `4.3118` | Heating Setpoint | number | °C |
 | `4.3120` | Solar Setpoint ¹ | number | °C |
 | `4.3376` | Whirlpool Setpoint ¹ | number | °C |
@@ -334,6 +340,7 @@ system language.
 | `4.4069` | Air Temperature | sensor | °C |
 | `4.4071` | Temperature T3 | sensor | °C |
 | `4.4132` | Active Alarms | sensor | — |
+| `5.5017` | pH Mode | select | — |
 | `5.5213` | Heating Mode | select | — |
 | `5.5427` | Filter Pump Mode | select | — |
 | `5.5433` | Out 1 ² | button | — |

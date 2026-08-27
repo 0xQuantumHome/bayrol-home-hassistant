@@ -692,12 +692,12 @@ applies to both.
 | `4.3052` | Mv lower al br | — |
 | `4.3053` | Mv upper al cl | Redox Alert Max (`select`) |
 | `4.3054` | Mv upper al br | — |
-| `4.3069` | T1 lower al | — |
-| `4.3070` | T1 upper al | — |
-| `4.3074` | T2 lower al | — |
-| `4.3075` | T2 upper al | — |
-| `4.3079` | T3 lower al | — |
-| `4.3080` | T3 upper al | — |
+| `4.3069` | T1 lower al | T1 Alert Min (`number`) |
+| `4.3070` | T1 upper al | T1 Alert Max (`number`) |
+| `4.3074` | T2 lower al | T2 Alert Min (`number`) |
+| `4.3075` | T2 upper al | T2 Alert Max (`number`) |
+| `4.3079` | T3 lower al | T3 Alert Min (`number`) |
+| `4.3080` | T3 upper al | T3 Alert Max (`number`) |
 | `4.3084` | O2 amount | — |
 | `4.3118` | Heating setpoint | Heating Setpoint (`number`) |
 | `4.3120` | Solar setpoint | Solar Setpoint (`number`) |
@@ -714,7 +714,7 @@ applies to both.
 | `4.4129` | Btc | — |
 | `4.4132` | No of active alarms | Active Alarms (`sensor`) |
 | `4.4133` | Mqtt test messages | — |
-| `5.5017` | Ph op mode | — |
+| `5.5017` | Ph op mode | pH Mode (`select`) |
 | `5.5018` | Cl op mode | — |
 | `5.5019` | Br op mode | — |
 | `5.5020` | Mv op mode | — |

@@ -1650,6 +1650,81 @@ SENSOR_TYPES_PM5_CHLORINE = {
             500,
         ],
     },
+    # T1/T2/T3 temperature alarm thresholds. Officially documented in
+    # the PM5 XML/Modbus protocol spec (decimals 1 -> coefficient 10,
+    # range 0-50 C).
+    "4.3069": {
+        "name": "T1 Alert Min",
+        "device_class": NumberDeviceClass.TEMPERATURE,
+        "state_class": None,
+        "coefficient": 10,
+        "unit_of_measurement": "°C",
+        "entity_type": "number",
+        "min": 0.0,
+        "max": 50.0,
+        "step": 0.5,
+        "mode": NumberMode.BOX,
+    },
+    "4.3070": {
+        "name": "T1 Alert Max",
+        "device_class": NumberDeviceClass.TEMPERATURE,
+        "state_class": None,
+        "coefficient": 10,
+        "unit_of_measurement": "°C",
+        "entity_type": "number",
+        "min": 0.0,
+        "max": 50.0,
+        "step": 0.5,
+        "mode": NumberMode.BOX,
+    },
+    "4.3074": {
+        "name": "T2 Alert Min",
+        "device_class": NumberDeviceClass.TEMPERATURE,
+        "state_class": None,
+        "coefficient": 10,
+        "unit_of_measurement": "°C",
+        "entity_type": "number",
+        "min": 0.0,
+        "max": 50.0,
+        "step": 0.5,
+        "mode": NumberMode.BOX,
+    },
+    "4.3075": {
+        "name": "T2 Alert Max",
+        "device_class": NumberDeviceClass.TEMPERATURE,
+        "state_class": None,
+        "coefficient": 10,
+        "unit_of_measurement": "°C",
+        "entity_type": "number",
+        "min": 0.0,
+        "max": 50.0,
+        "step": 0.5,
+        "mode": NumberMode.BOX,
+    },
+    "4.3079": {
+        "name": "T3 Alert Min",
+        "device_class": NumberDeviceClass.TEMPERATURE,
+        "state_class": None,
+        "coefficient": 10,
+        "unit_of_measurement": "°C",
+        "entity_type": "number",
+        "min": 0.0,
+        "max": 50.0,
+        "step": 0.5,
+        "mode": NumberMode.BOX,
+    },
+    "4.3080": {
+        "name": "T3 Alert Max",
+        "device_class": NumberDeviceClass.TEMPERATURE,
+        "state_class": None,
+        "coefficient": 10,
+        "unit_of_measurement": "°C",
+        "entity_type": "number",
+        "min": 0.0,
+        "max": 50.0,
+        "step": 0.5,
+        "mode": NumberMode.BOX,
+    },
     "4.3118": {
         "name": "Heating Setpoint",
         "device_class": NumberDeviceClass.TEMPERATURE,
@@ -1754,6 +1829,26 @@ SENSOR_TYPES_PM5_CHLORINE = {
     },
     # Heating operating mode. Values verified on a live PM5 Chlorine
     # by @tRoOlos (PR #43).
+    # pH dosing operating mode. Values confirmed via MQTT sniffing on a
+    # PM5 Chlorine by @BenTT85 (#52) and against the device data model.
+    # Topic-specific mqtt_values because 7002 means "Off" here but "Active"
+    # in the shared PM5 mapping.
+    "5.5017": {
+        "name": "pH Mode",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "select",
+        "options": [
+            "7002",  # Off
+            "7007",  # Auto
+        ],
+        "mqtt_values": {
+            "7002": "Off",
+            "7007": "Auto",
+        },
+    },
     "5.5213": {
         "name": "Heating Mode",
         "device_class": None,
