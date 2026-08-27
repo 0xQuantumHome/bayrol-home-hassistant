@@ -1849,6 +1849,45 @@ SENSOR_TYPES_PM5_CHLORINE = {
             "7007": "Auto",
         },
     },
+    # Chlorine pump operating mode, same Off/Auto op-mode family as pH
+    # Mode (5.5017) and Redox Dosing Mode (5.5020). Model-derived; not
+    # verifiable on @BenTT85's device (no chlorine pump), but the family
+    # is consistent across the op-mode topics (#52).
+    "5.5018": {
+        "name": "Cl Mode",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "select",
+        "options": [
+            "7002",  # Off
+            "7007",  # Auto
+        ],
+        "mqtt_values": {
+            "7002": "Off",
+            "7007": "Auto",
+        },
+    },
+    # Redox/chlorine dosing operating mode. Confirmed on a PM5 Chlorine
+    # by @BenTT85 (#52), same Off/Auto pattern as pH Mode. On his setup
+    # this drives the salt electrolysis.
+    "5.5020": {
+        "name": "Redox Dosing Mode",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "select",
+        "options": [
+            "7002",  # Off
+            "7007",  # Auto
+        ],
+        "mqtt_values": {
+            "7002": "Off",
+            "7007": "Auto",
+        },
+    },
     "5.5213": {
         "name": "Heating Mode",
         "device_class": None,

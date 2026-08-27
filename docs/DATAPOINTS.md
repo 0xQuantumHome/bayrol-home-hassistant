@@ -715,9 +715,9 @@ applies to both.
 | `4.4132` | No of active alarms | Active Alarms (`sensor`) |
 | `4.4133` | Mqtt test messages | — |
 | `5.5017` | Ph op mode | pH Mode (`select`) |
-| `5.5018` | Cl op mode | — |
+| `5.5018` | Cl op mode | Cl Mode (`select`) |
 | `5.5019` | Br op mode | — |
-| `5.5020` | Mv op mode | — |
+| `5.5020` | Mv op mode | Redox Dosing Mode (`select`) |
 | `5.5021` | O2 op mode | — |
 | `5.5041` | O2 t comp | — |
 | `5.5184` | Pump mode 1 | — |

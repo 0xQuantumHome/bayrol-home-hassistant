@@ -27,7 +27,7 @@ This custom integration allows you to monitor your Bayrol Pool Access device in 
   | --- | --- |
   | Automatic SALT | 86 |
   | Automatic Cl-pH | 76 |
-  | Pool Manager 5 Chlorine | 94 |
+  | Pool Manager 5 Chlorine | 96 |
 - Native entity types: read-only values as `sensor` and `binary_sensor`, the
   pool cover as a read-only `cover`, and writable settings as `select`
   (discrete modes), `number` (targets, alarm limits, temperature setpoints)
@@ -341,6 +341,8 @@ system language.
 | `4.4071` | Temperature T3 | sensor | °C |
 | `4.4132` | Active Alarms | sensor | — |
 | `5.5017` | pH Mode | select | — |
+| `5.5018` | Cl Mode | select | — |
+| `5.5020` | Redox Dosing Mode | select | — |
 | `5.5213` | Heating Mode | select | — |
 | `5.5427` | Filter Pump Mode | select | — |
 | `5.5433` | Out 1 ² | button | — |
