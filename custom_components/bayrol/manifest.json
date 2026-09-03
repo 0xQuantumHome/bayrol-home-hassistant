@@ -2,7 +2,7 @@
   "domain": "bayrol",
   "name": "Bayrol",
   "codeowners": [
-    "@QuantumHome"
+    "@0xQuantumHome"
   ],
   "config_flow": true,
   "dependencies": [],
