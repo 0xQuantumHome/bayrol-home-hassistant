@@ -272,7 +272,7 @@ disappear from its state. If you want a persistent list of the last messages
 on a dashboard, combine a small trigger-based template sensor with a Markdown
 card:
 
-<img width="500" alt="Message history card" src="images/message-history-card.png" />
+<img width="500" alt="Message history card" src="https://raw.githubusercontent.com/0xQuantumHome/bayrol-home-hassistant/main/images/message-history-card.png" />
 
 Add this to your `configuration.yaml` (or your template file):
 
