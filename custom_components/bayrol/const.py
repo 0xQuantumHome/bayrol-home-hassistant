@@ -1819,6 +1819,18 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": "°C",
         "entity_type": "sensor",
     },
+    # Balance tank control (BTC) water height, shown as "Tank: x cm" in the
+    # device web interface (#53). Raw value assumed unscaled (the display
+    # has no decimals); to be confirmed on a live device.
+    "4.4129": {
+        "name": "Balance Tank Water Height",
+        "device_class": SensorDeviceClass.DISTANCE,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "coefficient": 1,
+        "unit_of_measurement": "cm",
+        "entity_type": "sensor",
+        "enabled_default": False,
+    },
     "4.4132": {
         "name": "Active Alarms",
         "device_class": None,
@@ -2328,5 +2340,36 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "coefficient": None,
         "unit_of_measurement": None,
         "entity_type": "sensor",
+    },
+    # Balance tank control (BTC) sensors (#53). IDs and enum values from the
+    # Bayrol web app data model. Disabled by default because only overflow
+    # pools have a balance tank; Balance Tank Available (7003 = Yes) tells
+    # you whether the device reports one.
+    "5.6085": {
+        "name": "Balance Tank Status",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+        "enabled_default": False,
+    },
+    "5.6086": {
+        "name": "Balance Tank Mode",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+        "enabled_default": False,
+    },
+    "5.6102": {
+        "name": "Balance Tank Available",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+        "enabled_default": False,
     },
 }

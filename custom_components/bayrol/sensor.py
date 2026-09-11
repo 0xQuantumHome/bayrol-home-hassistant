@@ -409,6 +409,19 @@ def _handle_sensor_value(sensor, value):
                 sensor._attr_native_value = "Warning"
             case 7527:
                 sensor._attr_native_value = "Alarm"
+            # Balance tank control current mode (5.6086)
+            case 7528:
+                sensor._attr_native_value = "Ok"
+            case 7529:
+                sensor._attr_native_value = "Refilling"
+            case 7530:
+                sensor._attr_native_value = "Stopped"
+            case 7531:
+                sensor._attr_native_value = "Dry Run"
+            case 7532:
+                sensor._attr_native_value = "Dry Run Stopped"
+            case 7533:
+                sensor._attr_native_value = "Overflow"
             case _:
                 if (
                     sensor._sensor_config.get("coefficient") is not None

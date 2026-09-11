@@ -339,6 +339,7 @@ system language.
 | `4.4047` | Battery | sensor | V |
 | `4.4069` | Air Temperature | sensor | °C |
 | `4.4071` | Temperature T3 | sensor | °C |
+| `4.4129` | Balance Tank Water Height ³ | sensor | cm |
 | `4.4132` | Active Alarms | sensor | — |
 | `5.5017` | pH Mode | select | — |
 | `5.5018` | Cl Mode | select | — |
@@ -378,6 +379,9 @@ system language.
 | `5.6071` | Cl System Status | sensor | — |
 | `5.6072` | Redox System Status | sensor | — |
 | `5.6083` | Filter Pump Current Speed | sensor | — |
+| `5.6085` | Balance Tank Status ³ | sensor | — |
+| `5.6086` | Balance Tank Mode ³ | sensor | — |
+| `5.6102` | Balance Tank Available ³ | sensor | — |
 | `5.6104` | Out 1 Available | sensor | — |
 | `5.6105` | Out 2 Available | sensor | — |
 | `5.6106` | Out 3 Available | sensor | — |
@@ -394,6 +398,9 @@ To use them, go to Settings -> Devices & Services -> Bayrol -> Entities, open th
 
 ² Each `Out` entry creates three button entities: *On*, *Off* and *Auto* (for example `Out 1 On`, `Out 1 Off`, `Out 1 Auto`).
 The current state of an output is reported by the matching `Out x Status` sensor, and `Out x Available` tells you whether the output is configured on the device.
+
+³ The **Balance Tank** sensors are disabled by default, because only overflow pools with a balance tank control report these values. Enable them the same way as described in ¹.
+**Balance Tank Water Height** is the water level shown as "Tank: x cm" in the device web interface, **Balance Tank Mode** reports the current control mode (Ok, Refilling, Stopped, Dry Run, Dry Run Stopped, Overflow), **Balance Tank Status** the overall state (Ok, Info, Warning, Alarm) and **Balance Tank Available** whether the device has a balance tank control at all.
 
 ### Filtering stale values when the pump is off
 
