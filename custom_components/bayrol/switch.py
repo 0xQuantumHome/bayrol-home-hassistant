@@ -110,19 +110,9 @@ class BayrolSwitch(SwitchEntity):
 
     def _publish_value(self, value: str) -> None:
         """Publish a setting to the Bayrol MQTT broker."""
-        topic = (
-            f"d02/{self._config_entry.data[BAYROL_DEVICE_ID]}"
-            f"/s/{self._state_topic}"
-        )
-        # Compact JSON without spaces, exactly like the select/number/button
-        # write paths: the device firmware ignores payloads with whitespace
-        # (json.dumps default formatting broke switch writes, see #51).
-        payload = f'{{"t":"{self._state_topic}","v":{value}}}'
-        mqtt_manager = self.hass.data[DOMAIN][self._config_entry.entry_id][
+        self.hass.data[DOMAIN][self._config_entry.entry_id][
             "mqtt_manager"
-        ]
-        mqtt_manager.client.publish(topic, payload)
-        _LOGGER.debug("Published MQTT message to %s: %s", topic, payload)
+        ].set_value(self._state_topic, value)
 
     @property
     def device_info(self) -> DeviceInfo:

@@ -878,6 +878,8 @@ SENSOR_TYPES_AUTOMATIC_SALT = {
         "unit_of_measurement": "mg/l",
         "entity_type": "sensor",
     },
+    # Polarity setting (e_enum_se_polarity): A, B or OFF. OFF does not mean
+    # the cell is off, the active polarity is reported by 5.44 (#54).
     "5.17": {
         "name": "SE Polarity",
         "device_class": None,
@@ -885,6 +887,39 @@ SENSOR_TYPES_AUTOMATIC_SALT = {
         "coefficient": -1,
         "unit_of_measurement": None,
         "entity_type": "sensor",
+    },
+    "5.44": {
+        "name": "SE Current Polarity",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    # Value set not documented in the web app; shown raw until confirmed.
+    "5.82": {
+        "name": "SE Polarity Status",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+        "enabled_default": False,
+    },
+    # Boost start/stop are device functions (topic type 13), called with
+    # value 1 exactly like the web app (DeviceDriver.js I_CallFunction).
+    # The boost duration is the one stored on the device (#54).
+    "13.65": {
+        "name": "SE Boost",
+        "entity_type": "button",
+        "function": True,
+        "actions": {"Start": 1},
+    },
+    "13.46": {
+        "name": "SE Boost",
+        "entity_type": "button",
+        "function": True,
+        "actions": {"Stop": 1},
     },
     "5.60": {
         "name": "SE Pause Runtime",

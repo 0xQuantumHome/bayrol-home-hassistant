@@ -8,11 +8,13 @@ import logging
 import paho.mqtt.client as paho
 
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import HomeAssistantError
 
 from .const import (
     BAYROL_HOST,
     BAYROL_PORT,
 )
+from .helpers import build_set_payload
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -34,6 +36,25 @@ class BayrolMQTTManager:
         if self.client and self.client.is_connected():
             self.client.subscribe(f"d02/{self.device_id}/v/{topic}")
             # Push to receive initial value
+            self.client.publish(f"d02/{self.device_id}/g/{topic}")
+
+    def set_value(self, topic: str, value, read_back: bool = True) -> None:
+        """Send a set command and request the value back from the device.
+
+        Entities do not update optimistically: the state shown in Home
+        Assistant is the one the device reports after the set command.
+        Device function calls (topic type 13) have no value to read back.
+        """
+        if self.client is None or not self.client.is_connected():
+            raise HomeAssistantError("Bayrol MQTT connection not available")
+        payload = build_set_payload(topic, value)
+        result = self.client.publish(f"d02/{self.device_id}/s/{topic}", payload)
+        if result.rc != paho.MQTT_ERR_SUCCESS:
+            raise HomeAssistantError(
+                f"Failed to publish Bayrol setting {topic} (rc={result.rc})"
+            )
+        _LOGGER.debug("Published set for %s: %s", topic, payload)
+        if read_back:
             self.client.publish(f"d02/{self.device_id}/g/{topic}")
 
     def _on_connect(self, client, userdata, flags, rc):

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import logging
-import json
 
 from homeassistant.components.select import SelectEntity
 from homeassistant.config_entries import ConfigEntry
@@ -153,6 +152,8 @@ async def async_setup_entry(
 class BayrolSelect(SelectEntity):
     """Representation of a Bayrol select entity."""
 
+    _attr_should_poll = False
+
     def __init__(self, config_entry, select_type, select_config, topic):
         """Initialize the select entity."""
         self._config_entry = config_entry
@@ -255,16 +256,9 @@ class BayrolSelect(SelectEntity):
             )
             return
 
-        # Update the current option to the TEXT value (user's selection)
-        self._attr_current_option = option
-
-        # Publish the new value to the MQTT topic
-        topic = f"d02/{self._config_entry.data[BAYROL_DEVICE_ID]}/s/{self._state_topic}"
-        payload = f'{{"t":"{self._state_topic}","v":{mqtt_value}}}'
         self.hass.data[DOMAIN][self._config_entry.entry_id][
             "mqtt_manager"
-        ].client.publish(topic, payload)
-        _LOGGER.debug("Published MQTT message: %s", payload)
+        ].set_value(self._state_topic, mqtt_value)
 
     @property
     def options(self) -> list[str]:

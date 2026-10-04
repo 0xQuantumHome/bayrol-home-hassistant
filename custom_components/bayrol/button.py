@@ -63,6 +63,7 @@ class BayrolButton(ButtonEntity):
         self._config_entry = config_entry
         self._topic = topic
         self._mqtt_value = mqtt_value
+        self._is_function = config.get("function", False)
         base_name = config.get("name", topic)
         self._attr_name = f"{base_name} {action_name}"
         self._attr_unique_id = f"{config_entry.entry_id}_{topic}_{action_name}"
@@ -72,12 +73,9 @@ class BayrolButton(ButtonEntity):
 
     async def async_press(self) -> None:
         """Publish the configured MQTT value for this button."""
-        topic = f"d02/{self._config_entry.data[BAYROL_DEVICE_ID]}/s/{self._topic}"
-        payload = f'{{"t":"{self._topic}","v":{self._mqtt_value}}}'
         self.hass.data[DOMAIN][self._config_entry.entry_id][
             "mqtt_manager"
-        ].client.publish(topic, payload)
-        _LOGGER.debug("Published MQTT message: %s", payload)
+        ].set_value(self._topic, self._mqtt_value, read_back=not self._is_function)
 
     @property
     def device_info(self) -> DeviceInfo:

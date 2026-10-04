@@ -118,6 +118,7 @@ to request a new entity.
 | `5.9` | Alarm Sound | sensor | — |
 | `5.17` | SE Polarity | sensor | — |
 | `5.29` | Flow Pump Status | sensor | — |
+| `5.44` | SE Current Polarity | sensor | — |
 | `5.37` | Gas Sensor | binary_sensor | — |
 | `5.40` | Salt electrolysis ON/OFF | switch | — |
 | `5.41` | Redox Mode | select | — |
@@ -125,6 +126,7 @@ to request a new entity.
 | `5.59` | pH Pause Runtime | sensor | — |
 | `5.60` | SE Pause Runtime | sensor | — |
 | `5.80` | pH Minus Canister Status | sensor | — |
+| `5.82` | SE Polarity Status (disabled by default) | sensor | — |
 | `5.83` | Cover | cover | — |
 | `5.98` | Flow Contact | binary_sensor | — |
 | `5.147` | HW Version | sensor | — |
@@ -151,6 +153,11 @@ to request a new entity.
 | `11.46` | SE Boost Active | binary_sensor | — |
 | `11.47` | SE Manual Production Active | binary_sensor | — |
 | `11.48` | SE Paused | binary_sensor | — |
+| `13.46` | SE Boost Stop | button | — |
+| `13.65` | SE Boost Start | button | — |
+
+**SE Polarity** (`5.17`) is the polarity *setting* (A, B or OFF). The polarity the cell is currently running on is reported by **SE Current Polarity** (`5.44`).
+**SE Boost Start** starts the boost mode with the boost duration configured on the device, **SE Boost Stop** ends it. **SE Boost Active** (`11.46`) shows whether boost is running.
 
 ### Automatic Cl-pH
 

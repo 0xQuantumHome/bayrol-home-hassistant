@@ -460,6 +460,7 @@ async def async_setup_entry(
                 "switch",
                 "binary_sensor",
                 "cover",
+                "button",
             ):  # Skip entities exposed by another platform
                 topic = sensor_type
                 sensor = BayrolSensor(config_entry, sensor_type, sensor_config, topic)
@@ -475,6 +476,7 @@ async def async_setup_entry(
                 "switch",
                 "binary_sensor",
                 "cover",
+                "button",
             ):  # Skip entities exposed by another platform
                 topic = sensor_type
                 sensor = BayrolSensor(config_entry, sensor_type, sensor_config, topic)
