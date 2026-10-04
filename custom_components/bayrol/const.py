@@ -921,18 +921,35 @@ SENSOR_TYPES_AUTOMATIC_SALT = {
         "function": True,
         "actions": {"Stop": 1},
     },
-    # Boost duration setting (e_enum_se_boost_runtime). Read-only until the
-    # value set is confirmed on a live device; presumably the same hour
-    # codes as the pause runtime (19.123-19.129), which the decode table
-    # already covers (#54).
+    # Boost duration (e_enum_se_boost_runtime). Value set from the web app
+    # data model (Enums.js, 6 values); 19.123 = 1 hour confirmed on a live
+    # Automatic SALT (#54).
     "5.63": {
         "name": "SE Boost Duration",
         "device_class": None,
         "state_class": None,
-        "coefficient": -1,
+        "coefficient": None,
         "unit_of_measurement": None,
-        "entity_type": "sensor",
+        "entity_type": "select",
+        "options": [
+            "19.123",  # 1 hour
+            "19.125",  # 4 hours
+            "19.127",  # 12 hours
+            "19.128",  # 24 hours
+            "19.129",  # 48 hours
+            "19.130",  # 72 hours
+        ],
+        "mqtt_values": {
+            "19.123": "1 hour",
+            "19.125": "4 hours",
+            "19.127": "12 hours",
+            "19.128": "24 hours",
+            "19.129": "48 hours",
+            "19.130": "72 hours",
+        },
     },
+    # Minutes since boost started. The device reports -1 while boost is not
+    # running (default value in the data model), shown as no value.
     "4.155": {
         "name": "SE Boost Progress",
         "device_class": SensorDeviceClass.DURATION,
@@ -940,6 +957,42 @@ SENSOR_TYPES_AUTOMATIC_SALT = {
         "coefficient": 1,
         "unit_of_measurement": "min",
         "entity_type": "sensor",
+        "negative_as_none": True,
+    },
+    # Timed salt electrolysis cycle ("Zeitbegrenzter Salzelektrolyse-Zyklus"
+    # in the web app), read-only for now (#54).
+    "4.77": {
+        "name": "SE Timed Cycle Runtime",
+        "device_class": SensorDeviceClass.DURATION,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "coefficient": 1,
+        "unit_of_measurement": "min",
+        "entity_type": "sensor",
+    },
+    "4.149": {
+        "name": "SE Timed Cycle Power",
+        "device_class": None,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "coefficient": 1,
+        "unit_of_measurement": "%",
+        "entity_type": "sensor",
+    },
+    "4.150": {
+        "name": "SE Timed Cycle Redox Limit",
+        "device_class": None,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "coefficient": 1,
+        "unit_of_measurement": "mV",
+        "entity_type": "sensor",
+    },
+    "4.156": {
+        "name": "SE Timed Cycle Progress",
+        "device_class": SensorDeviceClass.DURATION,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "coefficient": 1,
+        "unit_of_measurement": "min",
+        "entity_type": "sensor",
+        "negative_as_none": True,
     },
     "5.60": {
         "name": "SE Pause Runtime",

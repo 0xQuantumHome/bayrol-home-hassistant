@@ -317,6 +317,12 @@ def _handle_sensor_value(sensor, value):
     # If it's a numeric sensor, handle it directly without string conversion
     if is_numeric_sensor:
         if (
+            sensor._sensor_config.get("negative_as_none")
+            and isinstance(value, (int, float))
+            and value < 0
+        ):
+            sensor._attr_native_value = None
+        elif (
             sensor._sensor_config.get("coefficient") is not None
             and sensor._sensor_config["coefficient"] != -1
         ):
