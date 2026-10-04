@@ -104,6 +104,7 @@ to request a new entity.
 | `4.145` | Recommended Min Daily Filtration Time | sensor | h |
 | `4.146` | Proposed Production Rate | sensor | % |
 | `4.147` | Estimated Daily Production | sensor | mg/l |
+| `4.155` | SE Boost Progress | sensor | min |
 | `4.176` | Power On Time | sensor | min |
 | `4.182` | pH | sensor | — |
 | `4.212` | Message Count | sensor | — |
@@ -125,6 +126,7 @@ to request a new entity.
 | `5.42` | pH Dosing ON/OFF | switch | — |
 | `5.59` | pH Pause Runtime | sensor | — |
 | `5.60` | SE Pause Runtime | sensor | — |
+| `5.63` | SE Boost Duration | sensor | — |
 | `5.80` | pH Minus Canister Status | sensor | — |
 | `5.82` | SE Polarity Status (disabled by default) | sensor | — |
 | `5.83` | Cover | cover | — |
@@ -157,7 +159,7 @@ to request a new entity.
 | `13.65` | SE Boost Start | button | — |
 
 **SE Polarity** (`5.17`) is the polarity *setting* (A, B or OFF). The polarity the cell is currently running on is reported by **SE Current Polarity** (`5.44`).
-**SE Boost Start** starts the boost mode with the boost duration configured on the device, **SE Boost Stop** ends it. **SE Boost Active** (`11.46`) shows whether boost is running.
+**SE Boost Start** starts the boost mode with the boost duration configured on the device (shown by **SE Boost Duration**), **SE Boost Stop** ends it. **SE Boost Active** (`11.46`) shows whether boost is running and **SE Boost Progress** how many minutes it has been running.
 
 ### Automatic Cl-pH
 

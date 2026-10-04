@@ -921,6 +921,26 @@ SENSOR_TYPES_AUTOMATIC_SALT = {
         "function": True,
         "actions": {"Stop": 1},
     },
+    # Boost duration setting (e_enum_se_boost_runtime). Read-only until the
+    # value set is confirmed on a live device; presumably the same hour
+    # codes as the pause runtime (19.123-19.129), which the decode table
+    # already covers (#54).
+    "5.63": {
+        "name": "SE Boost Duration",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "4.155": {
+        "name": "SE Boost Progress",
+        "device_class": SensorDeviceClass.DURATION,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "coefficient": 1,
+        "unit_of_measurement": "min",
+        "entity_type": "sensor",
+    },
     "5.60": {
         "name": "SE Pause Runtime",
         "device_class": None,
