@@ -751,22 +751,86 @@ SENSOR_TYPES_AUTOMATIC = {
         "closed_values": ("19.143",),
         "unknown_values": ("19.55",),  # Cover status is disabled
     },
+    # Filtration pump connected to the Smart&Easy module (#54). One select
+    # for four mode datapoints: which one applies depends on the pump type
+    # and on whether a temperature sensor is used. The device reports both
+    # as conditions (topic type 11), the same ones the official web app uses
+    # to choose its menus. Resolution logic: pump.py. The key keeps the
+    # unique_id of the former 5.184 select.
     "5.184": {
         "name": "Filtration mode",
-        "device_class": None,
-        "state_class": None,
-        "coefficient": None,
-        "unit_of_measurement": None,
         "entity_type": "select",
-        "options": [
-            "19.315",  # Low
-            "19.316",  # Med
-            "19.317",  # High
-            "19.346",  # Auto
-            "19.330",  # Smart
-            "19.338",  # Frost
-            "19.312",  # Off
-        ],
+        "filtration": True,
+        "conditions": {
+            "vsp_used": "11.74",
+            "temp_used": "11.7",
+            "temp_not_used": "11.71",
+            # Which OUT a fixed speed (on/off) pump is wired to
+            "out_filter_pump": {"11.91": 1, "11.92": 2, "11.93": 3, "11.94": 4},
+        },
+        "mode_topics": {
+            "vsp_temp": "5.184",
+            "vsp_no_temp": "5.271",
+            "fixed_temp": "5.256",
+            "fixed_no_temp": "5.272",
+        },
+        "mode_options": {
+            "5.184": {
+                "19.315": "Low",
+                "19.316": "Med",
+                "19.317": "High",
+                "19.346": "Auto",
+                "19.330": "Smart",
+                "19.338": "Frost",
+                "19.312": "Off",
+            },
+            "5.271": {
+                "19.315": "Low",
+                "19.316": "Med",
+                "19.317": "High",
+                "19.346": "Auto",
+                "19.312": "Off",
+            },
+            "5.256": {
+                "19.313": "On",
+                "19.346": "Auto",
+                "19.330": "Smart",
+                "19.338": "Frost",
+                "19.312": "Off",
+            },
+            "5.272": {
+                "19.313": "On",
+                "19.346": "Auto",
+                "19.312": "Off",
+            },
+        },
+    },
+    # Actual filter pump state. Speed only exists for a variable speed pump;
+    # the on/off state comes from 5.197 for a variable speed pump and from
+    # the state of its OUT for a fixed speed pump (#54).
+    "5.196": {
+        "name": "Filter Pump Speed",
+        "entity_type": "sensor",
+        "pump_sensor": "speed",
+        "value_texts": {
+            "19.312": "Off",
+            "19.315": "Low",
+            "19.316": "Med",
+            "19.317": "High",
+        },
+    },
+    "5.197": {
+        "name": "Filter Pump State",
+        "entity_type": "sensor",
+        "pump_sensor": "state",
+        "out_state_topics": {1: "5.199", 2: "5.200", 3: "5.201", 4: "5.202"},
+        "value_texts": {
+            "19.54": "On",
+            "19.55": "Off",
+            "19.347": "Blocked",
+            "19.348": "Frost Off",
+            "19.349": "Frost On",
+        },
     },
     "5.186": {
         "name": "Out 1 Mode",

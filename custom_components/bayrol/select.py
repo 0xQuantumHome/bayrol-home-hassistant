@@ -7,6 +7,7 @@ import logging
 from homeassistant.components.select import SelectEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.device_registry import DeviceInfo
 
@@ -23,6 +24,7 @@ from .const import (
     PM5_TEXT_TO_MQTT_MAPPING,
 )
 from .helpers import normalize_entity_id_part
+from .pump import get_pump_setup
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -120,7 +122,14 @@ async def async_setup_entry(
 
     if device_type == "Automatic SALT":
         for select_type, select_config in SENSOR_TYPES_AUTOMATIC_SALT.items():
-            if select_config.get("entity_type") == "select":
+            if select_config.get("filtration"):
+                entities.append(
+                    BayrolFiltrationSelect(
+                        config_entry, select_type, select_config, mqtt_manager,
+                        get_pump_setup(hass, config_entry, SENSOR_TYPES_AUTOMATIC_SALT),
+                    )
+                )
+            elif select_config.get("entity_type") == "select":
                 topic = select_type
                 select = BayrolSelect(config_entry, select_type, select_config, topic)
                 mqtt_manager.subscribe(
@@ -129,7 +138,14 @@ async def async_setup_entry(
                 entities.append(select)
     elif device_type == "Automatic Cl-pH":
         for select_type, select_config in SENSOR_TYPES_AUTOMATIC_CL_PH.items():
-            if select_config.get("entity_type") == "select":
+            if select_config.get("filtration"):
+                entities.append(
+                    BayrolFiltrationSelect(
+                        config_entry, select_type, select_config, mqtt_manager,
+                        get_pump_setup(hass, config_entry, SENSOR_TYPES_AUTOMATIC_CL_PH),
+                    )
+                )
+            elif select_config.get("entity_type") == "select":
                 topic = select_type
                 select = BayrolSelect(config_entry, select_type, select_config, topic)
                 mqtt_manager.subscribe(
@@ -296,6 +312,91 @@ class BayrolSelect(SelectEntity):
                 )
                 display_options.append(option_str)
         return display_options
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Device info."""
+        return DeviceInfo(
+            identifiers={(DOMAIN, self._config_entry.data[BAYROL_DEVICE_ID])},
+            manufacturer="Bayrol",
+        )
+
+
+class BayrolFiltrationSelect(SelectEntity):
+    """Filtration mode, written to the datapoint matching the pump setup.
+
+    Unavailable while the device reports no Smart&Easy filter pump (or the
+    setup is not known yet). Keeps the unique_id of the former 5.184 select.
+    """
+
+    _attr_should_poll = False
+
+    def __init__(self, config_entry, key, config, mqtt_manager, pump_setup):
+        """Initialize the filtration mode select."""
+        self._config_entry = config_entry
+        self._mqtt_manager = mqtt_manager
+        self._pump_setup = pump_setup
+        self._mode_options: dict[str, dict[str, str]] = config["mode_options"]
+        self._mode_values: dict[str, str] = {}
+        self._attr_name = config.get("name", key)
+        self._attr_unique_id = f"{config_entry.entry_id}_{key}"
+        device_id = normalize_entity_id_part(config_entry.data[BAYROL_DEVICE_ID])
+        name = normalize_entity_id_part(config.get("name", key))
+        self.entity_id = f"select.bayrol_{device_id}_{name}"
+        for topic in config["mode_topics"].values():
+            mqtt_manager.subscribe(
+                topic, lambda v, t=topic: self._on_mode_value(t, v)
+            )
+        pump_setup.add_listener(self._update_state)
+
+    def _on_mode_value(self, topic: str, value) -> None:
+        self._mode_values[topic] = str(value)
+        self._update_state()
+
+    def _update_state(self) -> None:
+        if self.hass is not None:
+            self.schedule_update_ha_state()
+
+    @property
+    def available(self) -> bool:
+        """Only available when the device reports a filter pump setup."""
+        return self._pump_setup.mode_topic is not None
+
+    @property
+    def options(self) -> list[str]:
+        """Options of the active filtration mode datapoint."""
+        topic = self._pump_setup.mode_topic
+        if topic is None:
+            return []
+        return list(self._mode_options[topic].values())
+
+    @property
+    def current_option(self) -> str | None:
+        """Mode reported by the device on the active datapoint."""
+        topic = self._pump_setup.mode_topic
+        if topic is None:
+            return None
+        return self._mode_options[topic].get(self._mode_values.get(topic, ""))
+
+    @property
+    def extra_state_attributes(self) -> dict[str, str | None]:
+        """Expose the detected setup for diagnostics."""
+        return {
+            "mode_datapoint": self._pump_setup.mode_topic,
+            "variable_speed_pump": self._pump_setup.vsp_used,
+            "temperature_sensor": self._pump_setup.temp_used,
+            "pump_output": self._pump_setup.pump_out,
+        }
+
+    async def async_select_option(self, option: str) -> None:
+        """Send the mode to the active filtration mode datapoint."""
+        topic = self._pump_setup.mode_topic
+        if topic is None:
+            raise HomeAssistantError("No Smart&Easy filter pump detected")
+        codes = {text: code for code, text in self._mode_options[topic].items()}
+        if option not in codes:
+            raise HomeAssistantError(f"Invalid filtration mode: {option}")
+        self._mqtt_manager.set_value(topic, codes[option])
 
     @property
     def device_info(self) -> DeviceInfo:

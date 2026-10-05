@@ -31,7 +31,17 @@ class BayrolMQTTManager:
         self._subscribers = {}
 
     def subscribe(self, topic: str, callback):
-        """Subscribe to a topic with a callback."""
+        """Subscribe to a topic with a callback.
+
+        Only one callback per topic is kept; a second subscription replaces
+        the first one, which then no longer receives values.
+        """
+        if topic in self._subscribers:
+            _LOGGER.warning(
+                "Topic %s subscribed twice, the earlier subscriber no longer "
+                "receives values",
+                topic,
+            )
         self._subscribers[topic] = callback
         if self.client and self.client.is_connected():
             self.client.subscribe(f"d02/{self.device_id}/v/{topic}")

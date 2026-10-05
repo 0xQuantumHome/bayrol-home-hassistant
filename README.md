@@ -142,7 +142,9 @@ to request a new entity.
 | `5.173` | Device Type | sensor | — |
 | `5.174` | Web Portal State | sensor | — |
 | `5.178` | Detected Device Type | sensor | — |
-| `5.184` | Filtration mode | select | — |
+| `5.184` | Filtration mode ⁵ | select | — |
+| `5.196` | Filter Pump Speed ⁵ | sensor | — |
+| `5.197` | Filter Pump State ⁵ | sensor | — |
 | `5.186` | Out 1 Mode | select | — |
 | `5.187` | Out 2 Mode | select | — |
 | `5.188` | Out 3 Mode | select | — |
@@ -228,7 +230,9 @@ The **SE Timed Cycle** sensors show the settings of the timed salt electrolysis 
 | `5.174` | Web Portal State | sensor | — |
 | `5.175` | Cl Adjust Dosing Amount | select | % |
 | `5.178` | Detected Device Type | sensor | — |
-| `5.184` | Filtration mode | select | — |
+| `5.184` | Filtration mode ⁵ | select | — |
+| `5.196` | Filter Pump Speed ⁵ | sensor | — |
+| `5.197` | Filter Pump State ⁵ | sensor | — |
 | `5.186` | Out 1 Mode | select | — |
 | `5.187` | Out 2 Mode | select | — |
 | `5.188` | Out 3 Mode | select | — |
@@ -323,6 +327,21 @@ content: >
 The sensor keeps the last 10 messages (adjust the `[:10]` slice to taste) and
 survives Home Assistant restarts. Message texts follow your Home Assistant
 system language.
+
+### Filtration pump (Smart&Easy)
+
+⁵ **Filtration mode** controls a filter pump connected to the Smart&Easy Control Module. The device has a separate filtration mode datapoint for each pump setup, the integration detects the setup from the device and writes to the matching one:
+
+| Pump | with temperature sensor | without temperature sensor |
+| --- | --- | --- |
+| variable speed | `5.184` (Off, Low, Med, High, Auto, Smart, Frost) | `5.271` (Off, Low, Med, High, Auto) |
+| fixed speed (on/off) | `5.256` (Off, On, Auto, Smart, Frost) | `5.272` (Off, On, Auto) |
+
+The setup is read from the device conditions `11.74` (variable speed pump used), `11.7` / `11.71` (temperature sensor used / not used) and `11.91`-`11.94` (OUT 1-4 used as filter pump). The detected setup is shown in the attributes of the Filtration mode entity.
+
+**Filter Pump Speed** shows the current speed of a variable speed pump. **Filter Pump State** shows whether the pump is actually running (On, Off, Blocked, Frost On, Frost Off): for a variable speed pump from `5.197`, for a fixed speed pump from the state of its OUT (`5.199`-`5.202`).
+
+Without a Smart&Easy filter pump all three entities are unavailable.
 
 ### PM5 Chlorine
 

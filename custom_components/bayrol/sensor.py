@@ -24,6 +24,7 @@ from .const import (
     BAYROL_MESSAGE_EVENT,
 )
 from .helpers import normalize_entity_id_part
+from .pump import get_pump_setup
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -460,7 +461,14 @@ async def async_setup_entry(
 
     if device_type == "Automatic SALT":
         for sensor_type, sensor_config in SENSOR_TYPES_AUTOMATIC_SALT.items():
-            if sensor_config.get("entity_type") not in (
+            if sensor_config.get("pump_sensor"):
+                entities.append(
+                    BayrolPumpSensor(
+                        config_entry, sensor_type, sensor_config, mqtt_manager,
+                        get_pump_setup(hass, config_entry, SENSOR_TYPES_AUTOMATIC_SALT),
+                    )
+                )
+            elif sensor_config.get("entity_type") not in (
                 "select",
                 "number",
                 "switch",
@@ -476,7 +484,14 @@ async def async_setup_entry(
                 entities.append(sensor)
     elif device_type == "Automatic Cl-pH":
         for sensor_type, sensor_config in SENSOR_TYPES_AUTOMATIC_CL_PH.items():
-            if sensor_config.get("entity_type") not in (
+            if sensor_config.get("pump_sensor"):
+                entities.append(
+                    BayrolPumpSensor(
+                        config_entry, sensor_type, sensor_config, mqtt_manager,
+                        get_pump_setup(hass, config_entry, SENSOR_TYPES_AUTOMATIC_CL_PH),
+                    )
+                )
+            elif sensor_config.get("entity_type") not in (
                 "select",
                 "number",
                 "switch",
@@ -547,6 +562,72 @@ class BayrolSensor(SensorEntity):
     async def async_added_to_hass(self) -> None:
         """Run when entity is added to Home Assistant."""
         pass
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Device info."""
+        return DeviceInfo(
+            identifiers={(DOMAIN, self._config_entry.data[BAYROL_DEVICE_ID])},
+            manufacturer="Bayrol",
+        )
+
+
+class BayrolPumpSensor(SensorEntity):
+    """Actual filter pump speed or on/off state, following the pump setup.
+
+    The speed sensor reads its own topic (variable speed pump only). The
+    state sensor reads its own topic for a variable speed pump and the state
+    of the OUT a fixed speed pump is wired to (out_state_topics) otherwise.
+    """
+
+    _attr_should_poll = False
+
+    def __init__(self, config_entry, key, config, mqtt_manager, pump_setup):
+        """Initialize the pump sensor."""
+        self._config_entry = config_entry
+        self._pump_setup = pump_setup
+        self._topic = key
+        self._kind = config["pump_sensor"]
+        self._out_topics: dict[int, str] = config.get("out_state_topics", {})
+        self._value_texts: dict[str, str] = config["value_texts"]
+        self._values: dict[str, str] = {}
+        self._attr_name = config.get("name", key)
+        self._attr_unique_id = f"{config_entry.entry_id}_{key}"
+        device_id = normalize_entity_id_part(config_entry.data[BAYROL_DEVICE_ID])
+        name = normalize_entity_id_part(config.get("name", key))
+        self.entity_id = f"sensor.bayrol_{device_id}_{name}"
+        for topic in (key, *self._out_topics.values()):
+            mqtt_manager.subscribe(topic, lambda v, t=topic: self._on_value(t, v))
+        pump_setup.add_listener(self._update_state)
+
+    def _on_value(self, topic: str, value) -> None:
+        self._values[topic] = str(value)
+        self._update_state()
+
+    def _update_state(self) -> None:
+        if self.hass is not None:
+            self.schedule_update_ha_state()
+
+    def _source_topic(self) -> str | None:
+        if self._pump_setup.vsp_used:
+            return self._topic
+        if self._kind == "state" and self._pump_setup.pump_out is not None:
+            return self._out_topics[self._pump_setup.pump_out]
+        return None
+
+    @property
+    def available(self) -> bool:
+        """Only available when the device reports a matching pump setup."""
+        return self._source_topic() is not None
+
+    @property
+    def native_value(self) -> str | None:
+        """Decoded pump speed or state."""
+        topic = self._source_topic()
+        if topic is None or topic not in self._values:
+            return None
+        raw = self._values[topic]
+        return self._value_texts.get(raw, raw)
 
     @property
     def device_info(self) -> DeviceInfo:
