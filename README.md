@@ -135,6 +135,7 @@ to request a new entity.
 | `5.82` | SE Polarity Status (disabled by default) | sensor | — |
 | `5.83` | Cover | cover | — |
 | `5.98` | Flow Contact | binary_sensor | — |
+| `5.104` | SE Boost Stop | button | — |
 | `5.147` | HW Version | sensor | — |
 | `5.152` | WiFi State | sensor | — |
 | `5.153` | WiFi Signal | sensor | — |
@@ -159,7 +160,6 @@ to request a new entity.
 | `11.46` | SE Boost Active | binary_sensor | — |
 | `11.47` | SE Manual Production Active | binary_sensor | — |
 | `11.48` | SE Paused | binary_sensor | — |
-| `13.46` | SE Boost Stop | button | — |
 | `13.65` | SE Boost Start | button | — |
 
 **SE Polarity** (`5.17`) is the polarity *setting* (A, B or OFF). The polarity the cell is currently running on is reported by **SE Current Polarity** (`5.44`).

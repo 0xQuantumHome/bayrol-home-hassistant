@@ -906,20 +906,25 @@ SENSOR_TYPES_AUTOMATIC_SALT = {
         "entity_type": "sensor",
         "enabled_default": False,
     },
-    # Boost start/stop are device functions (topic type 13), called with
-    # value 1 exactly like the web app (DeviceDriver.js I_CallFunction).
-    # The boost duration is the one stored on the device (#54).
+    # Boost start is a device function (topic type 13), called with value 1
+    # exactly like the web app (DeviceDriver.js I_CallFunction). It uses the
+    # boost duration stored on the device (SE Boost Duration, #54).
     "13.65": {
         "name": "SE Boost",
         "entity_type": "button",
-        "function": True,
         "actions": {"Start": 1},
     },
-    "13.46": {
+    # Boost is stopped by setting "Activate BOOST mode" (5.104) to No. It
+    # switches to Yes (19.17) together with SE Boost Active while boost
+    # runs; setting No (19.18) stopped boost on a live Automatic SALT (#54).
+    # The device function 13.46 (e_func_se_boost_exit) did not stop it.
+    "5.104": {
         "name": "SE Boost",
         "entity_type": "button",
-        "function": True,
-        "actions": {"Stop": 1},
+        "actions": {"Stop": "19.18"},
+        # Keeps the unique_id of the beta.2-4 button (13.46) so existing
+        # entity IDs and automations stay valid.
+        "unique_id_topic": "13.46",
     },
     # Boost duration (e_enum_se_boost_runtime). Value set from the web app
     # data model (Enums.js, 6 values); 19.123 = 1 hour confirmed on a live

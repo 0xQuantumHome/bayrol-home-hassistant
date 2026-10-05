@@ -43,7 +43,7 @@ class BayrolMQTTManager:
 
         Entities do not update optimistically: the state shown in Home
         Assistant is the one the device reports after the set command.
-        Device function calls (topic type 13) have no value to read back.
+        Buttons pass read_back=False: they have no state to update.
         """
         if self.client is None or not self.client.is_connected():
             raise HomeAssistantError("Bayrol MQTT connection not available")
