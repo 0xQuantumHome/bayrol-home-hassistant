@@ -198,14 +198,16 @@ AUTOMATIC_SENSOR_VALUE_TEXTS = {
 
 # Common sensor types for Automatic devices
 SENSOR_TYPES_AUTOMATIC = {
-    # Device online state as seen by the Bayrol portal (17.4 = online,
-    # 17.0 = offline). Verified on AS5 and Cl-pH in #51.
+    # Device status as seen by the Bayrol portal (17.<status>). Like the
+    # official web app (DeviceDriver.js), only status 0 means offline and
+    # every other status online; devices report e.g. 17.2 or 17.4 while
+    # online (#51, #55).
     "1": {
         "name": "Device Online",
         "device_class": BinarySensorDeviceClass.CONNECTIVITY,
         "entity_type": "binary_sensor",
-        "on_values": ("17.4",),
         "off_values": ("17.0",),
+        "on_prefix": "17.",
     },
     # Dosing/production mode states (0/1). Verified dynamic on AS5 in #51.
     "11.42": {

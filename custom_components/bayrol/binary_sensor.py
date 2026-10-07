@@ -104,10 +104,13 @@ class BayrolStateBinarySensor(BinarySensorEntity):
         previous_raw = self._raw_value
         self._raw_value = value
 
+        on_prefix = self._sensor_config.get("on_prefix")
         if value in self._sensor_config.get("on_values", ()):
             self._attr_is_on = True
         elif value in self._sensor_config.get("off_values", ()):
             self._attr_is_on = False
+        elif on_prefix and value.startswith(on_prefix):
+            self._attr_is_on = True
         else:
             # Keep the last known state instead of dropping to unknown on a
             # single malformed message; warn once per distinct value.

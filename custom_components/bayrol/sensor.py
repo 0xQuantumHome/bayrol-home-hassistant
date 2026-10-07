@@ -2,16 +2,20 @@
 
 from __future__ import annotations
 
+from datetime import timedelta
 import logging
 from typing import Any
 
 from homeassistant.components.sensor import (
+    SensorDeviceClass,
     SensorEntity,
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.entity import EntityCategory
+from homeassistant.util import dt as dt_util
 
 from .const import (
     AUTOMATIC_SENSOR_VALUE_TEXTS,
@@ -521,6 +525,8 @@ async def async_setup_entry(
                 )
                 entities.append(sensor)
 
+    entities.append(BayrolLastMessageSensor(config_entry, mqtt_manager))
+
     if device_type in ("Automatic SALT", "Automatic Cl-pH"):
         messages = BayrolMessagesSensor(config_entry, hass.config.language)
         mqtt_manager.subscribe(MESSAGE_TOPIC, messages.handle_message_payload)
@@ -632,6 +638,67 @@ class BayrolPumpSensor(SensorEntity):
     @property
     def device_info(self) -> DeviceInfo:
         """Device info."""
+        return DeviceInfo(
+            identifiers={(DOMAIN, self._config_entry.data[BAYROL_DEVICE_ID])},
+            manufacturer="Bayrol",
+        )
+
+
+class BayrolLastMessageSensor(SensorEntity):
+    """Time of the last MQTT message received from the device.
+
+    Diagnostic for data freshness, separate from Device Online (which is the
+    device status reported by the Bayrol portal). The state is written at
+    most once per minute to keep the recorder quiet, and immediately when
+    the broker connection changes.
+    """
+
+    _attr_name = "Last MQTT Message"
+    _attr_icon = "mdi:message-badge-outline"
+    _attr_device_class = SensorDeviceClass.TIMESTAMP
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_should_poll = False
+
+    _WRITE_INTERVAL = timedelta(minutes=1)
+
+    def __init__(self, config_entry: ConfigEntry, mqtt_manager) -> None:
+        """Initialize the last message sensor."""
+        self._config_entry = config_entry
+        self._mqtt_manager = mqtt_manager
+        self._attr_unique_id = f"{config_entry.entry_id}_last_mqtt_message"
+        device_id = normalize_entity_id_part(config_entry.data[BAYROL_DEVICE_ID])
+        self.entity_id = f"sensor.bayrol_{device_id}_last_mqtt_message"
+        self._written_at = None
+        self._written_connected = None
+        mqtt_manager.add_status_listener(self._on_status)
+
+    def _on_status(self) -> None:
+        if self.hass is None:
+            return
+        now = dt_util.utcnow()
+        connected = self._mqtt_manager.connected
+        if (
+            self._written_at is None
+            or connected != self._written_connected
+            or now - self._written_at >= self._WRITE_INTERVAL
+        ):
+            self._written_at = now
+            self._written_connected = connected
+            self.async_write_ha_state()
+
+    @property
+    def native_value(self):
+        """Receipt time of the last message from the device."""
+        return self._mqtt_manager.last_message_at
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        """Broker connection state of the integration."""
+        return {"mqtt_connected": self._mqtt_manager.connected}
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Return the Bayrol device information."""
         return DeviceInfo(
             identifiers={(DOMAIN, self._config_entry.data[BAYROL_DEVICE_ID])},
             manufacturer="Bayrol",

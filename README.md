@@ -25,9 +25,9 @@ This custom integration allows you to monitor your Bayrol Pool Access device in 
 
   | Device | Entities |
   | --- | --- |
-  | Automatic SALT | 86 |
-  | Automatic Cl-pH | 76 |
-  | Pool Manager 5 Chlorine | 96 |
+  | Automatic SALT | 99 |
+  | Automatic Cl-pH | 79 |
+  | Pool Manager 5 Chlorine | 111 |
 - Native entity types: read-only values as `sensor` and `binary_sensor`, the
   pool cover as a read-only `cover`, and writable settings as `select`
   (discrete modes), `number` (targets, alarm limits, temperature setpoints)
@@ -342,6 +342,12 @@ The setup is read from the device conditions `11.74` (variable speed pump used),
 **Filter Pump Speed** shows the current speed of a variable speed pump. **Filter Pump State** shows whether the pump is actually running (On, Off, Blocked, Frost On, Frost Off): for a variable speed pump from `5.197`, for a fixed speed pump from the state of its OUT (`5.199`-`5.202`).
 
 Without a Smart&Easy filter pump all three entities are unavailable.
+
+### Connection diagnostics
+
+**Device Online** (topic `1`) is the device status reported by the Bayrol portal (`17.<status>`). As in the official web app, only status `17.0` means offline, every other status (for example `17.2` or `17.4`) means online. The raw status is available in the `raw_value` attribute.
+
+**Last MQTT Message** (all devices, diagnostic) shows when the integration last received a message from the device, independent of Device Online. Its `mqtt_connected` attribute shows whether the integration is connected to the Bayrol MQTT broker. The state is updated at most once per minute. A timestamp that stops advancing means no data is coming in, even if the last values in Home Assistant look current (Home Assistant does not change the "last updated" time of a sensor while its value stays the same).
 
 ### PM5 Chlorine
 

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
+from datetime import datetime
 import json
 import logging
 
@@ -9,6 +11,7 @@ import paho.mqtt.client as paho
 
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
+from homeassistant.util import dt as dt_util
 
 from .const import (
     BAYROL_HOST,
@@ -29,6 +32,18 @@ class BayrolMQTTManager:
         self.device_id = device_id
         self.client = None
         self._subscribers = {}
+        # Connection diagnostics, shown by the Last MQTT Message sensor
+        self.connected = False
+        self.last_message_at: datetime | None = None
+        self._status_listeners: list[Callable[[], None]] = []
+
+    def add_status_listener(self, listener: Callable[[], None]) -> None:
+        """Call listener (in the event loop) on messages and (dis)connects."""
+        self._status_listeners.append(listener)
+
+    def _notify_status(self) -> None:
+        for listener in list(self._status_listeners):
+            listener()
 
     def subscribe(self, topic: str, callback):
         """Subscribe to a topic with a callback.
@@ -69,6 +84,8 @@ class BayrolMQTTManager:
 
     def _on_connect(self, client, userdata, flags, rc):
         """Handle the connection to the MQTT broker."""
+        self.connected = rc == 0
+        self.hass.loop.call_soon_threadsafe(self._notify_status)
         if rc == 0:
             _LOGGER.info("Connected to Bayrol MQTT broker with result code 0 (Success)")
             # Resubscribe to all topics (copy: the dict may grow concurrently
@@ -79,9 +96,17 @@ class BayrolMQTTManager:
         else:
             _LOGGER.debug("Failed to connect to MQTT broker, result code: %s", rc)
 
+    def _on_disconnect(self, client, userdata, rc):
+        """Track the loss of the broker connection; Paho reconnects itself."""
+        self.connected = False
+        self.hass.loop.call_soon_threadsafe(self._notify_status)
+        _LOGGER.debug("Disconnected from Bayrol MQTT broker, result code: %s", rc)
+
     def _on_message(self, client, userdata, msg):
         """Handle the incoming messages from the MQTT broker."""
         _LOGGER.debug("Received message from topic: %s", msg.topic)
+        self.last_message_at = dt_util.utcnow()
+        self.hass.loop.call_soon_threadsafe(self._notify_status)
 
         # Just get the last part of the topic
         topic_parts = msg.topic.split("/")
@@ -112,6 +137,7 @@ class BayrolMQTTManager:
         self.client.tls_set()
         self.client.on_connect = self._on_connect
         self.client.on_message = self._on_message
+        self.client.on_disconnect = self._on_disconnect
 
         try:
             # loop_start() registers Paho's network thread internally. This is
