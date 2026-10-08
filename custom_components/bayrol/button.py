@@ -22,6 +22,8 @@ from .helpers import normalize_entity_id_part
 
 _LOGGER = logging.getLogger(__name__)
 
+NOT_AVAILABLE = "7004"
+
 
 def _sensor_types_for_device(device_type: str) -> dict:
     """Return the sensor type dict matching the configured device type."""
@@ -44,19 +46,23 @@ async def async_setup_entry(
     device_type = config_entry.data[BAYROL_DEVICE_TYPE]
     sensor_types = _sensor_types_for_device(device_type)
 
+    mqtt_manager = hass.data[DOMAIN][config_entry.entry_id]["mqtt_manager"]
     for topic, config in sensor_types.items():
         if config.get("entity_type") != "button":
             continue
         for action_name, mqtt_value in config.get("actions", {}).items():
-            entities.append(
-                BayrolButton(config_entry, topic, config, action_name, mqtt_value)
-            )
+            button = BayrolButton(config_entry, topic, config, action_name, mqtt_value)
+            if available_topic := config.get("available_topic"):
+                mqtt_manager.subscribe(available_topic, button.handle_available)
+            entities.append(button)
 
     async_add_entities(entities)
 
 
 class BayrolButton(ButtonEntity):
     """Representation of a Bayrol button entity."""
+
+    _attr_should_poll = False
 
     def __init__(self, config_entry, topic, config, action_name, mqtt_value):
         """Initialize the button entity."""
@@ -72,6 +78,22 @@ class BayrolButton(ButtonEntity):
         device_id = normalize_entity_id_part(config_entry.data[BAYROL_DEVICE_ID])
         object_id = normalize_entity_id_part(f"{base_name} {action_name}")
         self.entity_id = f"button.bayrol_{device_id}_{object_id}"
+        self._output_available: bool | None = None
+
+    def handle_available(self, value) -> None:
+        """Follow the device's availability report (7003 Yes / 7004 No)."""
+        self._output_available = str(value) != NOT_AVAILABLE
+        if self.hass is not None:
+            self.schedule_update_ha_state()
+
+    @property
+    def available(self) -> bool:
+        """Unavailable only when the device reports the output as not usable.
+
+        Without a report (e.g. an unconfirmed topic ID) the button stays
+        usable as before.
+        """
+        return self._output_available is not False
 
     async def async_press(self) -> None:
         """Publish the configured MQTT value for this button."""

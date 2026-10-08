@@ -420,6 +420,13 @@ def _handle_sensor_value(sensor, value):
                 sensor._attr_native_value = "Warning"
             case 7527:
                 sensor._attr_native_value = "Alarm"
+            # PM5 Out 1-10 mode (5.5433 ...), as set by the Out buttons
+            case 7407:
+                sensor._attr_native_value = "Off"
+            case 7408:
+                sensor._attr_native_value = "On"
+            case 7427:
+                sensor._attr_native_value = "Auto"
             # Balance tank control current mode (5.6086)
             case 7528:
                 sensor._attr_native_value = "Ok"

@@ -2113,6 +2113,9 @@ SENSOR_TYPES_PM5_CHLORINE = {
             "7393",  # Off
         ],
     },
+    # Out buttons are unavailable while the matching "Out x Available"
+    # reports No (7004), e.g. when the output is assigned to a function such
+    # as backwash; the device then ignores manual Out commands (#55).
     "5.5433": {
         "name": "Out 1",
         "device_class": None,
@@ -2120,6 +2123,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "coefficient": None,
         "unit_of_measurement": None,
         "entity_type": "button",
+        "available_topic": "5.6104",
         "actions": {
             "On": "7408",
             "Off": "7407",
@@ -2133,6 +2137,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "coefficient": None,
         "unit_of_measurement": None,
         "entity_type": "button",
+        "available_topic": "5.6105",
         "actions": {
             "On": "7408",
             "Off": "7407",
@@ -2146,6 +2151,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "coefficient": None,
         "unit_of_measurement": None,
         "entity_type": "button",
+        "available_topic": "5.6106",
         "actions": {
             "On": "7408",
             "Off": "7407",
@@ -2159,6 +2165,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "coefficient": None,
         "unit_of_measurement": None,
         "entity_type": "button",
+        "available_topic": "5.6107",
         "actions": {
             "On": "7408",
             "Off": "7407",
@@ -2173,6 +2180,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "coefficient": None,
         "unit_of_measurement": None,
         "entity_type": "button",
+        "available_topic": "5.6108",
         "actions": {
             "On": "7408",
             "Off": "7407",
@@ -2186,6 +2194,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "coefficient": None,
         "unit_of_measurement": None,
         "entity_type": "button",
+        "available_topic": "5.6109",
         "actions": {
             "On": "7408",
             "Off": "7407",
@@ -2199,6 +2208,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "coefficient": None,
         "unit_of_measurement": None,
         "entity_type": "button",
+        "available_topic": "5.6110",
         "actions": {
             "On": "7408",
             "Off": "7407",
@@ -2212,6 +2222,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "coefficient": None,
         "unit_of_measurement": None,
         "entity_type": "button",
+        "available_topic": "5.6111",
         "actions": {
             "On": "7408",
             "Off": "7407",
@@ -2225,6 +2236,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "coefficient": None,
         "unit_of_measurement": None,
         "entity_type": "button",
+        "available_topic": "5.6112",
         "actions": {
             "On": "7408",
             "Off": "7407",
@@ -2238,6 +2250,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "coefficient": None,
         "unit_of_measurement": None,
         "entity_type": "button",
+        "available_topic": "5.6113",
         "actions": {
             "On": "7408",
             "Off": "7407",

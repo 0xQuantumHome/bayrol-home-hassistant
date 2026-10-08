@@ -436,7 +436,7 @@ Without a Smart&Easy filter pump all three entities are unavailable.
 To use them, go to Settings -> Devices & Services -> Bayrol -> Entities, open the entity and enable it. **Heating Setpoint** is enabled by default.
 
 ² Each `Out` entry creates three button entities: *On*, *Off* and *Auto* (for example `Out 1 On`, `Out 1 Off`, `Out 1 Auto`).
-The current state of an output is reported by the matching `Out x Status` sensor, and `Out x Available` tells you whether the output is configured on the device.
+The current state of an output is reported by the matching `Out x Status` sensor, and the `Out x` sensor shows its mode (On, Off, Auto). `Out x Available` tells you whether the output can be switched manually. If it reports No, for example because the output is assigned to a function such as backwash, the device ignores manual Out commands and the buttons are unavailable.
 
 ³ The **Balance Tank** sensors are disabled by default, because only overflow pools with a balance tank control report these values. Enable them the same way as described in ¹.
 **Balance Tank Water Height** is the water level shown as "Tank: x cm" in the device web interface, **Balance Tank Mode** reports the current control mode (Ok, Refilling, Stopped, Dry Run, Dry Run Stopped, Overflow), **Balance Tank Status** the overall state (Ok, Info, Warning, Alarm) and **Balance Tank Available** whether the device has a balance tank control at all.

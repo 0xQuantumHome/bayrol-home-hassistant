@@ -48,19 +48,15 @@ class BayrolMQTTManager:
     def subscribe(self, topic: str, callback):
         """Subscribe to a topic with a callback.
 
-        Only one callback per topic is kept; a second subscription replaces
-        the first one, which then no longer receives values.
+        Several callbacks per topic are allowed, e.g. the PM5 Out buttons
+        follow the same availability topics as the Out x Available sensors.
         """
-        if topic in self._subscribers:
-            _LOGGER.warning(
-                "Topic %s subscribed twice, the earlier subscriber no longer "
-                "receives values",
-                topic,
-            )
-        self._subscribers[topic] = callback
+        callbacks = self._subscribers.setdefault(topic, [])
+        callbacks.append(callback)
         if self.client and self.client.is_connected():
-            self.client.subscribe(f"d02/{self.device_id}/v/{topic}")
-            # Push to receive initial value
+            if len(callbacks) == 1:
+                self.client.subscribe(f"d02/{self.device_id}/v/{topic}")
+            # Request the current value, so a late subscriber gets it too
             self.client.publish(f"d02/{self.device_id}/g/{topic}")
 
     def set_value(self, topic: str, value, read_back: bool = True) -> None:
@@ -118,10 +114,9 @@ class BayrolMQTTManager:
                 # Alarm topics (8.2002/8.2003) send a dict without a "v" key;
                 # pass the whole payload through in that case.
                 value = parsed.get("v", parsed) if isinstance(parsed, dict) else parsed
-                # Schedule the callback in the event loop
-                self.hass.loop.call_soon_threadsafe(
-                    lambda: self._subscribers[topic](value)
-                )
+                # Schedule the callbacks in the event loop
+                for callback in list(self._subscribers[topic]):
+                    self.hass.loop.call_soon_threadsafe(callback, value)
             except Exception as e:
                 _LOGGER.error("Invalid payload for %s: %s", msg.topic, e)
         else:
