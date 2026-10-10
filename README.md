@@ -6,7 +6,7 @@
 
 # Bayrol Pool Access Integration for Home Assistant
 
-This custom integration allows you to monitor your Bayrol Pool Access device in Home Assistant. It uses a direct MQTT connection to the Bayrol Cloud.
+Monitor **and control** your Bayrol pool controller from Home Assistant: water values, dosing, salt electrolysis, filter pump, outputs and device messages. The integration connects directly to the Bayrol PoolAccess cloud via MQTT and supports the Automatic SALT, Automatic Cl-pH and Pool Manager 5 devices.
 
 > [!TIP]
 > **Enjoying the integration? Make a splash with a ⭐!**
@@ -23,50 +23,67 @@ This custom integration allows you to monitor your Bayrol Pool Access device in 
 
 ## Features
 
-- Water values (pH, redox, chlorine, salt, temperatures), electrolysis and
-  dosing details, canister levels, pump and output states, flow and cover
-  states, and connectivity diagnostics (WiFi, web portal, Control Module):
+- **Live values** via MQTT: pH, redox, chlorine, salt, temperatures, electrolysis and dosing details, canister levels, flow and cover states
+- **Control from Home Assistant:** pH / redox targets and alarm limits, pH and chlorine dosing, salt electrolysis, boost mode, temperature setpoints and dosing modes
+- **Smart&Easy filter pump and outputs:** filtration mode with automatic detection of the pump setup (variable or fixed speed, with or without temperature sensor), pump state and speed, Out 1 to 4
+- **PM5 extras:** dosing modes, outputs, heating, filter pump and balance tank (overflow pools)
+- **Device messages** decoded to readable text in six languages (EN, DE, FR, ES, IT, PL), with a logbook history and a `bayrol_message` event for automations
+- **Connection diagnostics:** Device Online status, last received MQTT message, WiFi and Control Module quality
 
   | Device | Entities |
   | --- | --- |
   | Automatic SALT | 99 |
   | Automatic Cl-pH | 79 |
   | Pool Manager 5 Chlorine | 111 |
-- Native entity types: read-only values as `sensor` and `binary_sensor`, the
-  pool cover as a read-only `cover`, and writable settings as `select`
-  (discrete modes), `number` (targets, alarm limits, temperature setpoints)
-  and `switch` (pH dosing, salt electrolysis) entities
-- Device messages decoded to readable text in six languages (EN, DE, FR, ES,
-  IT, PL), with a message event entity for a full logbook history and a
-  `bayrol_message` bus event for automations
-- Real-time updates via MQTT connection to the Bayrol cloud
 
 ## Tested Devices
 
 - Bayrol Automatic Salt 5 (AS5) and Salt 7 (AS7)
 - Bayrol Automatic Cl-pH
 - Pool Manager 5 Chlorine
+- Smart&Easy Control Module / Box (filter pump and outputs, with Automatic devices)
+
+## Installation
+
+### HACS (recommended)
+
+1. Make sure you have [HACS](https://hacs.xyz/) installed
+2. Search for "Bayrol" and install the integration
+3. Restart Home Assistant
+
+### Manual installation
+
+1. Download `bayrol.zip` from the [latest release](https://github.com/0xQuantumHome/bayrol-home-hassistant/releases/latest)
+2. Extract it into `custom_components/bayrol` in your Home Assistant configuration directory (the folder must contain `manifest.json` directly)
+3. Restart Home Assistant
+
+## Configuration
+
+1. Go to Settings -> Devices & Services
+2. Click "Add Integration" and search for "Bayrol"
+3. Enter your **App Link Code**. You get it in the Bayrol PoolAccess web app, it looks like `A-aBcDeF`
+4. Select your **device type**: Automatic SALT, Automatic Cl-pH or PM5 Chlorine. The entities you get depend on this choice
+
+If you manage several pools, add the integration once per device.
 
 ## Supported Entities
 
-The entities you get depend on the device type you select when adding the integration.
 The **MQTT ID** is the topic suffix the device publishes under (see [MQTT Debug](#mqtt-debug)), the **Type** is the Home Assistant platform the entity is created on:
 
-- `sensor` – read only
-- `binary_sensor` – read-only two-state input
-- `cover` – read-only pool-cover state (no controls are exposed)
-- `select` – writable, pick one of a fixed list of values
-- `number` – writable numeric value
-- `switch` – writable on/off setting
-- `button` – sends a command to the device
+- `sensor`: read-only value
+- `binary_sensor`: read-only two-state value
+- `cover`: read-only pool cover state (no controls are exposed)
+- `select`: writable, pick one of a fixed list of values
+- `number`: writable numeric value
+- `switch`: writable on/off setting
+- `button`: sends a command to the device
 
-The tables below list the entities the integration creates. A community
-reference of **all** known MQTT datapoints, including those not implemented
-yet, lives in [docs/DATAPOINTS.md](docs/DATAPOINTS.md), useful if you like to
-explore the topics with MQTT Explorer (see [MQTT Debug](#mqtt-debug)) or want
-to request a new entity.
+A community reference of **all** known MQTT datapoints, including those not implemented yet, lives in [docs/DATAPOINTS.md](docs/DATAPOINTS.md). It's useful if you like to explore the topics with MQTT Explorer or want to request a new entity.
 
 ### Automatic SALT
+
+<details>
+<summary>Show all Automatic SALT entities</summary>
 
 | MQTT ID | Name | Type | Unit |
 | --- | --- | --- | --- |
@@ -76,7 +93,7 @@ to request a new entity.
 | `4.4` | pH Alert Min | number | — |
 | `4.5` | pH Dosing Control Time Interval | sensor | min |
 | `4.7` | Minutes Counter / Reset every hour | sensor | min |
-| `4.10` | Pool Volume ⁴ | number | m³ |
+| `4.10` | Pool Volume ² | number | m³ |
 | `4.26` | Redox Alert Max | number | mV |
 | `4.27` | Redox Alert Min | number | mV |
 | `4.28` | Redox Target | number | mV |
@@ -85,11 +102,11 @@ to request a new entity.
 | `4.38` | pH Dosing Cycle | sensor | s |
 | `4.47` | pH Dosing Speed | sensor | % |
 | `4.51` | Polarity Reversal Times | sensor | min |
-| `4.77` | SE Timed Cycle Runtime | sensor | min |
-| `4.66` | Minimum Redox Produktion | number | % |
+| `4.66` | Minimum Redox Production | number | % |
 | `4.67` | SW Version | sensor | — |
 | `4.68` | SW Date | sensor | — |
 | `4.69` | Hourly Counter / Reset every 24h | sensor | h |
+| `4.77` | SE Timed Cycle Runtime | sensor | min |
 | `4.82` | Redox | sensor | mV |
 | `4.89` | pH Dosing Rate | sensor | % |
 | `4.91` | Electrolyzer Production Rate | sensor | % |
@@ -118,20 +135,20 @@ to request a new entity.
 | `4.212` | Message Count | sensor | — |
 | `4.239` | WiFi RSSI | sensor | dBm |
 | `4.304` | Control Module Signal Strength | sensor | % |
-| `4.340` | pH Dosing Time Today ³ | sensor | s |
-| `4.341` | pH Daily Dosing Limit ³ | number | L |
-| `4.343` | pH Dosed Today ³ | sensor | L |
+| `4.340` | pH Dosing Time Today ¹ | sensor | s |
+| `4.341` | pH Daily Dosing Limit ¹ | number | L |
+| `4.343` | pH Dosed Today ¹ | sensor | L |
 | `5.2` | Language | sensor | — |
 | `5.3` | pH Production Rate | select | — |
 | `5.8` | pH Dosing Direction | sensor | — |
 | `5.9` | Alarm Sound | sensor | — |
 | `5.17` | SE Polarity | sensor | — |
 | `5.29` | Flow Pump Status | sensor | — |
-| `5.44` | SE Current Polarity | sensor | — |
 | `5.37` | Gas Sensor | binary_sensor | — |
 | `5.40` | Salt electrolysis ON/OFF | switch | — |
 | `5.41` | Redox Mode | select | — |
 | `5.42` | pH Dosing ON/OFF | switch | — |
+| `5.44` | SE Current Polarity | sensor | — |
 | `5.59` | pH Pause Runtime | sensor | — |
 | `5.60` | SE Pause Runtime | sensor | — |
 | `5.63` | SE Boost Duration | select | — |
@@ -146,13 +163,13 @@ to request a new entity.
 | `5.173` | Device Type | sensor | — |
 | `5.174` | Web Portal State | sensor | — |
 | `5.178` | Detected Device Type | sensor | — |
-| `5.184` | Filtration mode ⁵ | select | — |
-| `5.196` | Filter Pump Speed ⁵ | sensor | — |
-| `5.197` | Filter Pump State ⁵ | sensor | — |
+| `5.184` | Filtration mode ³ | select | — |
 | `5.186` | Out 1 Mode | select | — |
 | `5.187` | Out 2 Mode | select | — |
 | `5.188` | Out 3 Mode | select | — |
 | `5.189` | Out 4 Mode | select | — |
+| `5.196` | Filter Pump Speed ³ | sensor | — |
+| `5.197` | Filter Pump State ³ | sensor | — |
 | `5.239` | SW Update Required | sensor | — |
 | `5.242` | Control Module Connection Quality | sensor | — |
 | `5.275` | Flow In Status | binary_sensor | — |
@@ -168,11 +185,16 @@ to request a new entity.
 | `11.48` | SE Paused | binary_sensor | — |
 | `13.65` | SE Boost Start | button | — |
 
+</details>
+
 **SE Polarity** (`5.17`) is the polarity *setting* (A, B or OFF). The polarity the cell is currently running on is reported by **SE Current Polarity** (`5.44`).
 **SE Boost Start** starts the boost mode with the duration selected in **SE Boost Duration** (1 to 72 hours), **SE Boost Stop** ends it. **SE Boost Active** (`11.46`) shows whether boost is running and **SE Boost Progress** how many minutes it has been running (no value while boost is off).
 The **SE Timed Cycle** sensors show the settings of the timed salt electrolysis cycle ("Zeitbegrenzter Salzelektrolyse-Zyklus" in the Bayrol web app): runtime, power, redox limit and progress.
 
 ### Automatic Cl-pH
+
+<details>
+<summary>Show all Automatic Cl-pH entities</summary>
 
 | MQTT ID | Name | Type | Unit |
 | --- | --- | --- | --- |
@@ -182,7 +204,7 @@ The **SE Timed Cycle** sensors show the settings of the timed salt electrolysis 
 | `4.4` | pH Alert Min | number | — |
 | `4.5` | pH Dosing Control Time Interval | sensor | min |
 | `4.7` | Minutes Counter / Reset every hour | sensor | min |
-| `4.10` | Pool Volume ⁴ | number | m³ |
+| `4.10` | Pool Volume ² | number | m³ |
 | `4.26` | Redox Alert Max | number | mV |
 | `4.27` | Redox Alert Min | number | mV |
 | `4.28` | Redox Target | number | mV |
@@ -207,12 +229,12 @@ The **SE Timed Cycle** sensors show the settings of the timed salt electrolysis 
 | `4.212` | Message Count | sensor | — |
 | `4.239` | WiFi RSSI | sensor | dBm |
 | `4.304` | Control Module Signal Strength | sensor | % |
-| `4.335` | Cl Dosing Time Today ³ | sensor | s |
-| `4.336` | Cl Daily Dosing Limit ³ | number | L |
-| `4.339` | Cl Dosed Today ³ | sensor | L |
-| `4.340` | pH Dosing Time Today ³ | sensor | s |
-| `4.341` | pH Daily Dosing Limit ³ | number | L |
-| `4.343` | pH Dosed Today ³ | sensor | L |
+| `4.335` | Cl Dosing Time Today ¹ | sensor | s |
+| `4.336` | Cl Daily Dosing Limit ¹ | number | L |
+| `4.339` | Cl Dosed Today ¹ | sensor | L |
+| `4.340` | pH Dosing Time Today ¹ | sensor | s |
+| `4.341` | pH Daily Dosing Limit ¹ | number | L |
+| `4.343` | pH Dosed Today ¹ | sensor | L |
 | `5.2` | Language | sensor | — |
 | `5.3` | pH Production Rate | select | — |
 | `5.8` | pH Dosing Direction | sensor | — |
@@ -234,13 +256,13 @@ The **SE Timed Cycle** sensors show the settings of the timed salt electrolysis 
 | `5.174` | Web Portal State | sensor | — |
 | `5.175` | Cl Adjust Dosing Amount | select | % |
 | `5.178` | Detected Device Type | sensor | — |
-| `5.184` | Filtration mode ⁵ | select | — |
-| `5.196` | Filter Pump Speed ⁵ | sensor | — |
-| `5.197` | Filter Pump State ⁵ | sensor | — |
+| `5.184` | Filtration mode ³ | select | — |
 | `5.186` | Out 1 Mode | select | — |
 | `5.187` | Out 2 Mode | select | — |
 | `5.188` | Out 3 Mode | select | — |
 | `5.189` | Out 4 Mode | select | — |
+| `5.196` | Filter Pump Speed ³ | sensor | — |
+| `5.197` | Filter Pump State ³ | sensor | — |
 | `5.239` | SW Update Required | sensor | — |
 | `5.242` | Control Module Connection Quality | sensor | — |
 | `5.275` | Flow In Status | binary_sensor | — |
@@ -254,16 +276,123 @@ The **SE Timed Cycle** sensors show the settings of the timed salt electrolysis 
 | `11.44` | Cl Manual Dosing Active | binary_sensor | — |
 | `11.45` | Cl Dosing Paused | binary_sensor | — |
 
-³ Daily dosing statistics require a recent PoolAccess firmware (the values were
+</details>
+
+### Notes for Automatic devices
+
+¹ Daily dosing statistics require a recent PoolAccess firmware (the values were
 added with app version v1.0.147); devices on older firmware never publish
 these topics and the entities stay unknown. The dosing time sensors are
-disabled by default and can be enabled in the entity registry.
+disabled by default and can be enabled in the entity registry. The dosed
+amount is reported in steps of 0.1 L, so small daily amounts show as 0.
 
-⁴ Pool Volume is the writable commissioning setting the device bases its
+² Pool Volume is the writable commissioning setting the device bases its
 dosing calculations on. It is disabled by default; enable it in the entity
 registry only if you really need to change it from Home Assistant. The device
 stores whole cubic meters.
 
+³ See [Filtration pump (Smart&Easy)](#filtration-pump-smarteasy).
+
+### PM5 Chlorine
+
+<details>
+<summary>Show all PM5 Chlorine entities</summary>
+
+| MQTT ID | Name | Type | Unit |
+| --- | --- | --- | --- |
+| `4.3001` | pH Target | select | — |
+| `4.3002` | pH Alert Min | select | — |
+| `4.3003` | pH Alert Max | select | — |
+| `4.3017` | Setpoint Chlorine | select | mg/l |
+| `4.3018` | Lower Alarm threshold Chlorine | select | mg/l |
+| `4.3019` | Upper Alarm threshold Chlorine | select | mg/l |
+| `4.3049` | Setpoint Redox | select | mV |
+| `4.3051` | Redox Alert Min | select | mV |
+| `4.3053` | Redox Alert Max | select | mV |
+| `4.3069` | T1 Alert Min | number | °C |
+| `4.3070` | T1 Alert Max | number | °C |
+| `4.3074` | T2 Alert Min | number | °C |
+| `4.3075` | T2 Alert Max | number | °C |
+| `4.3079` | T3 Alert Min | number | °C |
+| `4.3080` | T3 Alert Max | number | °C |
+| `4.3118` | Heating Setpoint | number | °C |
+| `4.3120` | Solar Setpoint ⁴ | number | °C |
+| `4.3376` | Whirlpool Setpoint ⁴ | number | °C |
+| `4.4001` | pH | sensor | — |
+| `4.4008` | Cl | sensor | mg/l |
+| `4.4022` | Redox | sensor | mV |
+| `4.4033` | Water Temperature | sensor | °C |
+| `4.4047` | Battery | sensor | V |
+| `4.4069` | Air Temperature | sensor | °C |
+| `4.4071` | Temperature T3 | sensor | °C |
+| `4.4129` | Balance Tank Water Height ⁶ | sensor | cm |
+| `4.4132` | Active Alarms | sensor | — |
+| `5.5017` | pH Mode | select | — |
+| `5.5018` | Cl Mode | select | — |
+| `5.5020` | Redox Dosing Mode | select | — |
+| `5.5213` | Heating Mode | select | — |
+| `5.5427` | Filter Pump Mode | select | — |
+| `5.5433` | Out 1 ⁵ | button | — |
+| `5.5434` | Out 2 ⁵ | button | — |
+| `5.5435` | Out 3 ⁵ | button | — |
+| `5.5436` | Out 4 ⁵ | button | — |
+| `5.5485` | Out 5 ⁵ | button | — |
+| `5.5519` | Out 6 ⁵ | button | — |
+| `5.5553` | Out 7 ⁵ | button | — |
+| `5.5587` | Out 8 ⁵ | button | — |
+| `5.5621` | Out 9 ⁵ | button | — |
+| `5.5655` | Out 10 ⁵ | button | — |
+| `5.6012` | pH Pump Status | sensor | — |
+| `5.6013` | Cl Pump Status | sensor | — |
+| `5.6015` | Redox Pump Status | sensor | — |
+| `5.6028` | Out 1 Status | sensor | — |
+| `5.6029` | Out 2 Status | sensor | — |
+| `5.6030` | Out 3 Status | sensor | — |
+| `5.6031` | Out 4 Status | sensor | — |
+| `5.6039` | Heating Status | sensor | — |
+| `5.6058` | Out 5 Status | sensor | — |
+| `5.6059` | Out 6 Status | sensor | — |
+| `5.6060` | Out 7 Status | sensor | — |
+| `5.6061` | Out 8 Status | sensor | — |
+| `5.6062` | Out 9 Status | sensor | — |
+| `5.6063` | Out 10 Status | sensor | — |
+| `5.6064` | pH Canister Level | sensor | — |
+| `5.6065` | pH Status | sensor | — |
+| `5.6066` | Cl Canister Level | sensor | — |
+| `5.6067` | pH System Status | sensor | — |
+| `5.6068` | Redox Canister Level | sensor | — |
+| `5.6069` | Redox Status | sensor | — |
+| `5.6071` | Cl System Status | sensor | — |
+| `5.6072` | Redox System Status | sensor | — |
+| `5.6083` | Filter Pump Current Speed | sensor | — |
+| `5.6085` | Balance Tank Status ⁶ | sensor | — |
+| `5.6086` | Balance Tank Mode ⁶ | sensor | — |
+| `5.6102` | Balance Tank Available ⁶ | sensor | — |
+| `5.6104` | Out 1 Available | sensor | — |
+| `5.6105` | Out 2 Available | sensor | — |
+| `5.6106` | Out 3 Available | sensor | — |
+| `5.6107` | Out 4 Available | sensor | — |
+| `5.6108` | Out 5 Available | sensor | — |
+| `5.6109` | Out 6 Available | sensor | — |
+| `5.6110` | Out 7 Available | sensor | — |
+| `5.6111` | Out 8 Available | sensor | — |
+| `5.6112` | Out 9 Available | sensor | — |
+| `5.6113` | Out 10 Available | sensor | — |
+
+</details>
+
+⁴ **Solar Setpoint** and **Whirlpool Setpoint** are disabled by default, because not every PM5 installation has a solar or whirlpool circuit.
+To use them, go to Settings -> Devices & Services -> Bayrol -> Entities, open the entity and enable it. **Heating Setpoint** is enabled by default.
+
+⁵ Each `Out` entry creates three button entities: *On*, *Off* and *Auto* (for example `Out 1 On`, `Out 1 Off`, `Out 1 Auto`).
+The current state of an output is reported by the matching `Out x Status` sensor, and the `Out x` sensor shows its mode (On, Off, Auto). `Out x Available` tells you whether the output can be switched manually. If it reports No, for example because the output is assigned to a function such as backwash, the device ignores manual Out commands and the buttons are unavailable.
+
+⁶ The **Balance Tank** sensors are disabled by default, because only overflow pools with a balance tank control report these values. Enable them the same way as described in ⁴.
+**Balance Tank Water Height** is the water level shown as "Tank: x cm" in the device web interface, **Balance Tank Mode** reports the current control mode (Ok, Refilling, Stopped, Dry Run, Dry Run Stopped, Overflow), **Balance Tank Status** the overall state (Ok, Info, Warning, Alarm) and **Balance Tank Available** whether the device has a balance tank control at all.
+
+## Good to know
+
+### Device messages
 
 Automatic SALT and Automatic Cl-pH devices also expose MQTT topic `10` as a
 `Messages` sensor. Its state shows the current messages as readable text in
@@ -334,7 +463,7 @@ system language.
 
 ### Filtration pump (Smart&Easy)
 
-⁵ **Filtration mode** controls a filter pump connected to the Smart&Easy Control Module. The device has a separate filtration mode datapoint for each pump setup, the integration detects the setup from the device and writes to the matching one:
+**Filtration mode** controls a filter pump connected to the Smart&Easy Control Module. The device has a separate filtration mode datapoint for each pump setup, the integration detects the setup from the device and writes to the matching one:
 
 | Pump | with temperature sensor | without temperature sensor |
 | --- | --- | --- |
@@ -353,101 +482,9 @@ Without a Smart&Easy filter pump all three entities are unavailable.
 
 **Last MQTT Message** (all devices, diagnostic) shows when the integration last received a message from the device, independent of Device Online. Its `mqtt_connected` attribute shows whether the integration is connected to the Bayrol MQTT broker. The state is updated at most once per minute. A timestamp that stops advancing means no data is coming in, even if the last values in Home Assistant look current (Home Assistant does not change the "last updated" time of a sensor while its value stays the same).
 
-### PM5 Chlorine
-
-| MQTT ID | Name | Type | Unit |
-| --- | --- | --- | --- |
-| `4.3001` | pH Target | select | — |
-| `4.3002` | pH Alert Min | select | — |
-| `4.3003` | pH Alert Max | select | — |
-| `4.3017` | Setpoint Chlorine | select | mg/l |
-| `4.3018` | Lower Alarm threshold Chlorine | select | mg/l |
-| `4.3019` | Upper Alarm threshold Chlorine | select | mg/l |
-| `4.3049` | Setpoint Redox | select | mV |
-| `4.3051` | Redox Alert Min | select | mV |
-| `4.3053` | Redox Alert Max | select | mV |
-| `4.3069` | T1 Alert Min | number | °C |
-| `4.3070` | T1 Alert Max | number | °C |
-| `4.3074` | T2 Alert Min | number | °C |
-| `4.3075` | T2 Alert Max | number | °C |
-| `4.3079` | T3 Alert Min | number | °C |
-| `4.3080` | T3 Alert Max | number | °C |
-| `4.3118` | Heating Setpoint | number | °C |
-| `4.3120` | Solar Setpoint ¹ | number | °C |
-| `4.3376` | Whirlpool Setpoint ¹ | number | °C |
-| `4.4001` | pH | sensor | — |
-| `4.4008` | Cl | sensor | mg/l |
-| `4.4022` | Redox | sensor | mV |
-| `4.4033` | Water Temperature | sensor | °C |
-| `4.4047` | Battery | sensor | V |
-| `4.4069` | Air Temperature | sensor | °C |
-| `4.4071` | Temperature T3 | sensor | °C |
-| `4.4129` | Balance Tank Water Height ³ | sensor | cm |
-| `4.4132` | Active Alarms | sensor | — |
-| `5.5017` | pH Mode | select | — |
-| `5.5018` | Cl Mode | select | — |
-| `5.5020` | Redox Dosing Mode | select | — |
-| `5.5213` | Heating Mode | select | — |
-| `5.5427` | Filter Pump Mode | select | — |
-| `5.5433` | Out 1 ² | button | — |
-| `5.5434` | Out 2 ² | button | — |
-| `5.5435` | Out 3 ² | button | — |
-| `5.5436` | Out 4 ² | button | — |
-| `5.5485` | Out 5 ² | button | — |
-| `5.5519` | Out 6 ² | button | — |
-| `5.5553` | Out 7 ² | button | — |
-| `5.5587` | Out 8 ² | button | — |
-| `5.5621` | Out 9 ² | button | — |
-| `5.5655` | Out 10 ² | button | — |
-| `5.6012` | pH Pump Status | sensor | — |
-| `5.6013` | Cl Pump Status | sensor | — |
-| `5.6015` | Redox Pump Status | sensor | — |
-| `5.6028` | Out 1 Status | sensor | — |
-| `5.6029` | Out 2 Status | sensor | — |
-| `5.6030` | Out 3 Status | sensor | — |
-| `5.6031` | Out 4 Status | sensor | — |
-| `5.6039` | Heating Status | sensor | — |
-| `5.6058` | Out 5 Status | sensor | — |
-| `5.6059` | Out 6 Status | sensor | — |
-| `5.6060` | Out 7 Status | sensor | — |
-| `5.6061` | Out 8 Status | sensor | — |
-| `5.6062` | Out 9 Status | sensor | — |
-| `5.6063` | Out 10 Status | sensor | — |
-| `5.6064` | pH Canister Level | sensor | — |
-| `5.6065` | pH Status | sensor | — |
-| `5.6066` | Cl Canister Level | sensor | — |
-| `5.6067` | pH System Status | sensor | — |
-| `5.6068` | Redox Canister Level | sensor | — |
-| `5.6069` | Redox Status | sensor | — |
-| `5.6071` | Cl System Status | sensor | — |
-| `5.6072` | Redox System Status | sensor | — |
-| `5.6083` | Filter Pump Current Speed | sensor | — |
-| `5.6085` | Balance Tank Status ³ | sensor | — |
-| `5.6086` | Balance Tank Mode ³ | sensor | — |
-| `5.6102` | Balance Tank Available ³ | sensor | — |
-| `5.6104` | Out 1 Available | sensor | — |
-| `5.6105` | Out 2 Available | sensor | — |
-| `5.6106` | Out 3 Available | sensor | — |
-| `5.6107` | Out 4 Available | sensor | — |
-| `5.6108` | Out 5 Available | sensor | — |
-| `5.6109` | Out 6 Available | sensor | — |
-| `5.6110` | Out 7 Available | sensor | — |
-| `5.6111` | Out 8 Available | sensor | — |
-| `5.6112` | Out 9 Available | sensor | — |
-| `5.6113` | Out 10 Available | sensor | — |
-
-¹ **Solar Setpoint** and **Whirlpool Setpoint** are disabled by default, because not every PM5 installation has a solar or whirlpool circuit.
-To use them, go to Settings -> Devices & Services -> Bayrol -> Entities, open the entity and enable it. **Heating Setpoint** is enabled by default.
-
-² Each `Out` entry creates three button entities: *On*, *Off* and *Auto* (for example `Out 1 On`, `Out 1 Off`, `Out 1 Auto`).
-The current state of an output is reported by the matching `Out x Status` sensor, and the `Out x` sensor shows its mode (On, Off, Auto). `Out x Available` tells you whether the output can be switched manually. If it reports No, for example because the output is assigned to a function such as backwash, the device ignores manual Out commands and the buttons are unavailable.
-
-³ The **Balance Tank** sensors are disabled by default, because only overflow pools with a balance tank control report these values. Enable them the same way as described in ¹.
-**Balance Tank Water Height** is the water level shown as "Tank: x cm" in the device web interface, **Balance Tank Mode** reports the current control mode (Ok, Refilling, Stopped, Dry Run, Dry Run Stopped, Overflow), **Balance Tank Status** the overall state (Ok, Info, Warning, Alarm) and **Balance Tank Available** whether the device has a balance tank control at all.
-
 ### Filtering stale values when the pump is off
 
-When the filter pump is not running, water does not circulate past the probes, so pH, redox and temperature readings become physically stale. The device keeps sending the last measured values anyway - the native Bayrol app shows them the same way, and this integration deliberately mirrors that behavior. Marking those sensors as *unavailable* would also clash with Home Assistant semantics, where *unavailable* means "the data source is broken" (e.g. MQTT connection lost), not "the value is old".
+When the filter pump is not running, water does not circulate past the probes, so pH, redox and temperature readings become physically stale. The device keeps sending the last measured values anyway, the native Bayrol app shows them the same way, and this integration deliberately mirrors that behavior. Marking those sensors as *unavailable* would also clash with Home Assistant semantics, where *unavailable* means "the data source is broken" (e.g. MQTT connection lost), not "the value is old".
 
 If you prefer gaps in your history instead of stale readings, you can build that per sensor with a standard [template sensor](https://www.home-assistant.io/integrations/template/), using the flow status entity this integration already provides. On Automatic SALT devices this is the `Flow Contact` binary sensor (the paddle switch on the FLOW input), which is `on` while water is circulating and `off` otherwise:
 
@@ -465,57 +502,40 @@ template:
         availability: "{{ has_value('binary_sensor.bayrol_DEVICEID_flow_contact') }}"
 ```
 
-Replace `DEVICEID` with your device id - the exact entity ids are listed under Settings → Devices & Services → Bayrol. On devices without a `Flow Contact` entity, use `Flow Pump Status` instead and check which states it reports (Developer Tools → States). Repeat the pattern for redox and temperature if desired.
-
-## Installation
-
-### HACS (Recommended)
-
-1. Make sure you have [HACS](https://hacs.xyz/) installed
-2. Search for "Bayrol" and install the integration
-3. Restart Home Assistant
-
-### Manual Installation
-
-1. Copy the `custom_components/bayrol_cloud` directory to your Home Assistant's `custom_components` directory
-2. Restart Home Assistant
-
-## Configuration
-
-1. Go to Settings -> Devices & Services
-2. Click "Add Integration" and search for "Bayrol"
-3. Enter your Bayrol App Link Code (found in the Bayrol Pool Access Web App)
+Replace `DEVICEID` with your device id, the exact entity ids are listed under Settings → Devices & Services → Bayrol. On devices without a `Flow Contact` entity, use `Flow Pump Status` instead and check which states it reports (Developer Tools → States). Repeat the pattern for redox and temperature if desired.
 
 ## MQTT Debug
 
-To debug MQTT messages from the Bayrol device, you can use [**MQTT Explorer**](http://mqtt-explorer.com).
+To debug MQTT messages from the Bayrol device, you can use [**MQTT Explorer**](https://mqtt-explorer.com). It connects to the Bayrol cloud, no access to the local network of the pool is needed.
 
 ### Step 1: Get your Access Token
-First, obtain your **App Link Code** from the Bayrol Pool Access Web App.  
+First, obtain your **App Link Code** from the Bayrol PoolAccess web app.
 Replace the placeholder `A-aBcDeF` in the following URL with your code and open it in your browser:
 
 https://www.bayrol-poolaccess.de/api/?code=A-aBcDeF
 
 You will receive a response like this:
 
+```json
 {"accessToken": "23154245abc693883ef23823","deviceSerial": "212ABC1-016273"}
+```
 
-Please note down both 'accessToken' and 'deviceSerial'.
+Please note down both `accessToken` and `deviceSerial`.
 
 ### Step 2: Configure MQTT Explorer
 In MQTT Explorer, enter the connection details as shown below.
-Use your 'accessToken' value as the 'Username'.
+Use your `accessToken` value as the **Username**.
 
 <img width="654" height="438" alt="image" src="https://github.com/user-attachments/assets/bef549bb-e917-430b-bd07-79780a355f3d" />
 
 ### Step 3: Add Subscription
 In **MQTT Explorer**, click the **ADVANCED** button and add the following subscription:
 
-d02/`deviceSerial`>/v/#
+`d02/<deviceSerial>/v/#`
 
 For example, if your `deviceSerial` is `212ABC1-016273`, the subscription will be:
 
-d02/212ABC1-016273/v/#
+`d02/212ABC1-016273/v/#`
 
 <img width="647" height="196" alt="image" src="https://github.com/user-attachments/assets/e3b17d01-4d21-4ac4-bb28-89ad07a5804d" />
 
@@ -525,6 +545,18 @@ Click the **CONNECT** button and you should see the messages floating in:
 
 <img width="587" height="558" alt="image" src="https://github.com/user-attachments/assets/f92df652-5848-40ab-8edb-8250b50be68d" />
 
+## Reporting a problem
+
+Please [open an issue](https://github.com/0xQuantumHome/bayrol-home-hassistant/issues) with your device type, the integration version and what you expected to see. Raw values help a lot. Enable debug logging in your `configuration.yaml`:
+
+```yaml
+logger:
+  default: warning
+  logs:
+    custom_components.bayrol: debug
+```
+
+After a restart, the Home Assistant log shows every received value as `Received MQTT value: ... (topic ...)`. Please remove your device serial number and access token before posting log excerpts.
 
 ## Support
 
@@ -533,4 +565,3 @@ If you encounter any issues or have questions, please open an issue on GitHub.
 ### Show some love ⭐
 
 If this integration keeps your pool data flowing into Home Assistant, a star on GitHub is the easiest way to say thanks. It helps other pool owners find the project and motivates further development. 🏊
-

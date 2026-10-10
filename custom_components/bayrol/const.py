@@ -1082,7 +1082,7 @@ SENSOR_TYPES_AUTOMATIC_SALT = {
         "entity_type": "sensor",
     },
     "4.66": {
-        "name": "Minimum Redox Produktion",
+        "name": "Minimum Redox Production",
         "device_class": None,
         "state_class": None,
         "coefficient": 1,
