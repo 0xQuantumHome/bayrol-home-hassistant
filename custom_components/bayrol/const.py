@@ -2172,7 +2172,8 @@ SENSOR_TYPES_PM5_CHLORINE = {
             "Auto": "7427",
         },
     },
-    # Out 5-10 button IDs assumed sequential (not verified).
+    # Out 1-10 IDs (buttons, availability, status) match the PM5 web app
+    # data model (global_js.js).
     "5.5485": {
         "name": "Out 5",
         "device_class": None,
@@ -2259,7 +2260,8 @@ SENSOR_TYPES_PM5_CHLORINE = {
     },
     # Availability sensors for the Out 1-10 buttons.
     # Values: 7003 = Yes (available), 7004 = No (unavailable).
-    # Out 1 ID (5.6104) confirmed; Out 2-10 IDs assumed sequential.
+    # Out 1 ID (5.6104) confirmed on a live device, Out 1-10 IDs match the
+    # PM5 web app data model.
     "5.6104": {
         "name": "Out 1 Available",
         "device_class": None,
@@ -2406,7 +2408,8 @@ SENSOR_TYPES_PM5_CHLORINE = {
     },
     # On/off status sensors for the Out 1-10 buttons.
     # Values: 7001 = On, 7002 = Off.
-    # Out 1 ID (5.6028) confirmed; Out 2-10 IDs assumed sequential.
+    # Out 1 ID (5.6028) confirmed on a live device, Out 1-10 IDs match the
+    # PM5 web app data model.
     "5.6028": {
         "name": "Out 1 Status",
         "device_class": None,

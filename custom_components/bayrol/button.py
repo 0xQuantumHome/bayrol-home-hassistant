@@ -90,7 +90,7 @@ class BayrolButton(ButtonEntity):
     def available(self) -> bool:
         """Unavailable only when the device reports the output as not usable.
 
-        Without a report (e.g. an unconfirmed topic ID) the button stays
+        Without a report (e.g. before the first value arrives) the button stays
         usable as before.
         """
         return self._output_available is not False
