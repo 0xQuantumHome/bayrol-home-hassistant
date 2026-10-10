@@ -1,12 +1,16 @@
 [![Static Badge](https://img.shields.io/badge/HACS-Custom-41BDF5?style=for-the-badge&logo=homeassistantcommunitystore&logoColor=white)](https://github.com/hacs/integration) 
 ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/0xQuantumHome/bayrol-home-hassistant?style=for-the-badge) 
 ![GitHub Release Date](https://img.shields.io/github/release-date/0xQuantumHome/bayrol-home-hassistant?style=for-the-badge&label=Latest%20Release) [![GitHub Release](https://img.shields.io/github/v/release/0xQuantumHome/bayrol-home-hassistant?style=for-the-badge)](https://github.com/0xQuantumHome/bayrol-home-hassistant/releases)
-[![Downloads (total)](https://img.shields.io/github/downloads/0xQuantumHome/bayrol-home-hassistant/total?style=for-the-badge&label=Downloads%20total)](https://github.com/0xQuantumHome/bayrol-home-hassistant/releases) [![Downloads (latest)](https://img.shields.io/github/downloads/0xQuantumHome/bayrol-home-hassistant/latest/total?style=for-the-badge&label=Downloads%20latest)](https://github.com/0xQuantumHome/bayrol-home-hassistant/releases)
+[![Downloads (total)](https://img.shields.io/github/downloads/0xQuantumHome/bayrol-home-hassistant/total?style=for-the-badge&label=Downloads%20total)](https://github.com/0xQuantumHome/bayrol-home-hassistant/releases) [![Downloads (latest)](https://img.shields.io/github/downloads/0xQuantumHome/bayrol-home-hassistant/latest/total?style=for-the-badge&label=Downloads%20latest)](https://github.com/0xQuantumHome/bayrol-home-hassistant/releases) [![GitHub Stars](https://img.shields.io/github/stars/0xQuantumHome/bayrol-home-hassistant?style=for-the-badge&logo=github&label=Stars)](https://github.com/0xQuantumHome/bayrol-home-hassistant/stargazers)
 
 
 # Bayrol Pool Access Integration for Home Assistant
 
 This custom integration allows you to monitor your Bayrol Pool Access device in Home Assistant. It uses a direct MQTT connection to the Bayrol Cloud.
+
+> [!TIP]
+> **Enjoying the integration? Make a splash with a ⭐!**
+> Every star helps other Bayrol owners discover the project and keeps the development afloat. It only takes one click on the **Star** button at the top of this page.
 
 > [!WARNING]
 > **Do not modify the integration files locally.** Since v0.9.0 HACS installs
@@ -525,4 +529,8 @@ Click the **CONNECT** button and you should see the messages floating in:
 ## Support
 
 If you encounter any issues or have questions, please open an issue on GitHub.
+
+### Show some love ⭐
+
+If this integration keeps your pool data flowing into Home Assistant, a star on GitHub is the easiest way to say thanks. It helps other pool owners find the project and motivates further development. 🏊
 
