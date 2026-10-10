@@ -34,7 +34,7 @@ Monitor **and control** your Bayrol pool controller from Home Assistant: water v
   | --- | --- |
   | Automatic SALT | 99 |
   | Automatic Cl-pH | 79 |
-  | Pool Manager 5 Chlorine | 111 |
+  | Pool Manager 5 Chlorine | 121 |
 
 ## Tested Devices
 
@@ -378,6 +378,16 @@ stores whole cubic meters.
 | `5.6111` | Out 8 Available | sensor | — |
 | `5.6112` | Out 9 Available | sensor | — |
 | `5.6113` | Out 10 Available | sensor | — |
+| `6.10534` | Out 1 Name ⁵ | sensor | — |
+| `6.10535` | Out 2 Name ⁵ | sensor | — |
+| `6.10558` | Out 3 Name ⁵ | sensor | — |
+| `6.10559` | Out 4 Name ⁵ | sensor | — |
+| `6.10567` | Out 5 Name ⁵ | sensor | — |
+| `6.10568` | Out 6 Name ⁵ | sensor | — |
+| `6.10569` | Out 7 Name ⁵ | sensor | — |
+| `6.10570` | Out 8 Name ⁵ | sensor | — |
+| `6.10571` | Out 9 Name ⁵ | sensor | — |
+| `6.10572` | Out 10 Name ⁵ | sensor | — |
 
 </details>
 
@@ -385,7 +395,7 @@ stores whole cubic meters.
 To use them, go to Settings -> Devices & Services -> Bayrol -> Entities, open the entity and enable it. **Heating Setpoint** is enabled by default.
 
 ⁵ Each `Out` entry creates three button entities: *On*, *Off* and *Auto* (for example `Out 1 On`, `Out 1 Off`, `Out 1 Auto`).
-The current state of an output is reported by the matching `Out x Status` sensor, and the `Out x` sensor shows its mode (On, Off, Auto). `Out x Available` tells you whether the output can be switched manually. If it reports No, for example because the output is assigned to a function such as backwash, the device ignores manual Out commands and the buttons are unavailable.
+The current state of an output is reported by the matching `Out x Status` sensor, and the `Out x` sensor shows its mode (On, Off, Auto). `Out x Name` (diagnostic) shows the name given to the output on the device, for example the function it is assigned to. `Out x Available` tells you whether the output can be switched manually. If it reports No, for example because the output is assigned to a function such as backwash, the device ignores manual Out commands and the buttons are unavailable.
 
 ⁶ The **Balance Tank** sensors are disabled by default, because only overflow pools with a balance tank control report these values. Enable them the same way as described in ⁴.
 **Balance Tank Water Height** is the water level shown as "Tank: x cm" in the device web interface, **Balance Tank Mode** reports the current control mode (Ok, Refilling, Stopped, Dry Run, Dry Run Stopped, Overflow), **Balance Tank Status** the overall state (Ok, Info, Warning, Alarm) and **Balance Tank Available** whether the device has a balance tank control at all.
