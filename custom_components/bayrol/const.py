@@ -579,13 +579,15 @@ SENSOR_TYPES_AUTOMATIC = {
         "unit_of_measurement": None,
         "entity_type": "sensor",
     },
+    # Acoustic alarm signal in case of messages (e_enum_alarm_sound), a
+    # writable setting: 19.17 Yes / 19.18 No (default). Was a read-only
+    # sensor before 0.9.7.
     "5.9": {
         "name": "Alarm Sound",
-        "device_class": None,
-        "state_class": None,
-        "coefficient": -1,
-        "unit_of_measurement": None,
-        "entity_type": "sensor",
+        "entity_type": "switch",
+        "on_value": "19.17",
+        "off_value": "19.18",
+        "icon": "mdi:volume-high",
     },
     "5.59": {
         "name": "pH Pause Runtime",

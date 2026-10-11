@@ -141,7 +141,7 @@ A community reference of **all** known MQTT datapoints, including those not impl
 | `5.2` | Language | sensor | — |
 | `5.3` | pH Production Rate | select | — |
 | `5.8` | pH Dosing Direction | sensor | — |
-| `5.9` | Alarm Sound | sensor | — |
+| `5.9` | Alarm Sound | switch | — |
 | `5.17` | SE Polarity | sensor | — |
 | `5.29` | Flow Pump Status | sensor | — |
 | `5.37` | Gas Sensor | binary_sensor | — |
@@ -238,7 +238,7 @@ The **SE Timed Cycle** sensors show the settings of the timed salt electrolysis 
 | `5.2` | Language | sensor | — |
 | `5.3` | pH Production Rate | select | — |
 | `5.8` | pH Dosing Direction | sensor | — |
-| `5.9` | Alarm Sound | sensor | — |
+| `5.9` | Alarm Sound | switch | — |
 | `5.28` | Flow In 230V | binary_sensor | — |
 | `5.29` | Flow Pump Status | sensor | — |
 | `5.37` | Gas Sensor | binary_sensor | — |
