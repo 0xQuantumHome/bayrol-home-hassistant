@@ -2343,9 +2343,10 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "entity_type": "sensor",
     },
     # User-defined output names (e_text_out1_name ... from the PM5 web app
-    # data model), e.g. the name of the function an output is assigned to.
-    # Not yet confirmed on a live PM5 (#55); without a report they stay
-    # unknown.
+    # data model), default "Universal 1" ... "Universal 10". Confirmed on a
+    # live PM5 (#55): renaming an output updates the name. The name is
+    # independent of the function (e.g. backwash) assigned to the output.
+    # Disabled by default since the default names add little.
     "6.10534": {
         "name": "Out 1 Name",
         "device_class": None,
@@ -2354,6 +2355,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "sensor",
         "entity_category": EntityCategory.DIAGNOSTIC,
+        "enabled_default": False,
     },
     "6.10535": {
         "name": "Out 2 Name",
@@ -2363,6 +2365,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "sensor",
         "entity_category": EntityCategory.DIAGNOSTIC,
+        "enabled_default": False,
     },
     "6.10558": {
         "name": "Out 3 Name",
@@ -2372,6 +2375,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "sensor",
         "entity_category": EntityCategory.DIAGNOSTIC,
+        "enabled_default": False,
     },
     "6.10559": {
         "name": "Out 4 Name",
@@ -2381,6 +2385,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "sensor",
         "entity_category": EntityCategory.DIAGNOSTIC,
+        "enabled_default": False,
     },
     "6.10567": {
         "name": "Out 5 Name",
@@ -2390,6 +2395,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "sensor",
         "entity_category": EntityCategory.DIAGNOSTIC,
+        "enabled_default": False,
     },
     "6.10568": {
         "name": "Out 6 Name",
@@ -2399,6 +2405,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "sensor",
         "entity_category": EntityCategory.DIAGNOSTIC,
+        "enabled_default": False,
     },
     "6.10569": {
         "name": "Out 7 Name",
@@ -2408,6 +2415,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "sensor",
         "entity_category": EntityCategory.DIAGNOSTIC,
+        "enabled_default": False,
     },
     "6.10570": {
         "name": "Out 8 Name",
@@ -2417,6 +2425,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "sensor",
         "entity_category": EntityCategory.DIAGNOSTIC,
+        "enabled_default": False,
     },
     "6.10571": {
         "name": "Out 9 Name",
@@ -2426,6 +2435,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "sensor",
         "entity_category": EntityCategory.DIAGNOSTIC,
+        "enabled_default": False,
     },
     "6.10572": {
         "name": "Out 10 Name",
@@ -2435,6 +2445,7 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "sensor",
         "entity_category": EntityCategory.DIAGNOSTIC,
+        "enabled_default": False,
     },
     "5.6012": {
         "name": "pH Pump Status",
