@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 import logging
 from typing import Any
 
@@ -472,7 +472,13 @@ async def async_setup_entry(
 
     if device_type == "Automatic SALT":
         for sensor_type, sensor_config in SENSOR_TYPES_AUTOMATIC_SALT.items():
-            if sensor_config.get("pump_sensor"):
+            if sensor_config.get("device_time"):
+                entities.append(
+                    BayrolDeviceTimeSensor(
+                        config_entry, sensor_type, sensor_config, mqtt_manager
+                    )
+                )
+            elif sensor_config.get("pump_sensor"):
                 entities.append(
                     BayrolPumpSensor(
                         config_entry, sensor_type, sensor_config, mqtt_manager,
@@ -495,7 +501,13 @@ async def async_setup_entry(
                 entities.append(sensor)
     elif device_type == "Automatic Cl-pH":
         for sensor_type, sensor_config in SENSOR_TYPES_AUTOMATIC_CL_PH.items():
-            if sensor_config.get("pump_sensor"):
+            if sensor_config.get("device_time"):
+                entities.append(
+                    BayrolDeviceTimeSensor(
+                        config_entry, sensor_type, sensor_config, mqtt_manager
+                    )
+                )
+            elif sensor_config.get("pump_sensor"):
                 entities.append(
                     BayrolPumpSensor(
                         config_entry, sensor_type, sensor_config, mqtt_manager,
@@ -645,6 +657,87 @@ class BayrolPumpSensor(SensorEntity):
     @property
     def device_info(self) -> DeviceInfo:
         """Device info."""
+        return DeviceInfo(
+            identifiers={(DOMAIN, self._config_entry.data[BAYROL_DEVICE_ID])},
+            manufacturer="Bayrol",
+        )
+
+
+class BayrolDeviceTimeSensor(SensorEntity):
+    """Clock of the device as a timestamp, from its date/time datapoints.
+
+    The device keeps UTC plus a configurable offset; the attributes show the
+    local time as displayed on the device and that offset, so a wrongly set
+    time zone becomes visible.
+    """
+
+    _attr_device_class = SensorDeviceClass.TIMESTAMP
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_icon = "mdi:clock-outline"
+    _attr_should_poll = False
+
+    def __init__(self, config_entry, key, config, mqtt_manager):
+        """Initialize the device time sensor."""
+        self._config_entry = config_entry
+        self._parts: dict[str, int] = {}
+        self._attr_name = config.get("name", key)
+        self._attr_unique_id = f"{config_entry.entry_id}_{key}"
+        device_id = normalize_entity_id_part(config_entry.data[BAYROL_DEVICE_ID])
+        name = normalize_entity_id_part(config.get("name", key))
+        self.entity_id = f"sensor.bayrol_{device_id}_{name}"
+        for part, topic in config["time_topics"].items():
+            mqtt_manager.subscribe(
+                topic, lambda v, part=part: self._on_value(part, v)
+            )
+
+    def _on_value(self, part: str, value) -> None:
+        try:
+            self._parts[part] = int(value)
+        except (TypeError, ValueError):
+            return
+        if self.hass is not None:
+            self.schedule_update_ha_state()
+
+    def _local_time(self) -> datetime | None:
+        p = self._parts
+        if not {"year", "month", "day", "hour", "minute", "utc_offset"} <= p.keys():
+            return None
+        try:
+            return datetime(
+                2000 + p["year"],
+                p["month"],
+                p["day"],
+                p["hour"],
+                p["minute"],
+                tzinfo=timezone(timedelta(seconds=p["utc_offset"])),
+            )
+        except ValueError:
+            return None
+
+    @property
+    def native_value(self) -> datetime | None:
+        """Device clock as an absolute point in time."""
+        return self._local_time()
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        """Local time as shown on the device and its UTC offset."""
+        local = self._local_time()
+        offset = self._parts.get("utc_offset")
+        if offset is None:
+            offset_str = None
+        else:
+            sign = "-" if offset < 0 else "+"
+            hours, rest = divmod(abs(offset), 3600)
+            offset_str = f"{sign}{hours:02d}:{rest // 60:02d}"
+        return {
+            "device_local_time": local.strftime("%Y-%m-%d %H:%M") if local else None,
+            "utc_offset": offset_str,
+        }
+
+    @property
+    def device_info(self) -> DeviceInfo:
+        """Return the Bayrol device information."""
         return DeviceInfo(
             identifiers={(DOMAIN, self._config_entry.data[BAYROL_DEVICE_ID])},
             manufacturer="Bayrol",

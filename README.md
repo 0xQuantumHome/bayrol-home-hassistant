@@ -32,8 +32,8 @@ Monitor **and control** your Bayrol pool controller from Home Assistant: water v
 
   | Device | Entities |
   | --- | --- |
-  | Automatic SALT | 99 |
-  | Automatic Cl-pH | 79 |
+  | Automatic SALT | 101 |
+  | Automatic Cl-pH | 81 |
   | Pool Manager 5 Chlorine | 121 |
 
 ## Tested Devices
@@ -92,7 +92,7 @@ A community reference of **all** known MQTT datapoints, including those not impl
 | `4.3` | pH Alert Max | number | — |
 | `4.4` | pH Alert Min | number | — |
 | `4.5` | pH Dosing Control Time Interval | sensor | min |
-| `4.7` | Minutes Counter / Reset every hour | sensor | min |
+| `4.7` | pH Calibration Buffer 1 | sensor | — |
 | `4.10` | Pool Volume ² | number | m³ |
 | `4.26` | Redox Alert Max | number | mV |
 | `4.27` | Redox Alert Min | number | mV |
@@ -105,7 +105,7 @@ A community reference of **all** known MQTT datapoints, including those not impl
 | `4.66` | Minimum Redox Production | number | % |
 | `4.67` | SW Version | sensor | — |
 | `4.68` | SW Date | sensor | — |
-| `4.69` | Hourly Counter / Reset every 24h | sensor | h |
+| `4.69` | Device Time | sensor | — |
 | `4.77` | SE Timed Cycle Runtime | sensor | min |
 | `4.82` | Redox | sensor | mV |
 | `4.89` | pH Dosing Rate | sensor | % |
@@ -157,6 +157,7 @@ A community reference of **all** known MQTT datapoints, including those not impl
 | `5.83` | Cover | cover | — |
 | `5.98` | Flow Contact | binary_sensor | — |
 | `5.104` | SE Boost Stop | button | — |
+| `5.115` | Auto Summer/Winter Time | switch | — |
 | `5.147` | HW Version | sensor | — |
 | `5.152` | WiFi State | sensor | — |
 | `5.153` | WiFi Signal | sensor | — |
@@ -171,6 +172,7 @@ A community reference of **all** known MQTT datapoints, including those not impl
 | `5.196` | Filter Pump Speed ³ | sensor | — |
 | `5.197` | Filter Pump State ³ | sensor | — |
 | `5.239` | SW Update Required | sensor | — |
+| `5.241` | Time Sync with Web | switch | — |
 | `5.242` | Control Module Connection Quality | sensor | — |
 | `5.275` | Flow In Status | binary_sensor | — |
 | `6.2` | MAC Address | sensor | — |
@@ -203,7 +205,7 @@ The **SE Timed Cycle** sensors show the settings of the timed salt electrolysis 
 | `4.3` | pH Alert Max | number | — |
 | `4.4` | pH Alert Min | number | — |
 | `4.5` | pH Dosing Control Time Interval | sensor | min |
-| `4.7` | Minutes Counter / Reset every hour | sensor | min |
+| `4.7` | pH Calibration Buffer 1 | sensor | — |
 | `4.10` | Pool Volume ² | number | m³ |
 | `4.26` | Redox Alert Max | number | mV |
 | `4.27` | Redox Alert Min | number | mV |
@@ -214,7 +216,7 @@ The **SE Timed Cycle** sensors show the settings of the timed salt electrolysis 
 | `4.47` | pH Dosing Speed | sensor | % |
 | `4.67` | SW Version | sensor | — |
 | `4.68` | SW Date | sensor | — |
-| `4.69` | Hourly Counter / Reset every 24h | sensor | h |
+| `4.69` | Device Time | sensor | — |
 | `4.82` | Redox | sensor | mV |
 | `4.89` | pH Dosing Rate | sensor | % |
 | `4.90` | Cl Dosing Rate | sensor | % |
@@ -247,6 +249,7 @@ The **SE Timed Cycle** sensors show the settings of the timed salt electrolysis 
 | `5.80` | pH Minus Canister Status | sensor | — |
 | `5.83` | Cover | cover | — |
 | `5.98` | Flow Contact | binary_sensor | — |
+| `5.115` | Auto Summer/Winter Time | switch | — |
 | `5.147` | HW Version | sensor | — |
 | `5.152` | WiFi State | sensor | — |
 | `5.153` | WiFi Signal | sensor | — |
@@ -264,6 +267,7 @@ The **SE Timed Cycle** sensors show the settings of the timed salt electrolysis 
 | `5.196` | Filter Pump Speed ³ | sensor | — |
 | `5.197` | Filter Pump State ³ | sensor | — |
 | `5.239` | SW Update Required | sensor | — |
+| `5.241` | Time Sync with Web | switch | — |
 | `5.242` | Control Module Connection Quality | sensor | — |
 | `5.275` | Flow In Status | binary_sensor | — |
 | `6.2` | MAC Address | sensor | — |
@@ -489,6 +493,8 @@ Without a Smart&Easy filter pump all three entities are unavailable.
 ### Connection diagnostics
 
 **Device Online** (topic `1`) is the device status reported by the Bayrol portal (`17.<status>`). As in the official web app, only status `17.0` means offline, every other status (for example `17.2` or `17.4`) means online. The raw status is available in the `raw_value` attribute.
+
+**Device Time** (Automatic devices, diagnostic) shows the device clock, combined from its date and time datapoints (`4.69`-`4.74`) and its UTC offset (`4.240`). The state is the absolute point in time, the attributes show the local time as displayed on the device (`device_local_time`) and the configured offset (`utc_offset`). The device keeps UTC (synchronized via the web) and derives the offset from the local time set on the device. If timers or the daily statistics switch at unexpected times, compare `device_local_time` with your actual time: an unusual offset (for example `+01:45` instead of `+02:00`) means the clock was set to a wrong time. Set the correct time on the device or in the Bayrol portal, the offset is then recalculated. **Time Sync with Web** and **Auto Summer/Winter Time** (configuration switches) correspond to the clock settings of the Bayrol app.
 
 **Last MQTT Message** (all devices, diagnostic) shows when the integration last received a message from the device, independent of Device Online. Its `mqtt_connected` attribute shows whether the integration is connected to the Bayrol MQTT broker. The state is updated at most once per minute. A timestamp that stops advancing means no data is coming in, even if the last values in Home Assistant look current (Home Assistant does not change the "last updated" time of a sensor while its value stays the same).
 

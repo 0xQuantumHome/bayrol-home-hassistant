@@ -76,6 +76,7 @@ class BayrolSwitch(SwitchEntity):
         self._off_value = str(switch_config["off_value"])
         self._attr_name = switch_config.get("name", topic)
         self._attr_icon = switch_config.get("icon")
+        self._attr_entity_category = switch_config.get("entity_category")
         self._attr_unique_id = f"{config_entry.entry_id}_{topic}"
         device_id = normalize_entity_id_part(config_entry.data[BAYROL_DEVICE_ID])
         name = normalize_entity_id_part(self._attr_name)

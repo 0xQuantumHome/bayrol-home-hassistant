@@ -49,8 +49,10 @@ AUTOMATIC_MQTT_TO_TEXT_MAPPING = {
     "19.8": "1.5x",
     "19.9": "2x",
     "19.10": "3x",
-    "19.11": "5x",
-    "19.12": "10x",
+    # 5x / 10x of the dosing amount selects (5.3, 5.175): the data model
+    # uses 19.81 / 19.82 here, not 19.11 / 19.12 (e_enum_ph_dos_amount).
+    "19.81": "5x",
+    "19.82": "10x",
     "19.17": "Yes",
     "19.18": "No",
     "19.106": "Constant mode",
@@ -331,12 +333,14 @@ SENSOR_TYPES_AUTOMATIC = {
         "unit_of_measurement": "min",
         "entity_type": "sensor",
     },
+    # pH value of calibration buffer 1 (e_num_cal_ph_buffer_1, one decimal,
+    # range 5.0-9.0); was mislabeled as a minute counter before 0.9.7.
     "4.7": {
-        "name": "Minutes Counter / Reset every hour",
-        "device_class": None,
-        "state_class": SensorStateClass.MEASUREMENT,
-        "coefficient": 1,
-        "unit_of_measurement": "min",
+        "name": "pH Calibration Buffer 1",
+        "device_class": SensorDeviceClass.PH,
+        "state_class": None,
+        "coefficient": 10,
+        "unit_of_measurement": None,
         "entity_type": "sensor",
     },
     "4.26": {
@@ -427,13 +431,25 @@ SENSOR_TYPES_AUTOMATIC = {
         "unit_of_measurement": None,
         "entity_type": "sensor",
     },
+    # Device clock, combined from its date and time datapoints
+    # (e_num_time_h/_min, e_num_date_d/_m/_y, e_num_rtc_utc_offset_in_s).
+    # Device local time = UTC + utc_offset; the device derives the offset
+    # from the local time set by the user. Seconds (4.71) are not
+    # published, the minute is pushed once per minute. Keeps the unique_id
+    # of the former 4.69 sensor ("Hourly Counter").
     "4.69": {
-        "name": "Hourly Counter / Reset every 24h",
-        "device_class": None,
-        "state_class": SensorStateClass.MEASUREMENT,
-        "coefficient": 1,
-        "unit_of_measurement": "h",
+        "name": "Device Time",
         "entity_type": "sensor",
+        "device_time": True,
+        "entity_category": EntityCategory.DIAGNOSTIC,
+        "time_topics": {
+            "hour": "4.69",
+            "minute": "4.70",
+            "day": "4.72",
+            "month": "4.73",
+            "year": "4.74",
+            "utc_offset": "4.240",
+        },
     },
     "4.82": {
         "name": "Redox",
@@ -589,6 +605,28 @@ SENSOR_TYPES_AUTOMATIC = {
         "off_value": "19.18",
         "icon": "mdi:volume-high",
     },
+    # Clock settings, as switches like in the Bayrol app. The device keeps
+    # UTC (synchronized via the web when 5.241 is on) and derives the UTC
+    # offset from the local time set on the device.
+    # Synchronize time with web (e_enum_ntp_sync_on_off): 19.54 On / 19.55 Off.
+    "5.241": {
+        "name": "Time Sync with Web",
+        "entity_type": "switch",
+        "on_value": "19.54",
+        "off_value": "19.55",
+        "icon": "mdi:web-clock",
+        "entity_category": EntityCategory.CONFIG,
+    },
+    # Automatic summer/winter time changeover
+    # (e_enum_auto_summer_winter_time): 19.17 Yes / 19.18 No.
+    "5.115": {
+        "name": "Auto Summer/Winter Time",
+        "entity_type": "switch",
+        "on_value": "19.17",
+        "off_value": "19.18",
+        "icon": "mdi:sun-clock",
+        "entity_category": EntityCategory.CONFIG,
+    },
     "5.59": {
         "name": "pH Pause Runtime",
         "device_class": None,
@@ -685,8 +723,8 @@ SENSOR_TYPES_AUTOMATIC = {
             "19.8",  # 1.5x
             "19.9",  # 2x
             "19.10",  # 3x
-            "19.11",  # 5x
-            "19.12",  # 10x
+            "19.81",  # 5x
+            "19.82",  # 10x
         ],
     },
     "5.42": {
@@ -1268,8 +1306,8 @@ SENSOR_TYPES_AUTOMATIC_CL_PH = {
             "19.8",  # 1.5x
             "19.9",  # 2x
             "19.10",  # 3x
-            "19.11",  # 5x
-            "19.12",  # 10x
+            "19.81",  # 5x
+            "19.82",  # 10x
         ],
     },
     "5.169": {
