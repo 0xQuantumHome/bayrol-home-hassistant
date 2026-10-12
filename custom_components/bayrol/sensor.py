@@ -693,14 +693,14 @@ class BayrolPumpSensor(SensorEntity):
 
 
 class BayrolDeviceTimeSensor(SensorEntity):
-    """Clock of the device as a timestamp, from its date/time datapoints.
+    """Clock of the device, from its date/time datapoints.
 
-    The device keeps UTC plus a configurable offset; the attributes show the
-    local time as displayed on the device and that offset, so a wrongly set
-    time zone becomes visible.
+    The state is the local time as shown on the device (plain text, so the
+    frontend shows the time instead of a relative "x minutes ago"). The
+    attributes add the UTC offset and how many minutes the device clock is
+    ahead (+) or behind (-) of Home Assistant's clock.
     """
 
-    _attr_device_class = SensorDeviceClass.TIMESTAMP
     _attr_entity_category = EntityCategory.DIAGNOSTIC
     _attr_icon = "mdi:clock-outline"
     _attr_should_poll = False
@@ -744,13 +744,14 @@ class BayrolDeviceTimeSensor(SensorEntity):
             return None
 
     @property
-    def native_value(self) -> datetime | None:
-        """Device clock as an absolute point in time."""
-        return self._local_time()
+    def native_value(self) -> str | None:
+        """Local time as shown on the device."""
+        local = self._local_time()
+        return local.strftime("%Y-%m-%d %H:%M") if local else None
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:
-        """Local time as shown on the device and its UTC offset."""
+        """UTC offset, device time in UTC and the clock deviation."""
         local = self._local_time()
         offset = self._parts.get("utc_offset")
         if offset is None:
@@ -759,9 +760,17 @@ class BayrolDeviceTimeSensor(SensorEntity):
             sign = "-" if offset < 0 else "+"
             hours, rest = divmod(abs(offset), 3600)
             offset_str = f"{sign}{hours:02d}:{rest // 60:02d}"
+        deviation = None
+        if local is not None:
+            # The device reports whole minutes only, so compare minute-wise.
+            now = dt_util.utcnow().replace(second=0, microsecond=0)
+            deviation = round((local - now).total_seconds() / 60)
         return {
-            "device_local_time": local.strftime("%Y-%m-%d %H:%M") if local else None,
             "utc_offset": offset_str,
+            "device_time_utc": (
+                local.astimezone(timezone.utc).isoformat() if local else None
+            ),
+            "clock_deviation_min": deviation,
         }
 
     @property
