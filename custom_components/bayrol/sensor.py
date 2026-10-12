@@ -13,6 +13,7 @@ from homeassistant.components.sensor import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import EntityCategory
 from homeassistant.util import dt as dt_util
@@ -457,6 +458,24 @@ def _handle_sensor_value(sensor, value):
         sensor.schedule_update_ha_state()
 
 
+def _update_device_name(hass: HomeAssistant, config_entry: ConfigEntry, value) -> None:
+    """Name the device after the name set in the Bayrol app.
+
+    The serial number is kept in the name, since app names are often left
+    at their default. A name set by the user in Home Assistant
+    (name_by_user) takes precedence and is not touched.
+    """
+    app_name = str(value).strip()
+    if not app_name:
+        return
+    serial = config_entry.data[BAYROL_DEVICE_ID]
+    registry = dr.async_get(hass)
+    device = registry.async_get_device(identifiers={(DOMAIN, serial)})
+    new_name = f"{app_name} ({serial})"
+    if device is not None and device.name != new_name:
+        registry.async_update_device(device.id, name=new_name)
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     config_entry: ConfigEntry,
@@ -545,6 +564,16 @@ async def async_setup_entry(
                 entities.append(sensor)
 
     entities.append(BayrolLastMessageSensor(config_entry, mqtt_manager))
+
+    sensor_types = {
+        "Automatic SALT": SENSOR_TYPES_AUTOMATIC_SALT,
+        "Automatic Cl-pH": SENSOR_TYPES_AUTOMATIC_CL_PH,
+    }.get(device_type, {})
+    for topic, config in sensor_types.items():
+        if config.get("device_name"):
+            mqtt_manager.subscribe(
+                topic, lambda v: _update_device_name(hass, config_entry, v)
+            )
 
     if device_type in ("Automatic SALT", "Automatic Cl-pH"):
         messages = BayrolMessagesSensor(config_entry, hass.config.language)

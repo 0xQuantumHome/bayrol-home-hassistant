@@ -198,6 +198,17 @@ AUTOMATIC_SENSOR_VALUE_TEXTS = {
     "19.129": "48 hours",
 }
 
+# Value set of the pause duration selects (5.59, 5.60, 5.160)
+PAUSE_RUNTIME_TEXTS = {
+    "19.123": "1 hour",
+    "19.124": "2 hours",
+    "19.125": "4 hours",
+    "19.126": "8 hours",
+    "19.127": "12 hours",
+    "19.128": "24 hours",
+    "19.129": "48 hours",
+}
+
 # Common sensor types for Automatic devices
 SENSOR_TYPES_AUTOMATIC = {
     # Device status as seen by the Bayrol portal (17.<status>). Like the
@@ -289,9 +300,12 @@ SENSOR_TYPES_AUTOMATIC = {
         "entity_type": "sensor",
         "entity_category": EntityCategory.DIAGNOSTIC,
     },
-    # Device name as set in the Bayrol app (e_string_device_name).
+    # Device name as set in the Bayrol app (e_string_device_name). Also
+    # used for the device name in Home Assistant ("<name> (<serial>)"),
+    # unless the user renamed the device there.
     "6.14": {
         "name": "Device Name",
+        "device_name": True,
         "device_class": None,
         "state_class": None,
         "coefficient": -1,
@@ -720,13 +734,26 @@ SENSOR_TYPES_AUTOMATIC = {
         "icon": "mdi:sun-clock",
         "entity_category": EntityCategory.CONFIG,
     },
+    # Pause durations (e_enum_*_pause_runtime): the duration used when
+    # dosing / production is paused. Writable settings; selects since 0.9.7
+    # (read-only sensors before).
     "5.59": {
         "name": "pH Pause Runtime",
         "device_class": None,
         "state_class": None,
-        "coefficient": -1,
+        "coefficient": None,
         "unit_of_measurement": None,
-        "entity_type": "sensor",
+        "entity_type": "select",
+        "options": [
+            "19.123",  # 1 hour
+            "19.124",  # 2 hours
+            "19.125",  # 4 hours
+            "19.126",  # 8 hours
+            "19.127",  # 12 hours
+            "19.128",  # 24 hours
+            "19.129",  # 48 hours
+        ],
+        "mqtt_values": PAUSE_RUNTIME_TEXTS,
     },
     "5.147": {
         "name": "HW Version",
@@ -1202,9 +1229,19 @@ SENSOR_TYPES_AUTOMATIC_SALT = {
         "name": "SE Pause Runtime",
         "device_class": None,
         "state_class": None,
-        "coefficient": -1,
+        "coefficient": None,
         "unit_of_measurement": None,
-        "entity_type": "sensor",
+        "entity_type": "select",
+        "options": [
+            "19.123",  # 1 hour
+            "19.124",  # 2 hours
+            "19.125",  # 4 hours
+            "19.126",  # 8 hours
+            "19.127",  # 12 hours
+            "19.128",  # 24 hours
+            "19.129",  # 48 hours
+        ],
+        "mqtt_values": PAUSE_RUNTIME_TEXTS,
     },
     "4.51": {
         "name": "Polarity Reversal Times",
@@ -1311,6 +1348,24 @@ SENSOR_TYPES_AUTOMATIC_SALT = {
 # Additional sensor types for Automatic Cl-pH
 SENSOR_TYPES_AUTOMATIC_CL_PH = {
     **SENSOR_TYPES_AUTOMATIC,  # Include all base sensors
+    "5.160": {
+        "name": "Cl Pause Runtime",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "select",
+        "options": [
+            "19.123",  # 1 hour
+            "19.124",  # 2 hours
+            "19.125",  # 4 hours
+            "19.126",  # 8 hours
+            "19.127",  # 12 hours
+            "19.128",  # 24 hours
+            "19.129",  # 48 hours
+        ],
+        "mqtt_values": PAUSE_RUNTIME_TEXTS,
+    },
     "11.44": {
         "name": "Cl Manual Dosing Active",
         "device_class": None,

@@ -220,12 +220,12 @@ applies to both.
 | `4.66` | Minimum production rate when ON | SALT | Minimum Redox Produktion (`number`) |
 | `4.67` | Sw version * | both | SW Version (`sensor`) |
 | `4.68` | Sw date * | both | SW Date (`sensor`) |
-| `4.69` | time.hours | both | Hourly Counter / Reset every 24h (`sensor`) |
-| `4.70` | time.minutes | both | — |
-| `4.71` | time.seconds | both | — |
-| `4.72` | date.day | both | — |
-| `4.73` | date.month | both | — |
-| `4.74` | date.year | both | — |
+| `4.69` | time.hours | both | Device Time (`sensor`, combined from `4.69`-`4.74` and `4.240`) |
+| `4.70` | time.minutes | both | part of Device Time (`sensor`) |
+| `4.71` | time.seconds (not published, also not on request) | both | — |
+| `4.72` | date.day | both | part of Device Time (`sensor`) |
+| `4.73` | date.month | both | part of Device Time (`sensor`) |
+| `4.74` | date.year | both | part of Device Time (`sensor`) |
 | `4.75` | Production rate in Constant mode | SALT | — |
 | `4.77` | Stop time-limited production after | SALT | — |
 | `4.113` | Store logging data every | both | — |
@@ -387,12 +387,12 @@ applies to both.
 | `4.354` | Last * | both | — |
 | `5.1` | Undefined * | both | — |
 | `5.2` | Menu language | both | Language (`sensor`) |
-| `5.3` | Adjust pH dosing amount | both | pH Production Rate (`select`) |
+| `5.3` | Adjust pH dosing amount (19.3-19.10 = 0.25x-3x, 19.81 = 5x, 19.82 = 10x) | both | pH Production Rate (`select`) |
 | `5.4` | Increase dos. amount | both | — |
 | `5.5` | Adjust salt electrolysis production level | SALT | — |
 | `5.6` | Increase salt electrolysis production level | SALT | — |
 | `5.8` | Product used for pH dosing | both | pH Dosing Direction (`sensor`) |
-| `5.9` | Acoustic alarm signal in case of messages | both | Alarm Sound (`sensor`) |
+| `5.9` | Acoustic alarm signal in case of messages | both | Alarm Sound (`switch`) |
 | `5.10` | Controller type (temporary for demo) | both | — |
 | `5.11` | Paddle switch on FLOW input (BNC) | both | — |
 | `5.12` | Level switch in the pH canister | both | — |
@@ -419,8 +419,8 @@ applies to both.
 | `5.56` | Show other events | both | — |
 | `5.57` | Simulate Safe Mode / Stopped messages | both | — |
 | `5.58` | Switch on pH pump for 1 minute | both | — |
-| `5.59` | Pause pH dosing for | both | pH Pause Runtime (`sensor`) |
-| `5.60` | Pause salt electrolysis for | SALT | SE Pause Runtime (`sensor`) |
+| `5.59` | Pause pH dosing for | both | pH Pause Runtime (`select`) |
+| `5.60` | Pause salt electrolysis for | SALT | SE Pause Runtime (`select`) |
 | `5.61` | Pause pH dosing also | both | — |
 | `5.62` | Pause salt electrolysis also | both | — |
 | `5.63` | Duration of BOOST mode | SALT | — |
@@ -447,7 +447,7 @@ applies to both.
 | `5.112` | Never stop plus+ cycles (not recommended) | SALT | — |
 | `5.113` | If a redox problem is detected | SALT | — |
 | `5.114` | Confirm correct chlorine level in the pool | Cl-pH | — |
-| `5.115` | Automatic summer/winter time changeover | both | — |
+| `5.115` | Automatic summer/winter time changeover | both | Auto Summer/Winter Time (`switch`) |
 | `5.116` | Show info message, when salt level drops | SALT | — |
 | `5.117` | SE cycle | SALT | — |
 | `5.145` | ADC1 correction from old to new config. set | both | — |
@@ -457,11 +457,11 @@ applies to both.
 | `5.151` | DHCP (automatic configuration) | both | — |
 | `5.154` | Automatic chlorine dosing ON/OFF | both | Cl Dosing ON/OFF (`switch`) |
 | `5.159` | Run chlorine pump for the selected time | both | — |
-| `5.160` | Pause chlorine dosing for | both | — |
+| `5.160` | Pause chlorine dosing for | both | Cl Pause Runtime (`select`, Cl-pH) |
 | `5.161` | Pause chlorine dosing also | both | — |
 | `5.164` | Switch on chlorine pump for 1 minute | both | — |
 | `5.172` | Device type | both | — |
-| `5.175` | Adjust chlorine dosing amount | both | Cl Adjust Dosing Amount (`select`) |
+| `5.175` | Adjust chlorine dosing amount (same values as `5.3`) | both | Cl Adjust Dosing Amount (`select`) |
 | `5.176` | Temperature sensor | both | — |
 | `5.180` | Last detected device type | both | — |
 | `5.183` | Device has 6l/h pumps | both | — |
@@ -505,7 +505,7 @@ applies to both.
 | `5.237` | Click here for colour change | both | — |
 | `5.238` | Click here for colour change | both | — |
 | `5.240` | Touch beep | both | — |
-| `5.241` | Synchronize time with Web | both | — |
+| `5.241` | Synchronize time with Web | both | Time Sync with Web (`switch`) |
 | `5.243` | Heat when pump speed low | both | — |
 | `5.244` | Heat when pump speed med | both | — |
 | `5.245` | Heat when pump speed high | both | — |
@@ -545,7 +545,7 @@ applies to both.
 
 | MQTT ID | Description | Device | Entity in HA |
 | --- | --- | --- | --- |
-| `4.7` | pH value of the buffer solution | both | Minutes Counter / Reset every hour (`sensor`) |
+| `4.7` | pH value of the buffer solution | both | pH Calibration Buffer 1 (`sensor`) |
 | `4.19` | HW calibration pH offset | both | — |
 | `4.20` | HW calibration pH factor | both | — |
 | `4.21` | pH calibration offset | both | — |
@@ -602,7 +602,7 @@ applies to both.
 | `4.210` | Base man. dos. Cl ( 10m³ /  2,2l/h / 0,1mg/l ) | both | — |
 | `4.211` | No. of Eventlog events | both | — |
 | `4.219` | HW calibration offset conductivity v1.60 | both | — |
-| `4.240` | Local time = UTC + this offset | both | — |
+| `4.240` | Local time = UTC + this offset; derived by the device from the local time set on it (not a free setting) | both | part of Device Time (`sensor`) |
 | `4.323` | Clock time correction per 24 hours | both | — |
 | `4.328` | Salt electrolysis refresh cycles (total) | SALT | — |
 | `4.329` | Salt electrolysis refresh cycles (today) | SALT | — |
@@ -673,7 +673,7 @@ applies to both.
 
 ## 2. Pool Manager 5 (PM5)
 
-### 2.1 Datapoints (124)
+### 2.1 Datapoints (134)
 
 | MQTT ID | Description | Entity in HA |
 | --- | --- | --- |
@@ -733,17 +733,17 @@ applies to both.
 | `5.5295` | T2 function | — |
 | `5.5296` | T3 function | — |
 | `5.5427` | Pump eco normal high | Filter Pump Mode (`select`) |
-| `5.5433` | Out1 buttons | Out 1 (`button`) |
-| `5.5434` | Out2 buttons | Out 2 (`button`) |
-| `5.5435` | Out3 buttons | Out 3 (`button`) |
-| `5.5436` | Out4 buttons | Out 4 (`button`) |
+| `5.5433` | Out1 buttons | Out 1 (`button`), Out 1 Mode (`select`) |
+| `5.5434` | Out2 buttons | Out 2 (`button`), Out 2 Mode (`select`) |
+| `5.5435` | Out3 buttons | Out 3 (`button`), Out 3 Mode (`select`) |
+| `5.5436` | Out4 buttons | Out 4 (`button`), Out 4 Mode (`select`) |
 | `5.5464` | Out4 whirlpool buttons | — |
-| `5.5485` | Out5 buttons | Out 5 (`button`) |
-| `5.5519` | Out6 buttons | Out 6 (`button`) |
-| `5.5553` | Out7 buttons | Out 7 (`button`) |
-| `5.5587` | Out8 buttons | Out 8 (`button`) |
-| `5.5621` | Out9 buttons | Out 9 (`button`) |
-| `5.5655` | Out10 buttons | Out 10 (`button`) |
+| `5.5485` | Out5 buttons | Out 5 (`button`), Out 5 Mode (`select`) |
+| `5.5519` | Out6 buttons | Out 6 (`button`), Out 6 Mode (`select`) |
+| `5.5553` | Out7 buttons | Out 7 (`button`), Out 7 Mode (`select`) |
+| `5.5587` | Out8 buttons | Out 8 (`button`), Out 8 Mode (`select`) |
+| `5.5621` | Out9 buttons | Out 9 (`button`), Out 9 Mode (`select`) |
+| `5.5655` | Out10 buttons | Out 10 (`button`), Out 10 Mode (`select`) |
 | `5.6012` | Ph pump on | pH Pump Status (`sensor`) |
 | `5.6013` | Cl pump on | Cl Pump Status (`sensor`) |
 | `5.6014` | Br pump on | — |
@@ -801,6 +801,16 @@ applies to both.
 | `5.6113` | Out10 available | Out 10 Available (`sensor`) |
 | `5.6114` | Whirlpool available | — |
 | `5.6117` | Mv dosing br available | — |
+| `6.10534` | Out1 name (user-defined, default "Universal 1") | Out 1 Name (`sensor`, disabled by default) |
+| `6.10535` | Out2 name (user-defined, default "Universal 2") | Out 2 Name (`sensor`, disabled by default) |
+| `6.10558` | Out3 name (user-defined, default "Universal 3") | Out 3 Name (`sensor`, disabled by default) |
+| `6.10559` | Out4 name (user-defined, default "Universal 4") | Out 4 Name (`sensor`, disabled by default) |
+| `6.10567` | Out5 name (user-defined, default "Universal 5") | Out 5 Name (`sensor`, disabled by default) |
+| `6.10568` | Out6 name (user-defined, default "Universal 6") | Out 6 Name (`sensor`, disabled by default) |
+| `6.10569` | Out7 name (user-defined, default "Universal 7") | Out 7 Name (`sensor`, disabled by default) |
+| `6.10570` | Out8 name (user-defined, default "Universal 8") | Out 8 Name (`sensor`, disabled by default) |
+| `6.10571` | Out9 name (user-defined, default "Universal 9") | Out 9 Name (`sensor`, disabled by default) |
+| `6.10572` | Out10 name (user-defined, default "Universal 10") | Out 10 Name (`sensor`, disabled by default) |
 
 ### 2.2 Timer configuration blocks (120)
 
@@ -963,8 +973,9 @@ User-configured names and device identity as plain strings.
 | `6.17` | Hardware version |
 | `6.19` | Name of the variable-speed pump |
 | `6.20` | Name of the heating |
-| `6.21` to `6.24` | User-configured names of Out 1 to 4 (universal function) |
-| `6.25` to `6.28` | User-configured names of Out 1 to 4 (pool light function) |
+| `6.14` | Device name as set in the Bayrol app (also used for the device name in Home Assistant) |
+| `6.21` to `6.24` | User-configured names of Out 1 to 4 (universal function, default "Funktion 1" ...). Out x Name (Universal) (`sensor`, disabled by default) |
+| `6.25` to `6.28` | User-configured names of Out 1 to 4 (pool light function, default "Licht 1" ...). Out x Name (Pool Light) (`sensor`, disabled by default) |
 | `6.30` / `6.31` | Control Module software version / serial number |
 | `6.32` / `6.33` | Software commit (device / Control Module) |
 
@@ -1091,7 +1102,7 @@ states are active. Descriptions are derived from observed behavior.
 
 | MQTT ID | Description |
 | --- | --- |
-| `1` | Device online status (`17.0` = offline, `17.4` = online, intermediate values during connect) |
+| `1` | Device status `17.<status>`: only `17.0` means offline, every other status online (e.g. `17.2` or `17.4` during normal operation), like in the official web app. Device Online (`binary_sensor`) |
 | `9` | Most relevant current message code (e.g. `8.5`) |
 | `14` | Timestamped message event: `{"ts": <unix>, "class": "20.x", "type": "21.x", "id": "8.x"}` |
 | `16` | Pre-rendered notification content (subject and text of the e-mail the portal sends) |

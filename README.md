@@ -33,7 +33,7 @@ Monitor **and control** your Bayrol pool controller from Home Assistant: water v
   | Device | Entities |
   | --- | --- |
   | Automatic SALT | 110 |
-  | Automatic Cl-pH | 90 |
+  | Automatic Cl-pH | 91 |
   | Pool Manager 5 Chlorine | 131 |
 
 ## Tested Devices
@@ -64,7 +64,7 @@ Monitor **and control** your Bayrol pool controller from Home Assistant: water v
 3. Enter your **App Link Code**. You get it in the Bayrol PoolAccess web app, it looks like `A-aBcDeF`
 4. Select your **device type**: Automatic SALT, Automatic Cl-pH or PM5 Chlorine. The entities you get depend on this choice
 
-If you manage several pools, add the integration once per device.
+If you manage several pools, add the integration once per device. Automatic devices are named after the device name set in the Bayrol app, followed by the serial number (for example "My Pool (212ABC1-016273)"); a name you give the device in Home Assistant always takes precedence.
 
 ## Supported Entities
 
@@ -149,8 +149,8 @@ A community reference of **all** known MQTT datapoints, including those not impl
 | `5.41` | Redox Mode | select | — |
 | `5.42` | pH Dosing ON/OFF | switch | — |
 | `5.44` | SE Current Polarity | sensor | — |
-| `5.59` | pH Pause Runtime | sensor | — |
-| `5.60` | SE Pause Runtime | sensor | — |
+| `5.59` | pH Pause Runtime | select | — |
+| `5.60` | SE Pause Runtime | select | — |
 | `5.63` | SE Boost Duration | select | — |
 | `5.80` | pH Minus Canister Status | sensor | — |
 | `5.82` | SE Polarity Status (disabled by default) | sensor | — |
@@ -254,7 +254,7 @@ The **SE Timed Cycle** sensors show the settings of the timed salt electrolysis 
 | `5.29` | Flow Pump Status | sensor | — |
 | `5.37` | Gas Sensor | binary_sensor | — |
 | `5.42` | pH Dosing ON/OFF | switch | — |
-| `5.59` | pH Pause Runtime | sensor | — |
+| `5.59` | pH Pause Runtime | select | — |
 | `5.80` | pH Minus Canister Status | sensor | — |
 | `5.83` | Cover | cover | — |
 | `5.98` | Flow Contact | binary_sensor | — |
@@ -263,6 +263,7 @@ The **SE Timed Cycle** sensors show the settings of the timed salt electrolysis 
 | `5.152` | WiFi State | sensor | — |
 | `5.153` | WiFi Signal | sensor | — |
 | `5.154` | Cl Dosing ON/OFF | switch | — |
+| `5.160` | Cl Pause Runtime | select | — |
 | `5.169` | Cl Canister Status | sensor | — |
 | `5.173` | Device Type | sensor | — |
 | `5.174` | Web Portal State | sensor | — |
