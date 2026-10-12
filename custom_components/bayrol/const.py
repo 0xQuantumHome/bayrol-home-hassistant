@@ -289,6 +289,99 @@ SENSOR_TYPES_AUTOMATIC = {
         "entity_type": "sensor",
         "entity_category": EntityCategory.DIAGNOSTIC,
     },
+    # Device name as set in the Bayrol app (e_string_device_name).
+    "6.14": {
+        "name": "Device Name",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+        "entity_category": EntityCategory.DIAGNOSTIC,
+    },
+    # User-defined output names, one set per output function: as universal
+    # output (default "Funktion 1" ...) and as pool light (default
+    # "Licht 1" ...). Disabled by default, since the defaults add little.
+    "6.21": {
+        "name": "Out 1 Name (Universal)",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+        "entity_category": EntityCategory.DIAGNOSTIC,
+        "enabled_default": False,
+    },
+    "6.22": {
+        "name": "Out 2 Name (Universal)",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+        "entity_category": EntityCategory.DIAGNOSTIC,
+        "enabled_default": False,
+    },
+    "6.23": {
+        "name": "Out 3 Name (Universal)",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+        "entity_category": EntityCategory.DIAGNOSTIC,
+        "enabled_default": False,
+    },
+    "6.24": {
+        "name": "Out 4 Name (Universal)",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+        "entity_category": EntityCategory.DIAGNOSTIC,
+        "enabled_default": False,
+    },
+    "6.25": {
+        "name": "Out 1 Name (Pool Light)",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+        "entity_category": EntityCategory.DIAGNOSTIC,
+        "enabled_default": False,
+    },
+    "6.26": {
+        "name": "Out 2 Name (Pool Light)",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+        "entity_category": EntityCategory.DIAGNOSTIC,
+        "enabled_default": False,
+    },
+    "6.27": {
+        "name": "Out 3 Name (Pool Light)",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+        "entity_category": EntityCategory.DIAGNOSTIC,
+        "enabled_default": False,
+    },
+    "6.28": {
+        "name": "Out 4 Name (Pool Light)",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+        "entity_category": EntityCategory.DIAGNOSTIC,
+        "enabled_default": False,
+    },
     "4.2": {
         "name": "pH Target",
         "device_class": NumberDeviceClass.PH,
@@ -2156,6 +2249,9 @@ SENSOR_TYPES_PM5_CHLORINE = {
     # Out buttons are unavailable while the matching "Out x Available"
     # reports No (7004), e.g. when the output is assigned to a function such
     # as backwash; the device then ignores manual Out commands (#55).
+    # mode_select adds an "Out x Mode" select (On/Off/Auto) that also shows
+    # the current mode; the three buttons stay for existing installations
+    # but are disabled by default on new ones.
     "5.5433": {
         "name": "Out 1",
         "device_class": None,
@@ -2164,6 +2260,8 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "button",
         "available_topic": "5.6104",
+        "mode_select": True,
+        "button_enabled_default": False,
         "actions": {
             "On": "7408",
             "Off": "7407",
@@ -2178,6 +2276,8 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "button",
         "available_topic": "5.6105",
+        "mode_select": True,
+        "button_enabled_default": False,
         "actions": {
             "On": "7408",
             "Off": "7407",
@@ -2192,6 +2292,8 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "button",
         "available_topic": "5.6106",
+        "mode_select": True,
+        "button_enabled_default": False,
         "actions": {
             "On": "7408",
             "Off": "7407",
@@ -2206,6 +2308,8 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "button",
         "available_topic": "5.6107",
+        "mode_select": True,
+        "button_enabled_default": False,
         "actions": {
             "On": "7408",
             "Off": "7407",
@@ -2222,6 +2326,8 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "button",
         "available_topic": "5.6108",
+        "mode_select": True,
+        "button_enabled_default": False,
         "actions": {
             "On": "7408",
             "Off": "7407",
@@ -2236,6 +2342,8 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "button",
         "available_topic": "5.6109",
+        "mode_select": True,
+        "button_enabled_default": False,
         "actions": {
             "On": "7408",
             "Off": "7407",
@@ -2250,6 +2358,8 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "button",
         "available_topic": "5.6110",
+        "mode_select": True,
+        "button_enabled_default": False,
         "actions": {
             "On": "7408",
             "Off": "7407",
@@ -2264,6 +2374,8 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "button",
         "available_topic": "5.6111",
+        "mode_select": True,
+        "button_enabled_default": False,
         "actions": {
             "On": "7408",
             "Off": "7407",
@@ -2278,6 +2390,8 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "button",
         "available_topic": "5.6112",
+        "mode_select": True,
+        "button_enabled_default": False,
         "actions": {
             "On": "7408",
             "Off": "7407",
@@ -2292,6 +2406,8 @@ SENSOR_TYPES_PM5_CHLORINE = {
         "unit_of_measurement": None,
         "entity_type": "button",
         "available_topic": "5.6113",
+        "mode_select": True,
+        "button_enabled_default": False,
         "actions": {
             "On": "7408",
             "Off": "7407",

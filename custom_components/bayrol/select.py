@@ -154,7 +154,18 @@ async def async_setup_entry(
                 entities.append(select)
     elif device_type == "PM5 Chlorine":
         for select_type, select_config in SENSOR_TYPES_PM5_CHLORINE.items():
-            if select_config.get("entity_type") == "select":
+            if select_config.get("mode_select"):
+                select = BayrolOutModeSelect(
+                    config_entry, select_type, select_config
+                )
+                mqtt_manager.subscribe(
+                    select_type, lambda v, s=select: _handle_select_value(s, v)
+                )
+                mqtt_manager.subscribe(
+                    select_config["available_topic"], select.handle_available
+                )
+                entities.append(select)
+            elif select_config.get("entity_type") == "select":
                 topic = select_type
                 select = BayrolSelect(config_entry, select_type, select_config, topic)
                 mqtt_manager.subscribe(
@@ -405,3 +416,37 @@ class BayrolFiltrationSelect(SelectEntity):
             identifiers={(DOMAIN, self._config_entry.data[BAYROL_DEVICE_ID])},
             manufacturer="Bayrol",
         )
+
+
+class BayrolOutModeSelect(BayrolSelect):
+    """PM5 output mode (On/Off/Auto), next to the three Out buttons.
+
+    Unavailable while the device reports the output as not available, e.g.
+    when it is assigned to a function such as backwash (#55).
+    """
+
+    MODES = {"7408": "On", "7407": "Off", "7427": "Auto"}
+    NOT_AVAILABLE = "7004"
+
+    def __init__(self, config_entry, topic, out_config):
+        """Initialize the output mode select."""
+        name = f"{out_config.get('name', topic)} Mode"
+        super().__init__(
+            config_entry,
+            topic,
+            {"name": name, "options": list(self.MODES), "mqtt_values": self.MODES},
+            topic,
+        )
+        self._attr_unique_id = f"{config_entry.entry_id}_{topic}_mode"
+        self._output_available: bool | None = None
+
+    def handle_available(self, value) -> None:
+        """Follow the device's availability report (7003 Yes / 7004 No)."""
+        self._output_available = str(value) != self.NOT_AVAILABLE
+        if self.hass is not None:
+            self.schedule_update_ha_state()
+
+    @property
+    def available(self) -> bool:
+        """Unavailable only when the device reports the output as not usable."""
+        return self._output_available is not False

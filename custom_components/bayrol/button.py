@@ -79,6 +79,9 @@ class BayrolButton(ButtonEntity):
         object_id = normalize_entity_id_part(f"{base_name} {action_name}")
         self.entity_id = f"button.bayrol_{device_id}_{object_id}"
         self._output_available: bool | None = None
+        self._attr_entity_registry_enabled_default = config.get(
+            "button_enabled_default", True
+        )
 
     def handle_available(self, value) -> None:
         """Follow the device's availability report (7003 Yes / 7004 No)."""
