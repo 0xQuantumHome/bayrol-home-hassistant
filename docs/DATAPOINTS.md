@@ -39,8 +39,8 @@ applies to both.
 | `4.84` | Redox reading (filtered) * | both | — |
 | `4.85` | Additional chlorine dosing: remaining time * | Cl-pH | — |
 | `4.86` | Manual chlorine/redox dosing: remaining time * | both | — |
-| `4.87` | Manual pH-Minus dosing: remaining time * | both | — |
-| `4.88` | Manual pH-Plus dosing: remaining time * | both | — |
+| `4.87` | Manual pH-Minus dosing: remaining time * | both | pH Minus Manual Dosing Remaining (`sensor`, disabled by default) |
+| `4.88` | Manual pH-Plus dosing: remaining time * | both | pH Plus Manual Dosing Remaining (`sensor`, disabled by default) |
 | `4.89` | Dosing | both | pH Dosing Rate (`sensor`) |
 | `4.90` | Dosing | both | Cl Dosing Rate (`sensor`) |
 | `4.91` | Production | SALT | Electrolyzer Production Rate (`sensor`) |
@@ -59,7 +59,7 @@ applies to both.
 | `4.107` | Internal battery voltage | both | Battery Voltage (`sensor`) |
 | `4.109` | Current software version * | both | — |
 | `4.110` | Current software date code * | both | — |
-| `4.111` | Stop production in | SALT | — |
+| `4.111` | Stop production in | SALT | SE Production Stops In (`sensor`, disabled by default) |
 | `4.112` | Next automatic polarity reversal in | SALT | Time Before Next Polarity Reversal (`sensor`) |
 | `4.137` | Measured salt level in the pool | SALT | — |
 | `4.138` | Amount of salt to add | SALT | Salt To Add (`sensor`) |
@@ -78,9 +78,9 @@ applies to both.
 | `4.183` | pH reading (pH-Plus context) * | both | — |
 | `4.184` | Salt reading (pH blocking screen) * | SALT | — |
 | `4.185` | Conductivity reading (pH blocking screen) * | both | — |
-| `4.186` | Last power off duration | both | — |
-| `4.188` | Cell weighted operating hours ( time * % %) | SALT | — |
-| `4.192` | pH reading with 0.01 resolution * | both | — |
+| `4.186` | Last power off duration | both | Last Power Off Duration (`sensor`) |
+| `4.188` | Cell weighted operating hours ( time * % %) | SALT | Cell Weighted Operating Time (`sensor`) |
+| `4.192` | pH reading with 0.01 resolution * | both | pH (High Resolution) (`sensor`) |
 | `4.196` | Desired production rate * | SALT | — |
 | `4.204` | Redox reading * | both | — |
 | `4.205` | Digital input: chlorine canister level * | Cl-pH | — |
@@ -92,13 +92,13 @@ applies to both.
 | `4.220` | Current temp. | both | — |
 | `4.239` | RSSI signal strength (from Control Module) | both | WiFi RSSI (`sensor`) |
 | `4.304` | Signal strength (must be at least 50%%) | both | Control Module Signal Strength (`sensor`) |
-| `4.320` | Planned runtime today (Smart mode) | both | — |
-| `4.321` | Actual runtime today | both | — |
-| `4.322` | Average temperature | both | — |
-| `4.324` | Salt electrolysis OFF > ON cycles (total) | SALT | — |
-| `4.325` | Salt electrolysis OFF > ON cycles (today) | SALT | — |
-| `4.326` | Salt electrolysis polarity reversals (total) | SALT | — |
-| `4.327` | Salt electrolysis polarity reversals (today) | SALT | — |
+| `4.320` | Planned runtime today (Smart mode) | both | Filtration Planned Runtime Today (`sensor`, disabled by default) |
+| `4.321` | Actual runtime today | both | Filtration Runtime Today (`sensor`, disabled by default) |
+| `4.322` | Average temperature | both | Average Water Temperature (`sensor`) |
+| `4.324` | Salt electrolysis OFF > ON cycles (total) | SALT | SE Off-On Cycles Total (`sensor`) |
+| `4.325` | Salt electrolysis OFF > ON cycles (today) | SALT | SE Off-On Cycles Today (`sensor`) |
+| `4.326` | Salt electrolysis polarity reversals (total) | SALT | SE Polarity Reversals Total (`sensor`) |
+| `4.327` | Salt electrolysis polarity reversals (today) | SALT | SE Polarity Reversals Today (`sensor`) |
 | `4.337` | Max. chlorine dosing per day (l/m³) | Cl-pH | — |
 | `4.338` | Max. chlorine dosing per day (active chlorine) | Cl-pH | — |
 | `4.339` | Chlorine dosing amount today | Cl-pH | Cl Dosed Today (`sensor`) |
@@ -115,11 +115,11 @@ applies to both.
 | `5.32` | Salt status | SALT | — |
 | `5.33` | Temp. status | both | — |
 | `5.34` | Salt electrolysis polarity mode * | SALT | — |
-| `5.35` | Identified connected cell type | SALT | — |
+| `5.35` | Identified connected cell type | SALT | Cell Type (`sensor`) |
 | `5.36` | Pool cover contact (BNC) | both | — |
 | `5.37` | Gas sensor | both | Gas Sensor (`binary_sensor`) |
 | `5.38` | Salt electrolysis on/off state * | SALT | — |
-| `5.44` | Current polarity | SALT | — |
+| `5.44` | Current polarity | SALT | SE Current Polarity (`sensor`) |
 | `5.45` | Ph status info * | both | — |
 | `5.46` | Se status info * | SALT | — |
 | `5.47` | Sys status * | both | — |
@@ -131,25 +131,25 @@ applies to both.
 | `5.77` | Standby info * | both | — |
 | `5.79` | Ph pump status * | both | — |
 | `5.80` | pH-Minus canister | both | pH Minus Canister Status (`sensor`) |
-| `5.81` | Salt electrolysis operating mode (auto/constant/boost/pause) * | SALT | — |
-| `5.82` | Se polarity status * | SALT | — |
+| `5.81` | Salt electrolysis operating mode (auto/constant/boost/pause) * | SALT | SE Operating Mode (`sensor`) |
+| `5.82` | Se polarity status * | SALT | SE Polarity Status (`sensor`, disabled by default) |
 | `5.83` | Cover status * | both | Cover (`cover`) |
 | `5.84` | T low status * | both | — |
 | `5.85` | Se const * | SALT | — |
 | `5.98` | Flow / paddle switch input (BNC) | both | Flow Contact (`binary_sensor`) |
-| `5.118` | pH pump on/off state * | both | — |
+| `5.118` | pH pump on/off state * | both | pH Pump Running (`binary_sensor`) |
 | `5.123` | Plus+ cycle active | both | — |
 | `5.124` | Safe mode production cycle active | both | — |
 | `5.126` | Salt electrolysis Safe Mode active (after redox problem) * | SALT | — |
 | `5.127` | Safe Mode production cycle currently running * | SALT | — |
-| `5.128` | pH dosing operating mode (auto/manual/pause/off) * | both | — |
+| `5.128` | pH dosing operating mode (auto/manual/pause/off) * | both | pH Dosing Operating Mode (`sensor`) |
 | `5.143` | pH-Plus canister | both | — |
 | `5.144` | Redox monitoring status of the salt electrolysis * | SALT | — |
 | `5.147` | Hardware version | both | HW Version (`sensor`) |
 | `5.152` | WiFi status | both | WiFi State (`sensor`) |
 | `5.153` | WiFi signal strength | both | WiFi Signal (`sensor`) |
-| `5.165` | Chlorine pump on/off state * | both | — |
-| `5.166` | Chlorine dosing operating mode (auto/manual/pause/off) * | both | — |
+| `5.165` | Chlorine pump on/off state * | both | Cl Pump Running (`binary_sensor`) |
+| `5.166` | Chlorine dosing operating mode (auto/manual/pause/off) * | both | Cl Dosing Operating Mode (`sensor`) |
 | `5.167` | mV status | both | — |
 | `5.168` | Mv pump status * | both | — |
 | `5.169` | Chlorine canister | both | Cl Canister Status (`sensor`) |
@@ -164,14 +164,14 @@ applies to both.
 | `5.193` | Out2 used * | both | — |
 | `5.194` | Out3 used * | both | — |
 | `5.195` | Out4 used * | both | — |
-| `5.196` | Vsp speed * | both | — |
-| `5.197` | Vsp on off * | both | — |
-| `5.198` | Heating on off * | both | — |
-| `5.199` | Out1 on off * | both | — |
-| `5.200` | Out2 on off * | both | — |
-| `5.201` | Out3 on off * | both | — |
-| `5.202` | Out4 on off * | both | — |
-| `5.203` | Control Module connection status * | both | — |
+| `5.196` | Vsp speed * | both | Filter Pump Speed (`sensor`) |
+| `5.197` | Vsp on off * | both | Filter Pump State (`sensor`) |
+| `5.198` | Heating on off * | both | Heating State (`sensor`, disabled by default) |
+| `5.199` | Out1 on off * | both | part of Filter Pump State (`sensor`, fixed speed pump on OUT 1) |
+| `5.200` | Out2 on off * | both | part of Filter Pump State (`sensor`, fixed speed pump on OUT 2) |
+| `5.201` | Out3 on off * | both | part of Filter Pump State (`sensor`, fixed speed pump on OUT 3) |
+| `5.202` | Out4 on off * | both | part of Filter Pump State (`sensor`, fixed speed pump on OUT 4) |
+| `5.203` | Control Module connection status * | both | Control Module Connection (`sensor`, disabled by default) |
 | `5.204` | Water treatment | both | — |
 | `5.239` | Software update required | both | SW Update Required (`sensor`) |
 | `5.242` | Connection quality | both | Control Module Connection Quality (`sensor`) |
@@ -711,7 +711,7 @@ applies to both.
 | `4.4047` | Battery | Battery (`sensor`) |
 | `4.4069` | T2 | Air Temperature (`sensor`) |
 | `4.4071` | T3 | Temperature T3 (`sensor`) |
-| `4.4129` | Btc | — |
+| `4.4129` | Btc | Balance Tank Water Height (`sensor`, disabled by default) |
 | `4.4132` | No of active alarms | Active Alarms (`sensor`) |
 | `4.4133` | Mqtt test messages | — |
 | `5.5017` | Ph op mode | pH Mode (`select`) |
@@ -772,8 +772,8 @@ applies to both.
 | `5.6072` | Br status | Redox System Status (`sensor`) |
 | `5.6083` | Pump current speed | Filter Pump Current Speed (`sensor`) |
 | `5.6084` | Pump available speeds | — |
-| `5.6085` | Btc status | — |
-| `5.6086` | Btc current mode | — |
+| `5.6085` | Btc status | Balance Tank Status (`sensor`, disabled by default) |
+| `5.6086` | Btc current mode | Balance Tank Mode (`sensor`, disabled by default) |
 | `5.6088` | Whirlpool on off | — |
 | `5.6089` | Whirlpool heating on off | — |
 | `5.6090` | Ph available | — |
@@ -788,7 +788,7 @@ applies to both.
 | `5.6099` | Heating available | — |
 | `5.6100` | Solar available | — |
 | `5.6101` | Pump available | — |
-| `5.6102` | Btc available | — |
+| `5.6102` | Btc available | Balance Tank Available (`sensor`, disabled by default) |
 | `5.6104` | Out1 available | Out 1 Available (`sensor`) |
 | `5.6105` | Out2 available | Out 2 Available (`sensor`) |
 | `5.6106` | Out3 available | Out 3 Available (`sensor`) |

@@ -119,6 +119,42 @@ PM5_TEXT_TO_MQTT_MAPPING = {v: k for k, v in PM5_MQTT_TO_TEXT_MAPPING.items()}
 # (e.g. "Yes"/"No" exist there with different codes).
 # Value sets and texts extracted from the official Bayrol web app (v1.0.147).
 AUTOMATIC_SENSOR_VALUE_TEXTS = {
+    # Salt electrolysis operating mode (5.81)
+    "19.216": "Boost",
+    "19.217": "Manual",
+    "19.218": "Off",
+    "19.219": "Paused",
+    "19.220": "Cell protection, stopped",
+    "19.221": "Cell protection",
+    "19.222": "Constant",
+    "19.223": "Safe mode",
+    "19.224": "Auto",
+    "19.225": "Auto Plus",
+    "19.226": "Test cycle",
+    "19.227": "Blocked",
+    "19.228": "No cell",
+    "19.306": "Temperature low",
+    # Dosing operating mode (5.128 pH, 5.166 chlorine)
+    "19.232": "Auto",
+    "19.233": "Pump test",
+    "19.234": "Manual",
+    "19.235": "Blocked",
+    "19.236": "Off",
+    "19.237": "Paused",
+    # Heating state (5.198); 19.55 decodes as "OFF" in sensor.py
+    "19.54": "ON",
+    "19.347": "Blocked",
+    "19.348": "Frost OFF",
+    "19.349": "Frost ON",
+    # Connected cell type (5.35)
+    "19.97": "No cell",
+    "19.98": "5 plates",
+    "19.99": "7 plates",
+    "19.178": "Final production test",
+    # Control Module connection status (5.203)
+    "19.318": "Not connected",
+    "19.319": "Connected",
+    "19.320": "Connection lost",
     # HW version (5.147)
     "19.261": "1.0.0.0",
     "19.262": "1.1.0.0",
@@ -712,6 +748,107 @@ SENSOR_TYPES_AUTOMATIC = {
         "off_value": "19.18",
         "icon": "mdi:volume-high",
     },
+    # Statistics and operating states (data model cross-check, 0.9.7)
+    "4.192": {
+        "name": "pH (High Resolution)",
+        "device_class": SensorDeviceClass.PH,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "coefficient": 100,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "4.322": {
+        "name": "Average Water Temperature",
+        "device_class": SensorDeviceClass.TEMPERATURE,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "coefficient": 10,
+        "unit_of_measurement": "°C",
+        "entity_type": "sensor",
+    },
+    # Smart filtration runtime of today, only with a variable speed pump in
+    # Smart mode (seconds).
+    "4.320": {
+        "name": "Filtration Planned Runtime Today",
+        "device_class": SensorDeviceClass.DURATION,
+        "state_class": SensorStateClass.MEASUREMENT,
+        "coefficient": 1,
+        "unit_of_measurement": "s",
+        "entity_type": "sensor",
+        "enabled_default": False,
+    },
+    "4.321": {
+        "name": "Filtration Runtime Today",
+        "device_class": SensorDeviceClass.DURATION,
+        "state_class": SensorStateClass.TOTAL_INCREASING,
+        "coefficient": 1,
+        "unit_of_measurement": "s",
+        "entity_type": "sensor",
+        "enabled_default": False,
+    },
+    "4.186": {
+        "name": "Last Power Off Duration",
+        "device_class": SensorDeviceClass.DURATION,
+        "state_class": None,
+        "coefficient": 1,
+        "unit_of_measurement": "s",
+        "entity_type": "sensor",
+        "entity_category": EntityCategory.DIAGNOSTIC,
+    },
+    # Remaining time of a manual dosing run; shows the configured duration
+    # while no manual dosing is running.
+    "4.87": {
+        "name": "pH Minus Manual Dosing Remaining",
+        "device_class": SensorDeviceClass.DURATION,
+        "state_class": None,
+        "coefficient": 1,
+        "unit_of_measurement": "min",
+        "entity_type": "sensor",
+        "enabled_default": False,
+    },
+    "4.88": {
+        "name": "pH Plus Manual Dosing Remaining",
+        "device_class": SensorDeviceClass.DURATION,
+        "state_class": None,
+        "coefficient": 1,
+        "unit_of_measurement": "min",
+        "entity_type": "sensor",
+        "enabled_default": False,
+    },
+    "5.128": {
+        "name": "pH Dosing Operating Mode",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.118": {
+        "name": "pH Pump Running",
+        "device_class": BinarySensorDeviceClass.RUNNING,
+        "entity_type": "binary_sensor",
+        "on_values": ("19.17",),
+        "off_values": ("19.18",),
+    },
+    # Heating via the Smart&Easy module: On, Off, Blocked, Frost On/Off.
+    "5.198": {
+        "name": "Heating State",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+        "enabled_default": False,
+    },
+    "5.203": {
+        "name": "Control Module Connection",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+        "entity_category": EntityCategory.DIAGNOSTIC,
+        "enabled_default": False,
+    },
     # Clock settings, as switches like in the Bayrol app. The device keeps
     # UTC (synchronized via the web when 5.241 is on) and derives the UTC
     # offset from the local time set on the device.
@@ -1051,6 +1188,75 @@ SENSOR_TYPES_AUTOMATIC = {
 # Additional sensor types for Automatic SALT
 SENSOR_TYPES_AUTOMATIC_SALT = {
     **SENSOR_TYPES_AUTOMATIC,  # Include all base sensors
+    # Salt electrolysis statistics and states (0.9.7)
+    "4.324": {
+        "name": "SE Off-On Cycles Total",
+        "device_class": None,
+        "state_class": SensorStateClass.TOTAL_INCREASING,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "4.325": {
+        "name": "SE Off-On Cycles Today",
+        "device_class": None,
+        "state_class": SensorStateClass.TOTAL_INCREASING,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "4.326": {
+        "name": "SE Polarity Reversals Total",
+        "device_class": None,
+        "state_class": SensorStateClass.TOTAL_INCREASING,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "4.327": {
+        "name": "SE Polarity Reversals Today",
+        "device_class": None,
+        "state_class": SensorStateClass.TOTAL_INCREASING,
+        "coefficient": None,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    # Operating time weighted by production power (minutes x %), an
+    # indicator of cell wear.
+    "4.188": {
+        "name": "Cell Weighted Operating Time",
+        "device_class": SensorDeviceClass.DURATION,
+        "state_class": SensorStateClass.TOTAL_INCREASING,
+        "coefficient": 1,
+        "unit_of_measurement": "min",
+        "entity_type": "sensor",
+    },
+    "4.111": {
+        "name": "SE Production Stops In",
+        "device_class": SensorDeviceClass.DURATION,
+        "state_class": None,
+        "coefficient": 1,
+        "unit_of_measurement": "s",
+        "entity_type": "sensor",
+        "enabled_default": False,
+    },
+    "5.81": {
+        "name": "SE Operating Mode",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.35": {
+        "name": "Cell Type",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+        "entity_category": EntityCategory.DIAGNOSTIC,
+    },
     "11.46": {
         "name": "SE Boost Active",
         "device_class": None,
@@ -1348,6 +1554,21 @@ SENSOR_TYPES_AUTOMATIC_SALT = {
 # Additional sensor types for Automatic Cl-pH
 SENSOR_TYPES_AUTOMATIC_CL_PH = {
     **SENSOR_TYPES_AUTOMATIC,  # Include all base sensors
+    "5.166": {
+        "name": "Cl Dosing Operating Mode",
+        "device_class": None,
+        "state_class": None,
+        "coefficient": -1,
+        "unit_of_measurement": None,
+        "entity_type": "sensor",
+    },
+    "5.165": {
+        "name": "Cl Pump Running",
+        "device_class": BinarySensorDeviceClass.RUNNING,
+        "entity_type": "binary_sensor",
+        "on_values": ("19.17",),
+        "off_values": ("19.18",),
+    },
     "5.160": {
         "name": "Cl Pause Runtime",
         "device_class": None,

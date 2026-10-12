@@ -32,8 +32,8 @@ Monitor **and control** your Bayrol pool controller from Home Assistant: water v
 
   | Device | Entities |
   | --- | --- |
-  | Automatic SALT | 110 |
-  | Automatic Cl-pH | 91 |
+  | Automatic SALT | 129 |
+  | Automatic Cl-pH | 104 |
   | Pool Manager 5 Chlorine | 131 |
 
 ## Tested Devices
@@ -108,6 +108,8 @@ A community reference of **all** known MQTT datapoints, including those not impl
 | `4.69` | Device Time | sensor | — |
 | `4.77` | SE Timed Cycle Runtime | sensor | min |
 | `4.82` | Redox | sensor | mV |
+| `4.87` | pH Minus Manual Dosing Remaining ⁵ | sensor | min |
+| `4.88` | pH Plus Manual Dosing Remaining ⁵ | sensor | min |
 | `4.89` | pH Dosing Rate | sensor | % |
 | `4.91` | Electrolyzer Production Rate | sensor | % |
 | `4.92` | Start Delay Remaining | sensor | min |
@@ -118,6 +120,7 @@ A community reference of **all** known MQTT datapoints, including those not impl
 | `4.105` | Electrolyzer Current | sensor | A |
 | `4.106` | Cell Power | sensor | W |
 | `4.107` | Battery Voltage | sensor | V |
+| `4.111` | SE Production Stops In ⁵ | sensor | s |
 | `4.112` | Time Before Next Polarity Reversal | sensor | s |
 | `4.119` | Time Since Polarity Reversal | sensor | s |
 | `4.123` | Desired Temperature | number | °C |
@@ -132,9 +135,19 @@ A community reference of **all** known MQTT datapoints, including those not impl
 | `4.156` | SE Timed Cycle Progress | sensor | min |
 | `4.176` | Power On Time | sensor | min |
 | `4.182` | pH | sensor | — |
+| `4.186` | Last Power Off Duration | sensor | s |
+| `4.188` | Cell Weighted Operating Time | sensor | min |
+| `4.192` | pH (High Resolution) | sensor | — |
 | `4.212` | Message Count | sensor | — |
 | `4.239` | WiFi RSSI | sensor | dBm |
 | `4.304` | Control Module Signal Strength | sensor | % |
+| `4.320` | Filtration Planned Runtime Today ⁵ | sensor | s |
+| `4.321` | Filtration Runtime Today ⁵ | sensor | s |
+| `4.322` | Average Water Temperature | sensor | °C |
+| `4.324` | SE Off-On Cycles Total | sensor | — |
+| `4.325` | SE Off-On Cycles Today | sensor | — |
+| `4.326` | SE Polarity Reversals Total | sensor | — |
+| `4.327` | SE Polarity Reversals Today | sensor | — |
 | `4.340` | pH Dosing Time Today ¹ | sensor | s |
 | `4.341` | pH Daily Dosing Limit ¹ | number | L |
 | `4.343` | pH Dosed Today ¹ | sensor | L |
@@ -144,6 +157,7 @@ A community reference of **all** known MQTT datapoints, including those not impl
 | `5.9` | Alarm Sound | switch | — |
 | `5.17` | SE Polarity | sensor | — |
 | `5.29` | Flow Pump Status | sensor | — |
+| `5.35` | Cell Type | sensor | — |
 | `5.37` | Gas Sensor | binary_sensor | — |
 | `5.40` | Salt electrolysis ON/OFF | switch | — |
 | `5.41` | Redox Mode | select | — |
@@ -153,11 +167,14 @@ A community reference of **all** known MQTT datapoints, including those not impl
 | `5.60` | SE Pause Runtime | select | — |
 | `5.63` | SE Boost Duration | select | — |
 | `5.80` | pH Minus Canister Status | sensor | — |
+| `5.81` | SE Operating Mode | sensor | — |
 | `5.82` | SE Polarity Status (disabled by default) | sensor | — |
 | `5.83` | Cover | cover | — |
 | `5.98` | Flow Contact | binary_sensor | — |
 | `5.104` | SE Boost Stop | button | — |
 | `5.115` | Auto Summer/Winter Time | switch | — |
+| `5.118` | pH Pump Running | binary_sensor | — |
+| `5.128` | pH Dosing Operating Mode | sensor | — |
 | `5.147` | HW Version | sensor | — |
 | `5.152` | WiFi State | sensor | — |
 | `5.153` | WiFi Signal | sensor | — |
@@ -171,6 +188,8 @@ A community reference of **all** known MQTT datapoints, including those not impl
 | `5.189` | Out 4 Mode | select | — |
 | `5.196` | Filter Pump Speed ³ | sensor | — |
 | `5.197` | Filter Pump State ³ | sensor | — |
+| `5.198` | Heating State ⁵ | sensor | — |
+| `5.203` | Control Module Connection ⁵ | sensor | — |
 | `5.239` | SW Update Required | sensor | — |
 | `5.241` | Time Sync with Web | switch | — |
 | `5.242` | Control Module Connection Quality | sensor | — |
@@ -227,6 +246,8 @@ The **SE Timed Cycle** sensors show the settings of the timed salt electrolysis 
 | `4.68` | SW Date | sensor | — |
 | `4.69` | Device Time | sensor | — |
 | `4.82` | Redox | sensor | mV |
+| `4.87` | pH Minus Manual Dosing Remaining ⁵ | sensor | min |
+| `4.88` | pH Plus Manual Dosing Remaining ⁵ | sensor | min |
 | `4.89` | pH Dosing Rate | sensor | % |
 | `4.90` | Cl Dosing Rate | sensor | % |
 | `4.92` | Start Delay Remaining | sensor | min |
@@ -237,9 +258,14 @@ The **SE Timed Cycle** sensors show the settings of the timed salt electrolysis 
 | `4.145` | Recommended Min Daily Filtration Time | sensor | h |
 | `4.176` | Power On Time | sensor | min |
 | `4.182` | pH | sensor | — |
+| `4.186` | Last Power Off Duration | sensor | s |
+| `4.192` | pH (High Resolution) | sensor | — |
 | `4.212` | Message Count | sensor | — |
 | `4.239` | WiFi RSSI | sensor | dBm |
 | `4.304` | Control Module Signal Strength | sensor | % |
+| `4.320` | Filtration Planned Runtime Today ⁵ | sensor | s |
+| `4.321` | Filtration Runtime Today ⁵ | sensor | s |
+| `4.322` | Average Water Temperature | sensor | °C |
 | `4.335` | Cl Dosing Time Today ¹ | sensor | s |
 | `4.336` | Cl Daily Dosing Limit ¹ | number | L |
 | `4.339` | Cl Dosed Today ¹ | sensor | L |
@@ -259,11 +285,15 @@ The **SE Timed Cycle** sensors show the settings of the timed salt electrolysis 
 | `5.83` | Cover | cover | — |
 | `5.98` | Flow Contact | binary_sensor | — |
 | `5.115` | Auto Summer/Winter Time | switch | — |
+| `5.118` | pH Pump Running | binary_sensor | — |
+| `5.128` | pH Dosing Operating Mode | sensor | — |
 | `5.147` | HW Version | sensor | — |
 | `5.152` | WiFi State | sensor | — |
 | `5.153` | WiFi Signal | sensor | — |
 | `5.154` | Cl Dosing ON/OFF | switch | — |
 | `5.160` | Cl Pause Runtime | select | — |
+| `5.165` | Cl Pump Running | binary_sensor | — |
+| `5.166` | Cl Dosing Operating Mode | sensor | — |
 | `5.169` | Cl Canister Status | sensor | — |
 | `5.173` | Device Type | sensor | — |
 | `5.174` | Web Portal State | sensor | — |
@@ -276,6 +306,8 @@ The **SE Timed Cycle** sensors show the settings of the timed salt electrolysis 
 | `5.189` | Out 4 Mode | select | — |
 | `5.196` | Filter Pump Speed ³ | sensor | — |
 | `5.197` | Filter Pump State ³ | sensor | — |
+| `5.198` | Heating State ⁵ | sensor | — |
+| `5.203` | Control Module Connection ⁵ | sensor | — |
 | `5.239` | SW Update Required | sensor | — |
 | `5.241` | Time Sync with Web | switch | — |
 | `5.242` | Control Module Connection Quality | sensor | — |
@@ -318,6 +350,8 @@ stores whole cubic meters.
 
 ⁴ Disabled by default. Every output has one name per function: as universal output (default "Funktion 1" ...) and as pool light (default "Licht 1" ...). Enable them if you renamed your outputs in the Bayrol app.
 
+⁵ Disabled by default, since they only matter for some setups (Smart filtration, heating or a Control Module) or show a preset while nothing is running. Enable them in the entity registry if needed.
+
 ### PM5 Chlorine
 
 <details>
@@ -341,8 +375,8 @@ stores whole cubic meters.
 | `4.3079` | T3 Alert Min | number | °C |
 | `4.3080` | T3 Alert Max | number | °C |
 | `4.3118` | Heating Setpoint | number | °C |
-| `4.3120` | Solar Setpoint ⁵ | number | °C |
-| `4.3376` | Whirlpool Setpoint ⁵ | number | °C |
+| `4.3120` | Solar Setpoint ⁶ | number | °C |
+| `4.3376` | Whirlpool Setpoint ⁶ | number | °C |
 | `4.4001` | pH | sensor | — |
 | `4.4008` | Cl | sensor | mg/l |
 | `4.4022` | Redox | sensor | mV |
@@ -350,33 +384,33 @@ stores whole cubic meters.
 | `4.4047` | Battery | sensor | V |
 | `4.4069` | Air Temperature | sensor | °C |
 | `4.4071` | Temperature T3 | sensor | °C |
-| `4.4129` | Balance Tank Water Height ⁷ | sensor | cm |
+| `4.4129` | Balance Tank Water Height ⁸ | sensor | cm |
 | `4.4132` | Active Alarms | sensor | — |
 | `5.5017` | pH Mode | select | — |
 | `5.5018` | Cl Mode | select | — |
 | `5.5020` | Redox Dosing Mode | select | — |
 | `5.5213` | Heating Mode | select | — |
 | `5.5427` | Filter Pump Mode | select | — |
-| `5.5433` | Out 1 Mode ⁶ | select | — |
-| `5.5433` | Out 1 ⁶ | button | — |
-| `5.5434` | Out 2 Mode ⁶ | select | — |
-| `5.5434` | Out 2 ⁶ | button | — |
-| `5.5435` | Out 3 Mode ⁶ | select | — |
-| `5.5435` | Out 3 ⁶ | button | — |
-| `5.5436` | Out 4 Mode ⁶ | select | — |
-| `5.5436` | Out 4 ⁶ | button | — |
-| `5.5485` | Out 5 Mode ⁶ | select | — |
-| `5.5485` | Out 5 ⁶ | button | — |
-| `5.5519` | Out 6 Mode ⁶ | select | — |
-| `5.5519` | Out 6 ⁶ | button | — |
-| `5.5553` | Out 7 Mode ⁶ | select | — |
-| `5.5553` | Out 7 ⁶ | button | — |
-| `5.5587` | Out 8 Mode ⁶ | select | — |
-| `5.5587` | Out 8 ⁶ | button | — |
-| `5.5621` | Out 9 Mode ⁶ | select | — |
-| `5.5621` | Out 9 ⁶ | button | — |
-| `5.5655` | Out 10 Mode ⁶ | select | — |
-| `5.5655` | Out 10 ⁶ | button | — |
+| `5.5433` | Out 1 Mode ⁷ | select | — |
+| `5.5433` | Out 1 ⁷ | button | — |
+| `5.5434` | Out 2 Mode ⁷ | select | — |
+| `5.5434` | Out 2 ⁷ | button | — |
+| `5.5435` | Out 3 Mode ⁷ | select | — |
+| `5.5435` | Out 3 ⁷ | button | — |
+| `5.5436` | Out 4 Mode ⁷ | select | — |
+| `5.5436` | Out 4 ⁷ | button | — |
+| `5.5485` | Out 5 Mode ⁷ | select | — |
+| `5.5485` | Out 5 ⁷ | button | — |
+| `5.5519` | Out 6 Mode ⁷ | select | — |
+| `5.5519` | Out 6 ⁷ | button | — |
+| `5.5553` | Out 7 Mode ⁷ | select | — |
+| `5.5553` | Out 7 ⁷ | button | — |
+| `5.5587` | Out 8 Mode ⁷ | select | — |
+| `5.5587` | Out 8 ⁷ | button | — |
+| `5.5621` | Out 9 Mode ⁷ | select | — |
+| `5.5621` | Out 9 ⁷ | button | — |
+| `5.5655` | Out 10 Mode ⁷ | select | — |
+| `5.5655` | Out 10 ⁷ | button | — |
 | `5.6012` | pH Pump Status | sensor | — |
 | `5.6013` | Cl Pump Status | sensor | — |
 | `5.6015` | Redox Pump Status | sensor | — |
@@ -400,9 +434,9 @@ stores whole cubic meters.
 | `5.6071` | Cl System Status | sensor | — |
 | `5.6072` | Redox System Status | sensor | — |
 | `5.6083` | Filter Pump Current Speed | sensor | — |
-| `5.6085` | Balance Tank Status ⁷ | sensor | — |
-| `5.6086` | Balance Tank Mode ⁷ | sensor | — |
-| `5.6102` | Balance Tank Available ⁷ | sensor | — |
+| `5.6085` | Balance Tank Status ⁸ | sensor | — |
+| `5.6086` | Balance Tank Mode ⁸ | sensor | — |
+| `5.6102` | Balance Tank Available ⁸ | sensor | — |
 | `5.6104` | Out 1 Available | sensor | — |
 | `5.6105` | Out 2 Available | sensor | — |
 | `5.6106` | Out 3 Available | sensor | — |
@@ -413,26 +447,26 @@ stores whole cubic meters.
 | `5.6111` | Out 8 Available | sensor | — |
 | `5.6112` | Out 9 Available | sensor | — |
 | `5.6113` | Out 10 Available | sensor | — |
-| `6.10534` | Out 1 Name ⁶ | sensor | — |
-| `6.10535` | Out 2 Name ⁶ | sensor | — |
-| `6.10558` | Out 3 Name ⁶ | sensor | — |
-| `6.10559` | Out 4 Name ⁶ | sensor | — |
-| `6.10567` | Out 5 Name ⁶ | sensor | — |
-| `6.10568` | Out 6 Name ⁶ | sensor | — |
-| `6.10569` | Out 7 Name ⁶ | sensor | — |
-| `6.10570` | Out 8 Name ⁶ | sensor | — |
-| `6.10571` | Out 9 Name ⁶ | sensor | — |
-| `6.10572` | Out 10 Name ⁶ | sensor | — |
+| `6.10534` | Out 1 Name ⁷ | sensor | — |
+| `6.10535` | Out 2 Name ⁷ | sensor | — |
+| `6.10558` | Out 3 Name ⁷ | sensor | — |
+| `6.10559` | Out 4 Name ⁷ | sensor | — |
+| `6.10567` | Out 5 Name ⁷ | sensor | — |
+| `6.10568` | Out 6 Name ⁷ | sensor | — |
+| `6.10569` | Out 7 Name ⁷ | sensor | — |
+| `6.10570` | Out 8 Name ⁷ | sensor | — |
+| `6.10571` | Out 9 Name ⁷ | sensor | — |
+| `6.10572` | Out 10 Name ⁷ | sensor | — |
 
 </details>
 
-⁵ **Solar Setpoint** and **Whirlpool Setpoint** are disabled by default, because not every PM5 installation has a solar or whirlpool circuit.
+⁶ **Solar Setpoint** and **Whirlpool Setpoint** are disabled by default, because not every PM5 installation has a solar or whirlpool circuit.
 To use them, go to Settings -> Devices & Services -> Bayrol -> Entities, open the entity and enable it. **Heating Setpoint** is enabled by default.
 
-⁶ Each output has an **Out x Mode** select (*On*, *Off*, *Auto*) that also shows the current mode. The older three button entities per output (for example `Out 1 On`, `Out 1 Off`, `Out 1 Auto`) are still created, but disabled by default on new installations; existing installations keep them.
+⁷ Each output has an **Out x Mode** select (*On*, *Off*, *Auto*) that also shows the current mode. The older three button entities per output (for example `Out 1 On`, `Out 1 Off`, `Out 1 Auto`) are still created, but disabled by default on new installations; existing installations keep them.
 The current state of an output is reported by the matching `Out x Status` sensor, and the `Out x` sensor shows its mode (On, Off, Auto). `Out x Name` (diagnostic, disabled by default) shows the name given to the output on the device (default "Universal 1" to "Universal 10"). It does not tell which function, such as backwash or the filter pump, an output is assigned to. `Out x Available` tells you whether the output can be switched manually. If it reports No, for example because the output is assigned to a function such as backwash, the device ignores manual Out commands and the select and buttons are unavailable.
 
-⁷ The **Balance Tank** sensors are disabled by default, because only overflow pools with a balance tank control report these values. Enable them the same way as described in ⁵.
+⁸ The **Balance Tank** sensors are disabled by default, because only overflow pools with a balance tank control report these values. Enable them the same way as described in ⁶.
 **Balance Tank Water Height** is the water level shown as "Tank: x cm" in the device web interface, **Balance Tank Mode** reports the current control mode (Ok, Refilling, Stopped, Dry Run, Dry Run Stopped, Overflow), **Balance Tank Status** the overall state (Ok, Info, Warning, Alarm) and **Balance Tank Available** whether the device has a balance tank control at all.
 
 ## Good to know
