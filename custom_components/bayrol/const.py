@@ -1278,14 +1278,9 @@ SENSOR_TYPES_AUTOMATIC_SALT = {
         "on_values": ("1",),
         "off_values": ("0",),
     },
-    "4.106": {
-        "name": "Cell Power",
-        "device_class": SensorDeviceClass.POWER,
-        "state_class": SensorStateClass.MEASUREMENT,
-        "coefficient": 1,
-        "unit_of_measurement": "W",
-        "entity_type": "sensor",
-    },
+    # 4.106 (e_num_var_se_power, cell power) is not created: the device
+    # never fills it (stays 0 while the cell produces, verified on a live
+    # Automatic SALT) and the Bayrol web app does not show it (#57).
     "4.138": {
         "name": "Salt To Add",
         "device_class": SensorDeviceClass.WEIGHT,

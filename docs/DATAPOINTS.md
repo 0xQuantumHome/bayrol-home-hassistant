@@ -55,7 +55,7 @@ applies to both.
 | `4.102` | Conductivity | both | Conductivity (`sensor`) |
 | `4.104` | Cell voltage | SALT | Electrolyzer Voltage (`sensor`) |
 | `4.105` | Cell current | SALT | Electrolyzer Current (`sensor`) |
-| `4.106` | Salt electrolysis cell power * | SALT | Cell Power (`sensor`) |
+| `4.106` | Salt electrolysis cell power * (not filled by the device, stays 0 while the cell produces) | SALT | — |
 | `4.107` | Internal battery voltage | both | Battery Voltage (`sensor`) |
 | `4.109` | Current software version * | both | — |
 | `4.110` | Current software date code * | both | — |

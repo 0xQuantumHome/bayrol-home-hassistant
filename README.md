@@ -32,7 +32,7 @@ Monitor **and control** your Bayrol pool controller from Home Assistant: water v
 
   | Device | Entities |
   | --- | --- |
-  | Automatic SALT | 129 |
+  | Automatic SALT | 128 |
   | Automatic Cl-pH | 104 |
   | Pool Manager 5 Chlorine | 131 |
 
@@ -118,7 +118,6 @@ A community reference of **all** known MQTT datapoints, including those not impl
 | `4.102` | Conductivity | sensor | mS/cm |
 | `4.104` | Electrolyzer Voltage | sensor | V |
 | `4.105` | Electrolyzer Current | sensor | A |
-| `4.106` | Cell Power | sensor | W |
 | `4.107` | Battery Voltage | sensor | V |
 | `4.111` | SE Production Stops In ⁵ | sensor | s |
 | `4.112` | Time Before Next Polarity Reversal | sensor | s |
@@ -562,6 +561,24 @@ Without a Smart&Easy filter pump all three entities are unavailable.
 **Device Time** (Automatic devices, diagnostic) shows the device clock as displayed on the device (for example `2026-10-13 00:07`), combined from its date and time datapoints (`4.69`-`4.74`) and its UTC offset (`4.240`). The attribute `clock_deviation_min` shows how many minutes the device clock is ahead (+) or behind (-) of Home Assistant, `utc_offset` the offset the device uses. The device keeps UTC (synchronized via the web) and derives the offset from the local time set on the device. If timers or the daily statistics switch at unexpected times, check `clock_deviation_min`: a value other than 0 means the clock was set to a wrong time. Set the correct time on the device or in the Bayrol portal, the offset is then recalculated. **Time Sync with Web** and **Auto Summer/Winter Time** (configuration switches) correspond to the clock settings of the Bayrol app.
 
 **Last MQTT Message** (all devices, diagnostic) shows when the integration last received a message from the device, independent of Device Online. Its `mqtt_connected` attribute shows whether the integration is connected to the Bayrol MQTT broker. The state is updated at most once per minute. A timestamp that stops advancing means no data is coming in, even if the last values in Home Assistant look current (Home Assistant does not change the "last updated" time of a sensor while its value stays the same).
+
+### Salt electrolysis cell power
+
+The data model contains a cell power datapoint (`4.106`), but the device never fills it: it stays at 0 W while the cell is producing, and the Bayrol app does not show it either. The integration therefore does not create a cell power entity, since it only shows values the device actually reports. If you want the power anyway, calculate it from the cell voltage and current with a [template sensor](https://www.home-assistant.io/integrations/template/):
+
+```yaml
+template:
+  - sensor:
+      - name: "Pool Cell Power"
+        unit_of_measurement: "W"
+        device_class: power
+        state_class: measurement
+        state: >
+          {{ (states('sensor.bayrol_DEVICEID_electrolyzer_voltage') | float(0)
+              * states('sensor.bayrol_DEVICEID_electrolyzer_current') | float(0)) | round(1) }}
+```
+
+Replace `DEVICEID` with your device id (see Settings → Devices & Services → Bayrol).
 
 ### Filtering stale values when the pump is off
 
